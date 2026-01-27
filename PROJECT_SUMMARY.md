@@ -102,7 +102,7 @@ tfn-sog-gala/
 ## 🔐 Authentication
 
 - Simple session-based auth with cookies
-- Default admin: `gala@teachfornepal.org` / `admin123`
+- Default admin:
 - Password hashing with bcryptjs
 - Protected admin routes via middleware
 
