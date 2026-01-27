@@ -46,12 +46,13 @@ const Navbar = () => {
             ))}
           </div>
           {/* RSVP Button */}
-            <button
+            <a
+              href="/register"
               className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-9 py-3 rounded-full font-semibold hover:shadow-2xl hover:scale-105 transition-all duration-300 ml-4"
-            aria-label="RSVP Now"
-          >
-            RSVP Now
-          </button>
+              aria-label="RSVP Now"
+            >
+              RSVP Now
+            </a>
           {/* Mobile Menu Toggle */}
           <button
             className="md:hidden ml-4 text-white focus:outline-none"
@@ -69,13 +70,14 @@ const Navbar = () => {
             <a href="#home" className="text-white py-2 w-full text-center hover:bg-purple-700 transition" onClick={() => setMenuOpen(false)}>Home</a>
             <a href="#highlights" className="text-white py-2 w-full text-center hover:bg-purple-700 transition" onClick={() => setMenuOpen(false)}>Highlights</a>
             <a href="#impact" className="text-white py-2 w-full text-center hover:bg-purple-700 transition" onClick={() => setMenuOpen(false)}>Impact</a>
-            <button
-              className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-2.5 rounded-full font-semibold mt-3 w-full hover:shadow-2xl transition-all duration-300"
+            <a
+              href="/register"
+              className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-2.5 rounded-full font-semibold mt-3 w-full hover:shadow-2xl transition-all duration-300 text-center"
               aria-label="RSVP Now"
               onClick={() => setMenuOpen(false)}
             >
               RSVP Now
-            </button>
+            </a>
           </div>
         )}
       </div>

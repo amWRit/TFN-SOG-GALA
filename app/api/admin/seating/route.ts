@@ -64,3 +64,35 @@ export async function PUT(request: Request) {
     );
   }
 }
+
+/**
+ * POST /api/admin/seating
+ * Add a table and seats (admin)
+ */
+export async function POST(request: Request) {
+  const isAuthenticated = await getSession();
+  if (!isAuthenticated) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  try {
+    const { tableNumber, seatCount } = await request.json();
+    if (!tableNumber || !seatCount) {
+      return NextResponse.json({ error: 'Missing tableNumber or seatCount' }, { status: 400 });
+    }
+    // Create seats for the table
+    const seats = Array.from({ length: seatCount }, (_, i) => ({
+      tableNumber: Number(tableNumber),
+      seatNumber: i + 1,
+      name: null,
+      quote: null,
+      bio: null,
+      involvement: null,
+      imageUrl: null,
+    }));
+    await prisma.seat.createMany({ data: seats, skipDuplicates: true });
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error("Error adding seats:", error);
+    return NextResponse.json({ error: 'Failed to add seats' }, { status: 500 });
+  }
+}

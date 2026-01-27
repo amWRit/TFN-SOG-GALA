@@ -1,0 +1,104 @@
+/* Primary button style for consistent use (matches RSVP button) */
+.primaryButton {
+  background: linear-gradient(90deg, #9333ea 0%, #ec4899 100%);
+  color: #fff;
+  padding: 0.75rem 2.25rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 1.125rem;
+  border: none;
+  cursor: pointer;
+  transition: box-shadow 0.2s, transform 0.2s, background 0.2s;
+  box-shadow: 0 2px 8px #a78bfa33;
+  margin-top: 0.5rem;
+  outline: none;
+  display: inline-block;
+}
+.primaryButton:hover, .primaryButton:focus {
+  box-shadow: 0 6px 24px #A78BFA55;
+  background: linear-gradient(90deg, #ec4899 0%, #9333ea 100%);
+  transform: scale(1.05);
+}
+.confetti {
+  font-size: 2.2rem;
+  margin-bottom: 0.5rem;
+  animation: confettiPop 1.2s cubic-bezier(.68,-0.55,.27,1.55);
+}
+
+@keyframes confettiPop {
+  0% { opacity: 0; transform: scale(0.7) translateY(30px); }
+  80% { opacity: 1; transform: scale(1.1) translateY(-8px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@media (max-width: 600px) {
+  .formCard {
+    padding: 1.2rem 0.5rem 1.5rem 0.5rem;
+    max-width: 98vw;
+  }
+  .gradientText {
+    font-size: 1.5rem !important;
+  }
+}
+
+.input:focus {
+  border: 2px solid #F472B6;
+  box-shadow: 0 0 0 2px #f472b655;
+}
+/* Homepage shared styles for custom form and homepage */
+
+.heroContainer {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #6B21A8 90%, #EC4899 100%);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.gradientText {
+  background: linear-gradient(90deg, #A78BFA, #F472B6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+}
+
+.formCard {
+  background: rgba(31, 41, 55, 0.95);
+  border-radius: 1rem;
+  box-shadow: 0 8px 32px 0 rgba(0,0,0,0.37);
+  padding: 2rem;
+  max-width: 480px;
+  margin: 2rem auto;
+  color: #fff;
+}
+
+.input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  border: none;
+  margin-bottom: 1.25rem;
+  background: #23272F;
+  color: #fff;
+  font-size: 1rem;
+}
+
+.button {
+  background: linear-gradient(90deg, #A78BFA, #F472B6);
+  color: #fff;
+  padding: 0.75rem 2rem;
+  border-radius: 0.5rem;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 16px #A78BFA44;
+}

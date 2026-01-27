@@ -14,12 +14,10 @@ const CTASection = () => {
           Be part of an unforgettable evening supporting Nepal's future leaders
         </p>
         <a
-          href="https://forms.google.com"
-          target="_blank"
-          rel="noopener noreferrer"
+          href="/register"
           className="inline-flex items-center gap-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-10 py-5 rounded-full font-bold text-xl hover:shadow-2xl hover:scale-105 transition-all duration-300"
         >
-          Reserve Your Spot
+          Reserve Your Seat
           <ChevronRight className="w-6 h-6" />
         </a>
       </div>
