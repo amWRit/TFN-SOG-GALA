@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { ChevronRight, Play } from 'lucide-react';
+import { ChevronRight, Play, Armchair } from 'lucide-react';
 import CountdownTimer from './countdown-timer';
 
 const VideoHero = () => {
@@ -40,21 +40,15 @@ const VideoHero = () => {
               <Play className="w-5 h-5" />
               Watch 2025 Highlights
             </button>
-            <a 
-              href="#rsvp"
-              className="bg-white/10 backdrop-blur-md border border-white/20 text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-white/20 transition-all duration-300 flex items-center gap-2"
-            >
-              RSVP Now
-              <ChevronRight className="w-5 h-5" />
-            </a>
           </div>
           <div className="mt-8 flex justify-center">
-            <a
-              href="/seating"
-              className="bg-gradient-to-r from-gold to-gold-dark text-gray-900 font-bold px-10 py-5 rounded-full shadow-xl text-xl tracking-wide hover:scale-105 hover:shadow-2xl transition-all duration-300 border-4 border-gold-dark"
+            <button
+              onClick={() => window.location.href = '/seating'}
+              className="group bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-4 rounded-full font-semibold text-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 flex items-center gap-3"
             >
+              <Armchair className="w-5 h-5" />
               View Available Seats
-            </a>
+            </button>
           </div>
         </div>
       </div>
