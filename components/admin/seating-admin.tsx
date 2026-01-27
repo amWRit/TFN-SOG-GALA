@@ -300,7 +300,7 @@ export function SeatingAdmin() {
         {/* Details Modal */}
         {selectedSeat && !showEditModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-            <div className={styles.adminCard + " max-w-md w-full relative animate-fade-in"}>
+            <div className={styles.adminCard + " max-w-md w-full relative animate-fade-in p-0 overflow-visible"}>
               <button
                 className="absolute top-3 right-4 text-2xl text-[#D4AF37] hover:text-[#B8941F] focus:outline-none"
                 onClick={() => { setSelectedSeat(null); setShowEditModal(false); }}
@@ -309,30 +309,67 @@ export function SeatingAdmin() {
               >
                 ×
               </button>
-              <h2 className="font-playfair text-xl font-bold text-[#D4AF37] mb-4">
-                Seat Details
-              </h2>
-              <div className="mb-4">
-                <div className="font-semibold mb-1">Table: {selectedSeat.tableNumber} | Seat: {selectedSeat.seatNumber}</div>
-                <div className="mb-1">Name: <span className="text-[#D4AF37]">{selectedSeat.name || <span className="text-gray-400">(empty)</span>}</span></div>
-                {selectedSeat.quote && <div className="mb-1">Quote: <span className="italic">{selectedSeat.quote}</span></div>}
-                {selectedSeat.bio && <div className="mb-1">Bio: {selectedSeat.bio}</div>}
-                {selectedSeat.involvement && <div className="mb-1">Involvement: {selectedSeat.involvement}</div>}
-                {selectedSeat.imageUrl && <div className="mb-1">Image: <a href={selectedSeat.imageUrl} target="_blank" rel="noopener noreferrer" className="underline text-blue-400">View</a></div>}
-              </div>
-              <div className="flex gap-4 justify-end mt-6">
-                <button
-                  className="flex items-center gap-2 text-[#D4AF37] hover:text-[#B8941F] font-semibold px-4 py-2 rounded transition"
-                  onClick={() => setShowEditModal(true)}
-                >
-                  <Pencil size={18} /> Edit
-                </button>
-                <button
-                  className="flex items-center gap-2 text-pink-400 hover:text-pink-300 font-semibold px-4 py-2 rounded transition"
-                  onClick={() => setShowDeleteModal(true)}
-                >
-                  <Trash2 size={18} /> Delete
-                </button>
+              <div className="flex flex-col items-center p-6 pt-10">
+                <div className="flex flex-col items-center w-full">
+                  <div className="flex gap-2 mb-4 w-full justify-center">
+                    <span className="bg-[#D4AF37]/10 text-[#D4AF37] font-bold px-3 py-1 rounded-full text-xs tracking-wide border border-[#D4AF37]/30">Table {selectedSeat.tableNumber}</span>
+                    <span className="bg-[#f5f5f5]/10 text-[#f5f5f5] font-bold px-3 py-1 rounded-full text-xs tracking-wide border border-[#f5f5f5]/20">Seat {selectedSeat.seatNumber}</span>
+                  </div>
+                  {selectedSeat.imageUrl ? (
+                    <img
+                      src={selectedSeat.imageUrl}
+                      alt={selectedSeat.name || "Seat image"}
+                      className="w-24 h-24 rounded-full object-cover border-4 border-[#D4AF37] shadow-lg mb-3 bg-[#23272F]"
+                    />
+                  ) : (
+                    <div className="w-24 h-24 rounded-full flex items-center justify-center bg-[#23272F] border-4 border-[#D4AF37]/30 text-4xl text-[#D4AF37] mb-3">
+                      <span>{selectedSeat.name ? selectedSeat.name[0] : "?"}</span>
+                    </div>
+                  )}
+                  <div className="text-center w-full">
+                    <h2 className="font-playfair text-2xl font-bold text-[#D4AF37] mb-1">
+                      {selectedSeat.name || <span className="text-gray-400">(Empty)</span>}
+                    </h2>
+                    {selectedSeat.quote && (
+                      <div className="italic text-[#f5f5f5]/80 text-base mb-2 border-l-4 border-[#D4AF37] pl-3 mx-auto max-w-xs">“{selectedSeat.quote}”</div>
+                    )}
+                  </div>
+                </div>
+                <div className="w-full border-t border-[#D4AF37]/20 my-4"></div>
+                <div className="w-full space-y-2">
+                  {selectedSeat.bio && (
+                    <div>
+                      <span className="text-xs text-[#D4AF37] font-semibold uppercase">Bio</span>
+                      <div className="text-[#f5f5f5] text-sm mt-1">{selectedSeat.bio}</div>
+                    </div>
+                  )}
+                  {selectedSeat.involvement && (
+                    <div>
+                      <span className="text-xs text-[#D4AF37] font-semibold uppercase">Involvement</span>
+                      <div className="text-[#f5f5f5] text-sm mt-1">{selectedSeat.involvement}</div>
+                    </div>
+                  )}
+                  {selectedSeat.imageUrl && (
+                    <div>
+                      <span className="text-xs text-[#D4AF37] font-semibold uppercase">Image URL</span>
+                      <div className="text-blue-400 text-xs truncate"><a href={selectedSeat.imageUrl} target="_blank" rel="noopener noreferrer" className="underline">{selectedSeat.imageUrl}</a></div>
+                    </div>
+                  )}
+                </div>
+                <div className="flex gap-4 justify-end mt-8 w-full">
+                  <button
+                    className="flex items-center gap-2 text-[#D4AF37] hover:text-[#B8941F] font-semibold px-4 py-2 rounded transition"
+                    onClick={() => setShowEditModal(true)}
+                  >
+                    <Pencil size={18} /> Edit
+                  </button>
+                  <button
+                    className="flex items-center gap-2 text-pink-400 hover:text-pink-300 font-semibold px-4 py-2 rounded transition"
+                    onClick={() => setShowDeleteModal(true)}
+                  >
+                    <Trash2 size={18} /> Delete
+                  </button>
+                </div>
               </div>
             </div>
           </div>

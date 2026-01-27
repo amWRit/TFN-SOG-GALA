@@ -55,8 +55,8 @@ const StatsSection = () => {
   ];
 
   return (
-    <section id="stats" className="py-24 bg-gradient-to-br from-purple-900 via-gray-900 to-pink-900">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="stats" className="py-24 bg-gradient-to-br from-purple-900 via-gray-900 to-pink-900 w-full">
+      <div className="w-full">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
           {stats.map((stat, index) => (
             <div key={index} className="text-center group">

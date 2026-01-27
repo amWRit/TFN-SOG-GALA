@@ -67,3 +67,24 @@ model Admin {
   password  String   // bcrypt hash
   createdAt DateTime @default(now())
 }
+
+model Registration {
+  id                String   @id @default(cuid())
+  name              String
+  email             String
+  phone             String?
+  tablePreference   Int?     // assigned table (nullable until assigned)
+  seatPreference    Int?     // assigned seat (nullable until assigned)
+  payment           Float    @default(0)
+  paymentStatus     Boolean  @default(false)
+  seatAssignedStatus Boolean @default(false)
+  quote             String?
+  bio               String?
+  involvement       String?
+  imageUrl          String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([tablePreference, seatPreference])
+  @@index([paymentStatus, seatAssignedStatus])
+}
