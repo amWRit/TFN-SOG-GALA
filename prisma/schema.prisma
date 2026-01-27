@@ -12,16 +12,13 @@ datasource db {
 
 // Seating assignments - stores who sits where
 model Seat {
-  id          String   @id @default(cuid())
-  tableNumber Int      // 1-12
-  seatNumber  Int      // 1-10 (seat position at table)
-  name        String?
-  quote       String?
-  bio         String?
-  involvement String?  // e.g., "Fellow 2022", "Board Member", "Donor"
-  imageUrl    String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id             String   @id @default(cuid())
+  tableNumber    Int      // 1-12
+  seatNumber     Int      // 1-10 (seat position at table)
+  registrationId String?  // FK to Registration, nullable if unassigned
+  registration   Registration? @relation(fields: [registrationId], references: [id])
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
   @@unique([tableNumber, seatNumber])
   @@index([tableNumber])
@@ -84,6 +81,8 @@ model Registration {
   imageUrl          String?
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
+
+  seat              Seat[]
 
   @@index([tablePreference, seatPreference])
   @@index([paymentStatus, seatAssignedStatus])
