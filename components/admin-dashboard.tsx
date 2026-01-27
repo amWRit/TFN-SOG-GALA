@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { SeatingAdmin } from "@/components/admin/seating-admin";
+import { RegistrationList } from "@/components/admin/registration-list";
 import { AuctionAdmin } from "@/components/admin/auction-admin";
 import { EventAdmin } from "@/components/admin/event-admin";
 import { SheetsSync } from "@/components/admin/sheets-sync";
@@ -39,7 +40,7 @@ export function AdminDashboard() {
     <main className="min-h-screen bg-gradient-to-b from-[#1a1a1a] to-[#0f0f0f]">
       {/* Header */}
       <div className="border-b border-[#D4AF37]/20 glass-strong">
-        <div className="max-w-7xl mx-auto px-4 py-6 flex items-center justify-between">
+        <div className="max-w-[1800px] mx-auto px-4 py-6 flex items-center justify-between">
           <h1 className="font-playfair text-3xl font-bold text-[#D4AF37]">
             Admin Dashboard
           </h1>
@@ -51,7 +52,7 @@ export function AdminDashboard() {
       </div>
 
       {/* Tabs */}
-      <div className="max-w-7xl mx-auto px-4 py-6">
+      <div className="max-w-[1800px] mx-auto px-4 py-6">
         <div className="flex flex-wrap gap-2 mb-8">
           {tabs.map((tab) => {
             const Icon = tab.icon;
@@ -79,7 +80,16 @@ export function AdminDashboard() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
         >
-          {activeTab === "seating" && <SeatingAdmin />}
+          {activeTab === "seating" && (
+            <div className="flex flex-col lg:flex-row lg:gap-8">
+              <div className="w-full lg:w-2/3">
+                <SeatingAdmin />
+              </div>
+              <div className="w-full lg:w-1/3">
+                <RegistrationList />
+              </div>
+            </div>
+          )}
           {activeTab === "auction" && <AuctionAdmin />}
           {activeTab === "event" && <EventAdmin />}
           {activeTab === "sheets" && <SheetsSync />}

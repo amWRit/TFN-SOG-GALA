@@ -190,76 +190,78 @@ export function SeatingAdmin() {
 
   return (
     <>
-      {/* Add Table Button and Modal */}
-      <div className="flex justify-end mb-6">
-        <button
-          className={styles.adminButton}
-          onClick={() => setShowAddTableModal(true)}
-          type="button"
-        >
-          + Add Table
-        </button>
-      </div>
-      {showAddTableModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-          <div className={styles.adminCard + " max-w-md w-full relative animate-fade-in"}>
-            <button
-              className="absolute top-3 right-4 text-2xl text-[#D4AF37] hover:text-[#B8941F] focus:outline-none"
-              onClick={() => setShowAddTableModal(false)}
-              aria-label="Close"
-              type="button"
-            >
-              ×
-            </button>
-            <h2 className="font-playfair text-xl font-bold text-[#D4AF37] mb-4">Add Table & Seats</h2>
-            <form onSubmit={handleAddTable} className="flex flex-col gap-4 items-center">
-              <label className={styles.adminFormLabel + " flex flex-col w-full"}>
-                Table Number
-                <input
-                  type="number"
-                  min={1}
-                  value={tableNumber}
-                  onChange={e => setTableNumber(Number(e.target.value))}
-                  className={styles.adminInput + " mt-1"}
-                  required
-                />
-              </label>
-              <label className={styles.adminFormLabel + " flex flex-col w-full"}>
-                Number of Seats
-                <input
-                  type="number"
-                  min={1}
-                  max={20}
-                  value={seatCount}
-                  onChange={e => setSeatCount(Number(e.target.value))}
-                  className={styles.adminInput + " mt-1"}
-                  required
-                />
-              </label>
-              <button
-                type="submit"
-                className={styles.adminButton + " w-full"}
-                disabled={adding}
-              >
-                {adding ? "Adding..." : "Add Table & Seats"}
-              </button>
-            </form>
-            {addMsg && <p className={addMsg.includes('added') ? "text-green-400 mt-2" : "text-pink-400 mt-2"}>{addMsg}</p>}
-          </div>
-        </div>
-      )}
-      {/* Seating Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2">
-          <Card className="glass-strong p-6">
+      {/* Seating Grid with Add Table Button inside Card */}
+      <div>
+        <Card className="glass-strong p-6">
             <div className="flex justify-between items-center mb-6">
               <h2 className="font-playfair text-2xl font-bold text-[#D4AF37]">
                 Seating Chart
               </h2>
-              <Button variant="outline" onClick={handleExportJSON}>
-                Export JSON
-              </Button>
+              <div className="flex gap-2">
+                <button
+                  className={styles.adminButton}
+                  onClick={handleExportJSON}
+                  type="button"
+                >
+                  Export
+                </button>
+                <button
+                  className={styles.adminButton}
+                  onClick={() => setShowAddTableModal(true)}
+                  type="button"
+                >
+                  + Add Table
+                </button>
+              </div>
             </div>
+            {showAddTableModal && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+                <div className={styles.adminCard + " max-w-md w-full relative animate-fade-in"}>
+                  <button
+                    className="absolute top-3 right-4 text-2xl text-[#D4AF37] hover:text-[#B8941F] focus:outline-none"
+                    onClick={() => setShowAddTableModal(false)}
+                    aria-label="Close"
+                    type="button"
+                  >
+                    ×
+                  </button>
+                  <h2 className="font-playfair text-xl font-bold text-[#D4AF37] mb-4">Add Table & Seats</h2>
+                  <form onSubmit={handleAddTable} className="flex flex-col gap-4 items-center">
+                    <label className={styles.adminFormLabel + " flex flex-col w-full"}>
+                      Table Number
+                      <input
+                        type="number"
+                        min={1}
+                        value={tableNumber}
+                        onChange={e => setTableNumber(Number(e.target.value))}
+                        className={styles.adminInput + " mt-1"}
+                        required
+                      />
+                    </label>
+                    <label className={styles.adminFormLabel + " flex flex-col w-full"}>
+                      Number of Seats
+                      <input
+                        type="number"
+                        min={1}
+                        max={20}
+                        value={seatCount}
+                        onChange={e => setSeatCount(Number(e.target.value))}
+                        className={styles.adminInput + " mt-1"}
+                        required
+                      />
+                    </label>
+                    <button
+                      type="submit"
+                      className={styles.adminButton + " w-full"}
+                      disabled={adding}
+                    >
+                      {adding ? "Adding..." : "Add Table & Seats"}
+                    </button>
+                  </form>
+                  {addMsg && <p className={addMsg.includes('added') ? "text-green-400 mt-2" : "text-pink-400 mt-2"}>{addMsg}</p>}
+                </div>
+              </div>
+            )}
             <div className="space-y-8">
               {Array.from({ length: 12 }, (_, i) => i + 1).map((tableNum) => (
                 <div key={tableNum}>
@@ -296,7 +298,6 @@ export function SeatingAdmin() {
               ))}
             </div>
           </Card>
-        </div>
         {/* Details Modal */}
         {selectedSeat && !showEditModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
