@@ -7,6 +7,7 @@ const RegisterForm = () => {
   const [form, setForm] = useState({
     name: '',
     email: '',
+    phone: '',
     table: '',
     seat: '',
     testimonial: ''
@@ -58,7 +59,7 @@ const RegisterForm = () => {
       });
       if (res.ok) {
         setSuccess(true);
-        setForm({ name: '', email: '', table: '', seat: '', testimonial: '' });
+        setForm({ name: '', email: '', phone: '', table: '', seat: '', testimonial: '' });
       } else {
         setError('Submission failed. Please try again.');
       }
@@ -79,7 +80,7 @@ const RegisterForm = () => {
           type="text"
           name="name"
           placeholder="Your Name"
-          value={form.name}
+          value={form.name || ''}
           onChange={handleChange}
           required
         />
@@ -88,15 +89,23 @@ const RegisterForm = () => {
           type="email"
           name="email"
           placeholder="Your Email"
-          value={form.email}
+          value={form.email || ''}
           onChange={handleChange}
           required
+        />
+        <input
+          className={styles.input}
+          type="tel"
+          name="phone"
+          placeholder="Your Phone Number (optional)"
+          value={form.phone || ''}
+          onChange={handleChange}
         />
         <div style={{display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 16}}>
           <select
             className={styles.input}
             name="table"
-            value={form.table}
+            value={form.table || ''}
             onChange={handleChange}
             required
             style={{flex: 1, minWidth: 0}}
@@ -109,7 +118,7 @@ const RegisterForm = () => {
           <select
             className={styles.input}
             name="seat"
-            value={form.seat}
+            value={form.seat || ''}
             onChange={handleChange}
             required
             disabled={!form.table}
@@ -125,7 +134,7 @@ const RegisterForm = () => {
           className={styles.input}
           name="testimonial"
           placeholder="Share a quote or testimonial about Teach For Nepal! 💬"
-          value={form.testimonial}
+          value={form.testimonial || ''}
           onChange={handleChange}
           rows={3}
         />
