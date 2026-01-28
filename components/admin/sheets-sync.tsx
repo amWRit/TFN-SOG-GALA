@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { OkModal } from "./ok-modal";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
@@ -8,6 +9,7 @@ import { RefreshCw } from "lucide-react";
 
 export function SheetsSync() {
   const [loading, setLoading] = useState(false);
+  const [modal, setModal] = useState<null | { type: 'registration' | 'seating', open: boolean }>(null);
 
   const handleSync = async () => {
     setLoading(true);
@@ -26,37 +28,27 @@ export function SheetsSync() {
     }
   };
 
-  const handleExportRegistration = async () => {
-    setLoading(true);
-    try {
-      const res = await fetch("/api/admin/sheets/export-registration", { method: "POST" });
-      if (res.ok) {
-        const data = await res.json();
-        toast.success(`Exported ${data.count || 0} registrations to Google Sheets!`);
-      } else {
-        toast.error("Failed to export registrations.");
-      }
-    } catch (error) {
-      toast.error("Error exporting registrations");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const registrationSheetId = process.env.NEXT_PUBLIC_REGISTRATION_GOOGLE_SHEETS_ID || process.env.REGISTRATION_GOOGLE_SHEETS_ID;
+  const seatingSheetId = process.env.NEXT_PUBLIC_SEATING_GOOGLE_SHEETS_ID || process.env.SEATING_GOOGLE_SHEETS_ID;
+  const registrationSheetUrl = registrationSheetId ? `https://docs.google.com/spreadsheets/d/${registrationSheetId}/edit` : '';
+  const seatingSheetUrl = seatingSheetId ? `https://docs.google.com/spreadsheets/d/${seatingSheetId}/edit` : '';
 
-  const handleExportSeating = async () => {
+  const doExport = async (type: 'registration' | 'seating') => {
     setLoading(true);
     try {
-      const res = await fetch("/api/admin/sheets/export-seating", { method: "POST" });
+      const url = type === 'registration' ? "/api/admin/sheets/export-registration" : "/api/admin/sheets/export-seating";
+      const res = await fetch(url, { method: "POST" });
       if (res.ok) {
         const data = await res.json();
-        toast.success(`Exported ${data.count || 0} seats to Google Sheets!`);
+        toast.success(`Exported ${data.count || 0} ${type === 'registration' ? 'registrations' : 'seats'} to Google Sheets!`);
       } else {
-        toast.error("Failed to export seats.");
+        toast.error(`Failed to export ${type === 'registration' ? 'registrations' : 'seats'}.`);
       }
     } catch (error) {
-      toast.error("Error exporting seats");
+      toast.error(`Error exporting ${type === 'registration' ? 'registrations' : 'seats'}`);
     } finally {
       setLoading(false);
+      setModal(null);
     }
   };
 
@@ -84,15 +76,53 @@ export function SheetsSync() {
       </div>
       <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4 gap-4">
         <Button disabled title="Import is currently disabled">
-          <RefreshCw size={18} className="mr-2" />
-          Import from Google Sheets (Disabled)
+          <span className="sm:hidden">Import</span>
+          <span className="hidden sm:inline">Import from Google Sheets (Disabled)</span>
         </Button>
-        <Button onClick={handleExportRegistration} disabled={loading} variant="outline">
-          Export Registration to Google Sheets
+        <Button
+          onClick={() => setModal({ type: 'registration', open: true })}
+          disabled={loading}
+          variant="outline"
+        >
+          <span className="sm:hidden">Export Registration</span>
+          <span className="hidden sm:inline">Export Registration to Google Sheets</span>
         </Button>
-        <Button onClick={handleExportSeating} disabled={loading} variant="outline">
-          Export Seating to Google Sheets
+        <Button
+          onClick={() => setModal({ type: 'seating', open: true })}
+          disabled={loading}
+          variant="outline"
+        >
+          <span className="sm:hidden">Export Seating</span>
+          <span className="hidden sm:inline">Export Seating to Google Sheets</span>
         </Button>
+        {/* Confirmation Modal */}
+        <OkModal
+          open={!!modal}
+          title={modal?.type === 'registration' ? 'Export Registration Data' : 'Export Seating Data'}
+          message={modal?.type === 'registration'
+            ? (<span>
+                You are about to overwrite all data in the {registrationSheetUrl ? (
+                  <a href={registrationSheetUrl} target="_blank" rel="noopener noreferrer" className="underline text-blue-400" style={{ wordBreak: 'break-all' }}> <br></br>
+                    TFN-GALA 2026 Registration Sheet
+                  </a>
+                ) : 'TFN-GALA 2026 Registration Google Sheet'}.
+                <br /><br />
+                This action cannot be undone. Proceed?
+              </span>)
+            : (<span>
+                You are about to overwrite all data in the {seatingSheetUrl ? (
+                  <a href={seatingSheetUrl} target="_blank" rel="noopener noreferrer" className="underline text-blue-400" style={{ wordBreak: 'break-all' }}><br></br>
+                    TFN-GALA 2026 Seating Sheet'
+                  </a>
+                ) : 'TFN-GALA 2026 Seating Google Sheet'}.
+                <br /><br />
+                This action cannot be undone. Proceed?
+              </span>)}
+          onOk={() => modal && doExport(modal.type)}
+          onCancel={() => setModal(null)}
+          okText="Export"
+          cancelText="Cancel"
+        />
       </div>
     </Card>
   );

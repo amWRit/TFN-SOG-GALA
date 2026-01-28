@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import { Home } from "lucide-react";
 import styles from '../../styles/homepage.module.css';
 
 const RegisterForm = () => {
@@ -72,11 +73,9 @@ const RegisterForm = () => {
   return (
     <>
       {/* Home Button */}
-      <div className="fixed top-6 left-6 z-50">
+      <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50">
         <a href="/" className="flex items-center gap-2 px-4 py-2 bg-white/90 text-gray-900 rounded-full shadow-lg font-semibold hover:bg-white transition-all border border-gray-200">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l9-9 9 9M4.5 10.5V19a1.5 1.5 0 001.5 1.5h3.75m6 0H18a1.5 1.5 0 001.5-1.5v-8.5" />
-          </svg>
+          <Home size={20} className="w-5 h-5" />
           Home
         </a>
       </div>

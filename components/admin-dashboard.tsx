@@ -10,7 +10,7 @@ import { RegistrationList } from "@/components/admin/registration-list";
 import { AuctionAdmin } from "@/components/admin/auction-admin";
 import { EventAdmin } from "@/components/admin/event-admin";
 import { SheetsSync } from "@/components/admin/sheets-sync";
-import { LogOut, Users, Gavel, Calendar, RefreshCw, Home } from "lucide-react";
+import { LogOut, Users, Gavel, Calendar, RefreshCw, Home, Shield } from "lucide-react";
 import toast from "react-hot-toast";
 import styles from '../styles/admin-dashboard.module.css';
 
@@ -42,15 +42,16 @@ export function AdminDashboard() {
       {/* Header */}
       <div className="border-b border-[#D4AF37]/20 glass-strong">
         <div className="max-w-[1800px] mx-auto px-4 py-6 flex items-center justify-between">
-          <h1 className="font-playfair text-3xl font-bold text-[#D4AF37]">
-            Admin Dashboard
+          <h1 className="font-playfair text-3xl font-bold text-[#D4AF37] flex items-center gap-2">
+            <Shield size={28} className="inline-block mb-1" />
+            <span className="hidden sm:inline">Admin Dashboard</span>
           </h1>
           <div className="flex items-center gap-4">
             <a href="/" className={styles.adminButtonSmall + " flex items-center px-4 py-2"} style={{ justifyContent: 'center'}}>
-              <Home size={20} className="mr-1" />
+              <Home size={18} className="mr-1" />
             </a>
             <button onClick={handleLogout} className={styles.adminButtonSmall + " flex items-center px-4 py-2"} style={{justifyContent: 'center'}}>
-              <LogOut size={16} className="mr-1" />
+              <LogOut size={18} className="mr-1" />
             </button>
           </div>
         </div>
@@ -72,7 +73,7 @@ export function AdminDashboard() {
                 }`}
               >
                 <Icon size={18} />
-                {tab.label}
+                <span className="hidden sm:inline">{tab.label}</span>
               </button>
             );
           })}
