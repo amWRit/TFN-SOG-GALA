@@ -12,6 +12,18 @@ export async function GET() {
         { tableNumber: "asc" },
         { seatNumber: "asc" },
       ],
+      include: {
+        registration: {
+          select: {
+            id: true,
+            name: true,
+            quote: true,
+            bio: true,
+            involvement: true,
+            imageUrl: true,
+          },
+        },
+      },
     });
 
     return NextResponse.json(seats);

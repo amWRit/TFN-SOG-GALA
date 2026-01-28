@@ -5,8 +5,8 @@ import { ChevronRight } from 'lucide-react';
 
 const CTASection = () => {
   return (
-    <section className="py-24 bg-gray-900">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <section className="py-24 bg-gray-900 w-full">
+      <div className="w-full text-center">
         <h2 className="text-5xl font-bold text-white mb-6">
           Join Us in Making History
         </h2>

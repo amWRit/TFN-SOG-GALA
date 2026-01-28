@@ -6,11 +6,13 @@ import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { SeatingAdmin } from "@/components/admin/seating-admin";
+import { RegistrationList } from "@/components/admin/registration-list";
 import { AuctionAdmin } from "@/components/admin/auction-admin";
 import { EventAdmin } from "@/components/admin/event-admin";
 import { SheetsSync } from "@/components/admin/sheets-sync";
-import { LogOut, Users, Gavel, Calendar, RefreshCw } from "lucide-react";
+import { LogOut, Users, Gavel, Calendar, RefreshCw, Home } from "lucide-react";
 import toast from "react-hot-toast";
+import styles from '../styles/admin-dashboard.module.css';
 
 type Tab = "seating" | "auction" | "event" | "sheets";
 
@@ -39,19 +41,23 @@ export function AdminDashboard() {
     <main className="min-h-screen bg-gradient-to-b from-[#1a1a1a] to-[#0f0f0f]">
       {/* Header */}
       <div className="border-b border-[#D4AF37]/20 glass-strong">
-        <div className="max-w-7xl mx-auto px-4 py-6 flex items-center justify-between">
+        <div className="max-w-[1800px] mx-auto px-4 py-6 flex items-center justify-between">
           <h1 className="font-playfair text-3xl font-bold text-[#D4AF37]">
             Admin Dashboard
           </h1>
-          <Button variant="outline" onClick={handleLogout}>
-            <LogOut size={16} className="mr-2" />
-            Logout
-          </Button>
+          <div className="flex items-center gap-4">
+            <a href="/" className={styles.adminButtonSmall + " flex items-center px-4 py-2"} style={{ justifyContent: 'center'}}>
+              <Home size={20} className="mr-1" />
+            </a>
+            <button onClick={handleLogout} className={styles.adminButtonSmall + " flex items-center px-4 py-2"} style={{justifyContent: 'center'}}>
+              <LogOut size={16} className="mr-1" />
+            </button>
+          </div>
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="max-w-7xl mx-auto px-4 py-6">
+      <div className="max-w-[1800px] mx-auto px-4 py-6">
         <div className="flex flex-wrap gap-2 mb-8">
           {tabs.map((tab) => {
             const Icon = tab.icon;
@@ -79,7 +85,16 @@ export function AdminDashboard() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
         >
-          {activeTab === "seating" && <SeatingAdmin />}
+          {activeTab === "seating" && (
+            <div className="flex flex-col lg:flex-row lg:gap-8">
+              <div className="w-full lg:w-2/3">
+                <SeatingAdmin />
+              </div>
+              <div className="w-full lg:w-1/3">
+                <RegistrationList />
+              </div>
+            </div>
+          )}
           {activeTab === "auction" && <AuctionAdmin />}
           {activeTab === "event" && <EventAdmin />}
           {activeTab === "sheets" && <SheetsSync />}

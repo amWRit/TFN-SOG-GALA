@@ -5,11 +5,15 @@ import { prisma } from '../../../../lib/prisma';
 export async function GET() {
   try {
     const seats = await prisma.seat.findMany({
-      select: {
-        tableNumber: true,
-        seatNumber: true,
-        name: true,
-      },
+        select: {
+          tableNumber: true,
+          seatNumber: true,
+          registration: {
+            select: {
+              name: true,
+            },
+          },
+        },
       orderBy: [
         { tableNumber: 'asc' },
         { seatNumber: 'asc' },

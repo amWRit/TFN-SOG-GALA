@@ -25,14 +25,16 @@ interface SeatPopoverProps {
 
 function SeatPopover({ seat, position, onClose }: SeatPopoverProps) {
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.9 }}
+    <div
       className="fixed z-50 pointer-events-none"
       style={{ left: position.x, top: position.y }}
     >
-      <Card className="glass-strong w-80 p-6 pointer-events-auto">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.9 }}
+      >
+        <Card className="glass-strong w-80 p-6 pointer-events-auto">
         <button
           onClick={onClose}
           className="absolute top-2 right-2 text-[#f5f5f5]/60 hover:text-[#D4AF37]"
@@ -68,7 +70,8 @@ function SeatPopover({ seat, position, onClose }: SeatPopoverProps) {
           </div>
         )}
       </Card>
-    </motion.div>
+      </motion.div>
+    </div>
   );
 }
 

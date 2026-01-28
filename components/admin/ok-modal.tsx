@@ -1,4 +1,6 @@
+
 import React from "react";
+import styles from '../../styles/admin-dashboard.module.css';
 
 interface OkModalProps {
   open: boolean;
@@ -19,13 +21,13 @@ export function OkModal({ open, title, message, onOk, onCancel, okText = "OK", c
         <p className="mb-6 text-center">{message}</p>
         <div className="flex gap-4 justify-center">
           <button
-            className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-2 rounded-full font-semibold hover:shadow-2xl hover:scale-105 transition-all duration-300"
+            className={styles.adminButton}
             onClick={onOk}
           >
             {okText}
           </button>
           <button
-            className="bg-gray-700 text-white px-6 py-2 rounded-full font-semibold hover:bg-gray-600 transition-all duration-300"
+            className={styles.adminButton + " bg-transparent text-pink-400 border border-pink-400 hover:bg-pink-400/10"}
             onClick={onCancel}
           >
             {cancelText}

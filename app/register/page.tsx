@@ -7,6 +7,7 @@ const RegisterForm = () => {
   const [form, setForm] = useState({
     name: '',
     email: '',
+    phone: '',
     table: '',
     seat: '',
     testimonial: ''
@@ -58,7 +59,7 @@ const RegisterForm = () => {
       });
       if (res.ok) {
         setSuccess(true);
-        setForm({ name: '', email: '', table: '', seat: '', testimonial: '' });
+        setForm({ name: '', email: '', phone: '', table: '', seat: '', testimonial: '' });
       } else {
         setError('Submission failed. Please try again.');
       }
@@ -69,8 +70,18 @@ const RegisterForm = () => {
   };
 
   return (
-    <div className={styles.heroContainer}>
-      <form className={styles.formCard} onSubmit={handleSubmit}>
+    <>
+      {/* Home Button */}
+      <div className="fixed top-6 left-6 z-50">
+        <a href="/" className="flex items-center gap-2 px-4 py-2 bg-white/90 text-gray-900 rounded-full shadow-lg font-semibold hover:bg-white transition-all border border-gray-200">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l9-9 9 9M4.5 10.5V19a1.5 1.5 0 001.5 1.5h3.75m6 0H18a1.5 1.5 0 001.5-1.5v-8.5" />
+          </svg>
+          Home
+        </a>
+      </div>
+      <div className={styles.heroContainer}>
+        <form className={styles.formCard} onSubmit={handleSubmit}>
         <h2 className={styles.gradientText} style={{fontSize: '2.2rem', marginBottom: '0.5rem', lineHeight: 1.2}}>
           Secure Your Spot! <span style={{fontSize: '1.5rem'}}></span>
         </h2>
@@ -79,7 +90,7 @@ const RegisterForm = () => {
           type="text"
           name="name"
           placeholder="Your Name"
-          value={form.name}
+          value={form.name || ''}
           onChange={handleChange}
           required
         />
@@ -88,15 +99,23 @@ const RegisterForm = () => {
           type="email"
           name="email"
           placeholder="Your Email"
-          value={form.email}
+          value={form.email || ''}
           onChange={handleChange}
           required
+        />
+        <input
+          className={styles.input}
+          type="tel"
+          name="phone"
+          placeholder="Your Phone Number (optional)"
+          value={form.phone || ''}
+          onChange={handleChange}
         />
         <div style={{display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 16}}>
           <select
             className={styles.input}
             name="table"
-            value={form.table}
+            value={form.table || ''}
             onChange={handleChange}
             required
             style={{flex: 1, minWidth: 0}}
@@ -109,7 +128,7 @@ const RegisterForm = () => {
           <select
             className={styles.input}
             name="seat"
-            value={form.seat}
+            value={form.seat || ''}
             onChange={handleChange}
             required
             disabled={!form.table}
@@ -125,7 +144,7 @@ const RegisterForm = () => {
           className={styles.input}
           name="testimonial"
           placeholder="Share a quote or testimonial about Teach For Nepal! 💬"
-          value={form.testimonial}
+          value={form.testimonial || ''}
           onChange={handleChange}
           rows={3}
         />
@@ -147,6 +166,7 @@ const RegisterForm = () => {
         {error && <p style={{ color: '#F472B6', marginTop: '1rem' }}>{error}</p>}
       </form>
     </div>
+    </>
   );
 };
 

@@ -13,18 +13,38 @@ interface SeatData {
   id: string;
   tableNumber: number;
   seatNumber: number;
-  name: string | null;
-  quote: string | null;
-  bio: string | null;
-  involvement: string | null;
-  imageUrl: string | null;
+  registrationId: string | null;
+}
+
+interface RegistrationData {
+  id: string;
+  name: string;
+  email?: string | null;
+  phone?: string | null;
+  quote?: string | null;
+  bio?: string | null;
+  involvement?: string | null;
+  imageUrl?: string | null;
+  payment?: string | null;
+  paymentStatus?: boolean;
+  tablePreference?: string | null;
+  seatPreference?: string | null;
 }
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export function SeatingAdmin() {
   const { data: seats, mutate } = useSWR<SeatData[]>("/api/admin/seating", fetcher);
+  const { data: registrationsData } = useSWR("/api/admin/registration", fetcher);
+  const registrations: RegistrationData[] = registrationsData?.registrations || [];
+  // Map registrationId to registration for fast lookup
+  const registrationMap = registrations.reduce((acc, reg) => {
+    acc[reg.id] = reg;
+    return acc;
+  }, {} as Record<string, RegistrationData>);
   const [selectedSeat, setSelectedSeat] = useState<SeatData | null>(null);
+
+  // Form state for editing seat details
   const [formData, setFormData] = useState({
     name: "",
     quote: "",
@@ -32,6 +52,7 @@ export function SeatingAdmin() {
     involvement: "",
     imageUrl: "",
   });
+
   // Add Table/Seats form state
   const [tableNumber, setTableNumber] = useState(1);
   const [seatCount, setSeatCount] = useState(8);
@@ -44,66 +65,77 @@ export function SeatingAdmin() {
   const handleSeatClick = (seat: SeatData) => {
     setShowAddTableModal(false);
     setSelectedSeat(seat);
+    const reg = seat.registrationId ? registrationMap[seat.registrationId] : null;
     setFormData({
-      name: seat.name || "",
-      quote: seat.quote || "",
-      bio: seat.bio || "",
-      involvement: seat.involvement || "",
-      imageUrl: seat.imageUrl || "",
+      name: reg?.name || "",
+      quote: reg?.quote || "",
+      bio: reg?.bio || "",
+      involvement: reg?.involvement || "",
+      imageUrl: reg?.imageUrl || "",
     });
   };
 
   const handleSave = async () => {
     if (!selectedSeat) return;
-
-    try {
-      const res = await fetch("/api/admin/seating", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          seatId: selectedSeat.id,
-          ...formData,
-        }),
-      });
-
-      if (res.ok) {
-        toast.success("Seat updated successfully!");
-        mutate();
-        setSelectedSeat(null);
-        setShowEditModal(false);
-      } else {
-        toast.error("Failed to update seat");
+    // If seat is assigned, update registration details
+    if (selectedSeat.registrationId) {
+      try {
+        const res = await fetch(`/api/admin/registration/${selectedSeat.registrationId}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: formData.name,
+            quote: formData.quote,
+            bio: formData.bio,
+            involvement: formData.involvement,
+            imageUrl: formData.imageUrl,
+          }),
+        });
+        if (res.ok) {
+          toast.success("Registration updated successfully!");
+          mutate();
+          setSelectedSeat(null);
+          setShowEditModal(false);
+        } else {
+          toast.error("Failed to update registration");
+        }
+      } catch (error) {
+        toast.error("Error updating registration");
       }
-    } catch (error) {
-      toast.error("Error updating seat");
+    } else {
+      toast.error("No registration assigned to this seat.");
     }
   };
 
   const handleClear = async () => {
     if (!selectedSeat) return;
-
+    if (!selectedSeat.registrationId) return;
     try {
-      const res = await fetch("/api/admin/seating", {
+      // 1. Unassign seat: set registrationId to null on seat
+      const seatRes = await fetch("/api/admin/seating", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           seatId: selectedSeat.id,
-          name: null,
-          quote: null,
-          bio: null,
-          involvement: null,
-          imageUrl: null,
+          registrationId: null,
         }),
       });
-
-      if (res.ok) {
-        toast.success("Seat cleared!");
+      // 2. Optionally, update registration to set seatAssignedStatus false (if needed)
+      await fetch(`/api/admin/registration/${selectedSeat.registrationId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ seatAssignedStatus: false }),
+      });
+      if (seatRes.ok) {
+        toast.success("Seat unassigned!");
         mutate();
         setSelectedSeat(null);
         setShowEditModal(false);
+      } else {
+        toast.error("Failed to unassign seat");
       }
     } catch (error) {
-      toast.error("Error clearing seat");
+      toast.error("Error unassigning seat");
     }
   };
 
@@ -111,17 +143,20 @@ export function SeatingAdmin() {
     if (!seats) return;
 
     const jsonData = seats
-      .filter((seat) => seat.name)
-      .map((seat) => ({
-        seat: `T${seat.tableNumber}-${String(seat.seatNumber).padStart(2, "0")}`,
-        tableNumber: seat.tableNumber,
-        seatNumber: seat.seatNumber,
-        name: seat.name,
-        quote: seat.quote,
-        bio: seat.bio,
-        involvement: seat.involvement,
-        image: seat.imageUrl,
-      }));
+      .filter((seat) => seat.registrationId && registrationMap[seat.registrationId]?.name)
+      .map((seat) => {
+        const reg = seat.registrationId ? registrationMap[seat.registrationId] : null;
+        return {
+          seat: `T${seat.tableNumber}-${String(seat.seatNumber).padStart(2, "0")}`,
+          tableNumber: seat.tableNumber,
+          seatNumber: seat.seatNumber,
+          name: reg?.name,
+          quote: reg?.quote,
+          bio: reg?.bio,
+          involvement: reg?.involvement,
+          image: reg?.imageUrl,
+        };
+      });
 
     const jsonString = JSON.stringify(jsonData, null, 2);
     const blob = new Blob([jsonString], { type: "application/json" });
@@ -188,78 +223,127 @@ export function SeatingAdmin() {
     }
   };
 
+  // --- CSV Export Logic ---
+  function exportSeatsToCSV() {
+    if (!seats) return;
+    const headers = [
+      'Seat ID', 'Table Number', 'Seat Number',
+      'Registration ID', 'Name', 'Email', 'Phone', 'Payment', 'Payment Status',
+      'Table Preference', 'Seat Preference', 'Involvement', 'Bio', 'Quote', 'Image URL'
+    ];
+    const rows = seats.map(seat => {
+      const reg = seat.registrationId ? registrationMap[seat.registrationId] : null;
+      return [
+        seat.id,
+        seat.tableNumber,
+        seat.seatNumber,
+        reg?.id || '',
+        reg?.name || '',
+        reg?.email || '',
+        reg?.phone || '',
+        reg?.payment ?? '',
+        reg ? (reg.paymentStatus ? 'Paid' : 'Unpaid') : '',
+        reg?.tablePreference ?? '',
+        reg?.seatPreference ?? '',
+        reg?.involvement || '',
+        reg?.bio || '',
+        reg?.quote || '',
+        reg?.imageUrl || ''
+      ];
+    });
+    const csvContent = [headers, ...rows]
+      .map(row => row.map(field => {
+        if (typeof field === 'string' && (field.includes(',') || field.includes('"') || field.includes('\n'))) {
+          return '"' + field.replace(/"/g, '""') + '"';
+        }
+        return field;
+      }).join(','))
+      .join('\r\n');
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `seating-chart-${new Date().toISOString().split('T')[0]}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
   return (
     <>
-      {/* Add Table Button and Modal */}
-      <div className="flex justify-end mb-6">
-        <button
-          className={styles.adminButton}
-          onClick={() => setShowAddTableModal(true)}
-          type="button"
-        >
-          + Add Table
-        </button>
-      </div>
-      {showAddTableModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-          <div className={styles.adminCard + " max-w-md w-full relative animate-fade-in"}>
-            <button
-              className="absolute top-3 right-4 text-2xl text-[#D4AF37] hover:text-[#B8941F] focus:outline-none"
-              onClick={() => setShowAddTableModal(false)}
-              aria-label="Close"
-              type="button"
-            >
-              ×
-            </button>
-            <h2 className="font-playfair text-xl font-bold text-[#D4AF37] mb-4">Add Table & Seats</h2>
-            <form onSubmit={handleAddTable} className="flex flex-col gap-4 items-center">
-              <label className={styles.adminFormLabel + " flex flex-col w-full"}>
-                Table Number
-                <input
-                  type="number"
-                  min={1}
-                  value={tableNumber}
-                  onChange={e => setTableNumber(Number(e.target.value))}
-                  className={styles.adminInput + " mt-1"}
-                  required
-                />
-              </label>
-              <label className={styles.adminFormLabel + " flex flex-col w-full"}>
-                Number of Seats
-                <input
-                  type="number"
-                  min={1}
-                  max={20}
-                  value={seatCount}
-                  onChange={e => setSeatCount(Number(e.target.value))}
-                  className={styles.adminInput + " mt-1"}
-                  required
-                />
-              </label>
-              <button
-                type="submit"
-                className={styles.adminButton + " w-full"}
-                disabled={adding}
-              >
-                {adding ? "Adding..." : "Add Table & Seats"}
-              </button>
-            </form>
-            {addMsg && <p className={addMsg.includes('added') ? "text-green-400 mt-2" : "text-pink-400 mt-2"}>{addMsg}</p>}
-          </div>
-        </div>
-      )}
-      {/* Seating Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2">
-          <Card className="glass-strong p-6">
+      {/* Seating Grid with Add Table Button inside Card */}
+      <div>
+        <div className={styles.adminCard}>
             <div className="flex justify-between items-center mb-6">
               <h2 className="font-playfair text-2xl font-bold text-[#D4AF37]">
                 Seating Chart
               </h2>
-              <Button variant="outline" onClick={handleExportJSON}>
-                Export JSON
-              </Button>
+              <div className="flex gap-2">
+                <button
+                  className={styles.adminButtonSmall}
+                  onClick={exportSeatsToCSV}
+                  type="button"
+                >
+                  Export CSV
+                </button>
+                <button
+                  className={styles.adminButtonSmall}
+                  onClick={() => setShowAddTableModal(true)}
+                  type="button"
+                >
+                  + Add Table
+                </button>
+              </div>
             </div>
+            {showAddTableModal && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+                <div className={styles.adminCard + " max-w-md w-full relative animate-fade-in"}>
+                  <button
+                    className="absolute top-3 right-4 text-2xl text-[#D4AF37] hover:text-[#B8941F] focus:outline-none"
+                    onClick={() => setShowAddTableModal(false)}
+                    aria-label="Close"
+                    type="button"
+                  >
+                    ×
+                  </button>
+                  <h2 className="font-playfair text-xl font-bold text-[#D4AF37] mb-4">Add Table & Seats</h2>
+                  <form onSubmit={handleAddTable} className="flex flex-col gap-4 items-center">
+                    <label className={styles.adminFormLabel + " flex flex-col w-full"}>
+                      Table Number
+                      <input
+                        type="number"
+                        min={1}
+                        value={tableNumber}
+                        onChange={e => setTableNumber(Number(e.target.value))}
+                        className={styles.adminInput + " mt-1"}
+                        required
+                      />
+                    </label>
+                    <label className={styles.adminFormLabel + " flex flex-col w-full"}>
+                      Number of Seats
+                      <input
+                        type="number"
+                        min={1}
+                        max={20}
+                        value={seatCount}
+                        onChange={e => setSeatCount(Number(e.target.value))}
+                        className={styles.adminInput + " mt-1"}
+                        required
+                      />
+                    </label>
+                    <button
+                      type="submit"
+                      className={styles.adminButton + " w-full"}
+                      disabled={adding}
+                    >
+                      {adding ? "Adding..." : "Add Table & Seats"}
+                    </button>
+                  </form>
+                  {addMsg && <p className={addMsg.includes('added') ? "text-green-400 mt-2" : "text-pink-400 mt-2"}>{addMsg}</p>}
+                </div>
+              </div>
+            )}
             <div className="space-y-8">
               {Array.from({ length: 12 }, (_, i) => i + 1).map((tableNum) => (
                 <div key={tableNum}>
@@ -267,40 +351,42 @@ export function SeatingAdmin() {
                     Table {tableNum}
                   </h3>
                   <div className="grid grid-cols-5 gap-2">
-                    {tables[tableNum]?.map((seat) => (
-                      <button
-                        key={seat.id}
-                        onClick={() => handleSeatClick(seat)}
-                        className={`p-3 rounded-lg border-2 transition-all ${
-                          selectedSeat?.id === seat.id
-                            ? "border-[#D4AF37] bg-[#D4AF37]/20"
-                            : seat.name
-                            ? "border-[#D4AF37]/50 bg-[#D4AF37]/10"
-                            : "border-[#f5f5f5]/20 bg-[#1a1a1a]/50"
-                        }`}
-                      >
-                        <div className="text-xs text-center">
-                          <div className="font-medium text-[#f5f5f5]">
-                            {seat.seatNumber}
-                          </div>
-                          {seat.name && (
-                            <div className="text-[#D4AF37] text-xs mt-1 truncate">
-                              {seat.name.split(" ")[0]}
+                    {tables[tableNum]?.map((seat) => {
+                      const reg = seat.registrationId ? registrationMap[seat.registrationId] : null;
+                      return (
+                        <button
+                          key={seat.id}
+                          onClick={() => handleSeatClick(seat)}
+                          className={`p-3 rounded-lg border-2 transition-all ${
+                            selectedSeat?.id === seat.id
+                              ? "border-[#D4AF37] bg-[#D4AF37]/20"
+                              : reg
+                              ? "border-[#D4AF37]/50 bg-[#D4AF37]/10"
+                              : "border-[#f5f5f5]/20 bg-[#1a1a1a]/50"
+                          }`}
+                        >
+                          <div className="text-xs text-center">
+                            <div className="font-medium text-[#f5f5f5]">
+                              {seat.seatNumber}
                             </div>
-                          )}
-                        </div>
-                      </button>
-                    ))}
+                            {reg && (
+                              <div className="text-[#D4AF37] text-xs mt-1 truncate max-w-[80px] mx-auto" title={reg.name}>
+                                {reg.name}
+                              </div>
+                            )}
+                          </div>
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
               ))}
             </div>
-          </Card>
-        </div>
+          </div>
         {/* Details Modal */}
         {selectedSeat && !showEditModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-            <div className={styles.adminCard + " max-w-md w-full relative animate-fade-in"}>
+            <div className={styles.adminCard + " max-w-md w-full relative animate-fade-in p-0 overflow-visible"}>
               <button
                 className="absolute top-3 right-4 text-2xl text-[#D4AF37] hover:text-[#B8941F] focus:outline-none"
                 onClick={() => { setSelectedSeat(null); setShowEditModal(false); }}
@@ -309,30 +395,67 @@ export function SeatingAdmin() {
               >
                 ×
               </button>
-              <h2 className="font-playfair text-xl font-bold text-[#D4AF37] mb-4">
-                Seat Details
-              </h2>
-              <div className="mb-4">
-                <div className="font-semibold mb-1">Table: {selectedSeat.tableNumber} | Seat: {selectedSeat.seatNumber}</div>
-                <div className="mb-1">Name: <span className="text-[#D4AF37]">{selectedSeat.name || <span className="text-gray-400">(empty)</span>}</span></div>
-                {selectedSeat.quote && <div className="mb-1">Quote: <span className="italic">{selectedSeat.quote}</span></div>}
-                {selectedSeat.bio && <div className="mb-1">Bio: {selectedSeat.bio}</div>}
-                {selectedSeat.involvement && <div className="mb-1">Involvement: {selectedSeat.involvement}</div>}
-                {selectedSeat.imageUrl && <div className="mb-1">Image: <a href={selectedSeat.imageUrl} target="_blank" rel="noopener noreferrer" className="underline text-blue-400">View</a></div>}
-              </div>
-              <div className="flex gap-4 justify-end mt-6">
-                <button
-                  className="flex items-center gap-2 text-[#D4AF37] hover:text-[#B8941F] font-semibold px-4 py-2 rounded transition"
-                  onClick={() => setShowEditModal(true)}
-                >
-                  <Pencil size={18} /> Edit
-                </button>
-                <button
-                  className="flex items-center gap-2 text-pink-400 hover:text-pink-300 font-semibold px-4 py-2 rounded transition"
-                  onClick={() => setShowDeleteModal(true)}
-                >
-                  <Trash2 size={18} /> Delete
-                </button>
+              <div className="flex flex-col items-center p-6 pt-10">
+                <div className="flex flex-col items-center w-full">
+                  <div className="flex gap-2 mb-4 w-full justify-center">
+                    <span className="bg-[#D4AF37]/10 text-[#D4AF37] font-bold px-3 py-1 rounded-full text-xs tracking-wide border border-[#D4AF37]/30">Table {selectedSeat.tableNumber}</span>
+                    <span className="bg-[#f5f5f5]/10 text-[#f5f5f5] font-bold px-3 py-1 rounded-full text-xs tracking-wide border border-[#f5f5f5]/20">Seat {selectedSeat.seatNumber}</span>
+                  </div>
+                  {selectedSeat.registrationId && registrationMap[selectedSeat.registrationId]?.imageUrl ? (
+                    <img
+                      src={registrationMap[selectedSeat.registrationId].imageUrl!}
+                      alt={registrationMap[selectedSeat.registrationId].name}
+                      className="w-24 h-24 rounded-full object-cover border-4 border-[#D4AF37] shadow-lg mb-3 bg-[#23272F]"
+                    />
+                  ) : (
+                    <div className="w-24 h-24 rounded-full flex items-center justify-center bg-[#23272F] border-4 border-[#D4AF37]/30 text-4xl text-[#D4AF37] mb-3">
+                      <span>{selectedSeat.registrationId && registrationMap[selectedSeat.registrationId]?.name ? registrationMap[selectedSeat.registrationId].name[0] : "?"}</span>
+                    </div>
+                  )}
+                  <div className="text-center w-full">
+                    <h2 className="font-playfair text-2xl font-bold text-[#D4AF37] mb-1">
+                      {selectedSeat.registrationId && registrationMap[selectedSeat.registrationId]?.name ? registrationMap[selectedSeat.registrationId].name : <span className="text-gray-400">(Empty)</span>}
+                    </h2>
+                    {selectedSeat.registrationId && registrationMap[selectedSeat.registrationId]?.quote && (
+                      <div className="italic text-[#f5f5f5]/80 text-base mb-2 border-l-4 border-[#D4AF37] pl-3 mx-auto max-w-xs">“{registrationMap[selectedSeat.registrationId].quote}”</div>
+                    )}
+                  </div>
+                </div>
+                <div className="w-full border-t border-[#D4AF37]/20 my-4"></div>
+                <div className="w-full space-y-2">
+                  {selectedSeat.registrationId && registrationMap[selectedSeat.registrationId]?.bio && (
+                    <div>
+                      <span className="text-xs text-[#D4AF37] font-semibold uppercase">Bio</span>
+                      <div className="text-[#f5f5f5] text-sm mt-1">{registrationMap[selectedSeat.registrationId].bio}</div>
+                    </div>
+                  )}
+                  {selectedSeat.registrationId && registrationMap[selectedSeat.registrationId]?.involvement && (
+                    <div>
+                      <span className="text-xs text-[#D4AF37] font-semibold uppercase">Involvement</span>
+                      <div className="text-[#f5f5f5] text-sm mt-1">{registrationMap[selectedSeat.registrationId].involvement}</div>
+                    </div>
+                  )}
+                  {selectedSeat.registrationId && registrationMap[selectedSeat.registrationId]?.imageUrl && (
+                    <div>
+                      <span className="text-xs text-[#D4AF37] font-semibold uppercase">Image URL</span>
+                      <div className="text-blue-400 text-xs truncate"><a href={registrationMap[selectedSeat.registrationId].imageUrl!} target="_blank" rel="noopener noreferrer" className="underline">{registrationMap[selectedSeat.registrationId].imageUrl}</a></div>
+                    </div>
+                  )}
+                </div>
+                <div className="flex gap-4 justify-end mt-8 w-full">
+                  <button
+                    className="flex items-center gap-2 text-[#D4AF37] hover:text-[#B8941F] font-semibold px-4 py-2 rounded transition"
+                    onClick={() => setShowEditModal(true)}
+                  >
+                    <Pencil size={18} /> Edit
+                  </button>
+                  <button
+                    className="flex items-center gap-2 text-pink-400 hover:text-pink-300 font-semibold px-4 py-2 rounded transition"
+                    onClick={() => setShowDeleteModal(true)}
+                  >
+                    <Trash2 size={18} /> Delete
+                  </button>
+                </div>
               </div>
             </div>
           </div>
