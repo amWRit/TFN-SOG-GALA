@@ -10,8 +10,9 @@ import { RegistrationList } from "@/components/admin/registration-list";
 import { AuctionAdmin } from "@/components/admin/auction-admin";
 import { EventAdmin } from "@/components/admin/event-admin";
 import { SheetsSync } from "@/components/admin/sheets-sync";
-import { LogOut, Users, Gavel, Calendar, RefreshCw } from "lucide-react";
+import { LogOut, Users, Gavel, Calendar, RefreshCw, Home } from "lucide-react";
 import toast from "react-hot-toast";
+import styles from '../styles/admin-dashboard.module.css';
 
 type Tab = "seating" | "auction" | "event" | "sheets";
 
@@ -44,10 +45,14 @@ export function AdminDashboard() {
           <h1 className="font-playfair text-3xl font-bold text-[#D4AF37]">
             Admin Dashboard
           </h1>
-          <Button variant="outline" onClick={handleLogout}>
-            <LogOut size={16} className="mr-2" />
-            Logout
-          </Button>
+          <div className="flex items-center gap-4">
+            <a href="/" className={styles.adminButtonSmall + " flex items-center px-4 py-2"} style={{ justifyContent: 'center'}}>
+              <Home size={20} className="mr-1" />
+            </a>
+            <button onClick={handleLogout} className={styles.adminButtonSmall + " flex items-center px-4 py-2"} style={{justifyContent: 'center'}}>
+              <LogOut size={16} className="mr-1" />
+            </button>
+          </div>
         </div>
       </div>
 
