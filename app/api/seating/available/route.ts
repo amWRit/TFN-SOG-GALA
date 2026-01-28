@@ -8,7 +8,6 @@ export async function GET() {
       select: {
         tableNumber: true,
         seatNumber: true,
-        name: true,
       },
       orderBy: [
         { tableNumber: 'asc' },
