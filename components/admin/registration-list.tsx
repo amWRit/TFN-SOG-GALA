@@ -91,12 +91,13 @@ export function RegistrationList() {
       {/* Modal for registration details */}
       {selected && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-          <div className={styles.adminCard + " max-w-md w-full relative animate-fade-in"}>
+          <div className={styles.adminCard + " max-w-md w-full relative animate-fade-in max-h-[95vh] overflow-y-auto sm:max-h-[90vh]"} style={{ overscrollBehavior: 'contain' }}>
             <button
-              className="absolute top-3 right-4 text-2xl text-[#D4AF37] hover:text-[#B8941F] focus:outline-none"
+              className="sticky top-3 right-4 text-2xl text-[#D4AF37] hover:text-[#B8941F] focus:outline-none float-right z-10 bg-transparent"
               onClick={() => setSelected(null)}
               aria-label="Close"
               type="button"
+              style={{ position: 'absolute', top: 12, right: 16 }}
             >
               ×
             </button>
@@ -337,10 +338,10 @@ function RegistrationModalActions({ registration, onClose, onUpdated }: { regist
     }, {});
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-        <div className={styles.adminCard + " max-w-lg w-full relative animate-fade-in p-6"}>
+        <div className={styles.adminCard + " max-w-lg w-full relative animate-fade-in p-6 max-h-[95vh] overflow-y-auto sm:max-h-[90vh]"} style={{ overscrollBehavior: 'contain' }}>
           <h3 className="text-xl font-bold text-[#D4AF37] mb-4">Assign Seat</h3>
           {error && <div className="text-pink-400 mb-2">{error}</div>}
-          <div className="flex flex-wrap gap-4 max-h-96 overflow-y-auto">
+          <div className="flex flex-wrap gap-4 max-h-80 overflow-y-auto">
             {Object.keys(tables).sort((a, b) => Number(a) - Number(b)).map(tableNum => (
               <div key={tableNum} className="min-w-[120px]">
                 <div className="font-semibold text-[#D4AF37] mb-1">Table {tableNum}</div>
@@ -462,10 +463,10 @@ function RegistrationModalActions({ registration, onClose, onUpdated }: { regist
             {/* Seat picker modal for change */}
             {showSeatPicker && seats && (
               <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-                <div className={styles.adminCard + " max-w-lg w-full relative animate-fade-in p-6"}>
+                <div className={styles.adminCard + " max-w-lg w-full relative animate-fade-in p-6 max-h-[95vh] overflow-y-auto sm:max-h-[90vh]"} style={{ overscrollBehavior: 'contain' }}>
                   <h3 className="text-xl font-bold text-[#D4AF37] mb-4">Change Seat</h3>
                   {error && <div className="text-pink-400 mb-2">{error}</div>}
-                  <div className="flex flex-wrap gap-4 max-h-96 overflow-y-auto">
+                  <div className="flex flex-wrap gap-4 max-h-80 overflow-y-auto">
                     {Object.keys(seats.reduce((acc: Record<number, any[]>, seat: any) => {
                       if (!acc[seat.tableNumber]) acc[seat.tableNumber] = [];
                       acc[seat.tableNumber].push(seat);
