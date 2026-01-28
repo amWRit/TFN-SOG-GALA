@@ -197,14 +197,16 @@ export function SeatingAdmin() {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-  // Group seats by table
+  // Group seats by table (guard against non-array)
   const tables: { [key: number]: SeatData[] } = {};
-  seats?.forEach((seat) => {
-    if (!tables[seat.tableNumber]) {
-      tables[seat.tableNumber] = [];
-    }
-    tables[seat.tableNumber].push(seat);
-  });
+  if (Array.isArray(seats)) {
+    seats.forEach((seat) => {
+      if (!tables[seat.tableNumber]) {
+        tables[seat.tableNumber] = [];
+      }
+      tables[seat.tableNumber].push(seat);
+    });
+  }
 
   // Remove useEffect that forcibly closes edit modal on seat select
 

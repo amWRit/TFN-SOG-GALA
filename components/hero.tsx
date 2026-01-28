@@ -8,7 +8,7 @@ const VideoHero = () => {
   const [showVideo, setShowVideo] = useState(false);
 
   return (
-    <div className="relative h-screen w-full overflow-hidden" id="home">
+    <div className="relative min-h-screen w-full overflow-hidden flex items-center justify-center" id="home">
       <div className="absolute inset-0 bg-gradient-to-br from-purple-900/90 via-gray-900/80 to-pink-900/90 z-10" />
       <div className="absolute inset-0 bg-gray-900">
         <img 
@@ -18,8 +18,8 @@ const VideoHero = () => {
         />
       </div>
 
-      <div className="relative z-20 h-full flex flex-col items-center justify-center text-center px-4">
-        <div className="max-w-4xl mx-auto space-y-8">
+      <div className="relative z-20 h-full flex flex-col items-center justify-center text-center px-4 sm:px-6 w-full">
+        <div className="w-full max-w-4xl mx-auto space-y-8">
           <h1 className="text-6xl md:text-7xl lg:text-8xl font-bold text-white leading-tight">
             Gala <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">2026</span>
           </h1>
@@ -28,23 +28,25 @@ const VideoHero = () => {
             Empowering Nepal's Future
           </p>
 
-          <div className="py-8">
-            <CountdownTimer targetDate="2026-12-31T18:00:00" />
+          <div className="py-8 flex justify-center w-full">
+            <div className="w-full max-w-xs mx-auto">
+              <CountdownTimer targetDate="2026-12-31T18:00:00" />
+            </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center w-full">
             <button 
               onClick={() => setShowVideo(true)}
-              className="group bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-4 rounded-full font-semibold text-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 flex items-center gap-3"
+              className="group bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-4 rounded-full font-semibold text-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 flex items-center gap-3 w-full sm:w-auto justify-center"
             >
               <Play className="w-5 h-5" />
               Watch 2025 Highlights
             </button>
           </div>
-          <div className="mt-8 flex justify-center">
+          <div className="mt-8 flex justify-center w-full">
             <button
               onClick={() => window.location.href = '/seating'}
-              className="group bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-4 rounded-full font-semibold text-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 flex items-center gap-3"
+              className="group bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-4 rounded-full font-semibold text-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 flex items-center gap-3 w-full sm:w-auto justify-center"
             >
               <Armchair className="w-5 h-5" />
               View Available Seats

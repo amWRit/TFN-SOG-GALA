@@ -1,8 +1,7 @@
-
 "use client";
 
 import React from 'react';
-import { Award, Users, X } from 'lucide-react';
+import { Award, Users, X, Home } from 'lucide-react';
 
 
 
@@ -208,7 +207,7 @@ const Table: React.FC<TableProps> = ({ table, onSeatClick }) => {
                 transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`,
                 width: '64px',
                 height: '64px',
-                boxShadow: assigned ? '0 0 0 4px #ec4899aa' : '0 0 0 2px #a3a3a3aa',
+                boxShadow: assigned ? '0 0 0 2px #ec4899aa' : '0 0 0 2px #a3a3a3aa',
               }}
             >
               <div className="relative w-full h-full flex items-center justify-center">
@@ -281,18 +280,16 @@ const SeatingChart = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900/20 to-gray-900">
       {/* Home Button */}
-      <div className="fixed top-6 left-6 z-50">
+      <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50">
         <a href="/" className="flex items-center gap-2 px-4 py-2 bg-white/90 text-gray-900 rounded-full shadow-lg font-semibold hover:bg-white transition-all border border-gray-200">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l9-9 9 9M4.5 10.5V19a1.5 1.5 0 001.5 1.5h3.75m6 0H18a1.5 1.5 0 001.5-1.5v-8.5" />
-          </svg>
+          <Home size={20} className="w-5 h-5" />
           Home
         </a>
       </div>
       {/* Header */}
       <div className="pt-24 pb-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center">
-          <h1 className="text-5xl md:text-6xl font-bold text-white mb-4">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4">
             Seating Chart
           </h1>
           <p className="text-xl text-gray-400 max-w-2xl mx-auto">
@@ -333,8 +330,10 @@ const SeatingChart = () => {
       <div className="fixed bottom-0 md:bottom-4 left-0 md:left-1/2 right-0 md:right-auto w-full md:w-auto -translate-x-0 md:-translate-x-1/2 bg-gray-900/90 backdrop-blur-md border border-purple-500/20 rounded-none md:rounded-2xl px-2 md:px-6 py-3 md:py-4 shadow-2xl z-40">
         <div className="flex flex-col md:flex-row items-center gap-2 md:gap-6 text-sm text-gray-300 justify-center w-full">
           <div className="flex items-center gap-2 mb-1 md:mb-0">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-600 to-pink-600" />
-            <span>Click to view details</span>
+            <div className="w-8 h-8 rounded-full border-2 border-dashed border-gray-400 flex items-center justify-center bg-gray-800">
+              <Users className="w-5 h-5 text-gray-300" />
+            </div>
+            <span>Tap any seat to view details</span>
           </div>
           <div className="flex flex-row gap-4 md:gap-6">
             <div className="flex items-center gap-2">

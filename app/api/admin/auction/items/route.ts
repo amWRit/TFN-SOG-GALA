@@ -6,7 +6,15 @@ import { prisma } from "@/lib/prisma";
  * GET /api/admin/auction/items
  * Fetch all auction items (admin)
  */
-export async function GET() {
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const countOnly = searchParams.get('countOnly');
+
+  if (countOnly) {
+    const count = await prisma.auctionItem.count();
+    return NextResponse.json({ count });
+  }
+
   const isAuthenticated = await getSession();
   if (!isAuthenticated) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -16,7 +24,6 @@ export async function GET() {
     const items = await prisma.auctionItem.findMany({
       orderBy: [{ isActive: "desc" }, { createdAt: "desc" }],
     });
-
     return NextResponse.json(items);
   } catch (error) {
     console.error("Error fetching auction items:", error);

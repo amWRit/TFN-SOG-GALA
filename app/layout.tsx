@@ -20,6 +20,19 @@ const playfair = Playfair_Display({
 export const metadata: Metadata = {
   title: "Gala 2026: Empowering Nepal's Future | Teach For Nepal",
   description: "Join us for an elegant evening supporting education in Nepal. Live auction, interactive seating, and unforgettable moments.",
+  icons: {
+    icon: [
+      { url: "/images/logos/favicon.ico" },
+      { url: "/images/logos/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/images/logos/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+    ],
+    shortcut: [
+      { url: "/images/logos/favicon.ico" },
+    ],
+    apple: [
+      { url: "/images/logos/favicon-32x32.png", sizes: "32x32" },
+    ],
+  },
 };
 
 export default function RootLayout({
@@ -29,6 +42,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="scroll-smooth">
+      <head>
+        <link rel="icon" href="/images/logos/favicon.ico" sizes="any" />
+        <link rel="icon" type="image/png" href="/images/logos/favicon-32x32.png" sizes="32x32" />
+        <link rel="icon" type="image/png" href="/images/logos/favicon-16x16.png" sizes="16x16" />
+        <link rel="apple-touch-icon" href="/images/logos/favicon-32x32.png" />
+      </head>
       <body
         className={`${inter.variable} ${playfair.variable} antialiased bg-[#1a1a1a] text-[#f5f5f5]`}
       >
