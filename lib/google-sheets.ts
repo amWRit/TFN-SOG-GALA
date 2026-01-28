@@ -34,6 +34,7 @@ export async function syncGoogleSheets(): Promise<number> {
     const rows = response.data.values || [];
     let count = 0;
 
+
     // Process each row
     for (const row of rows) {
       const [
@@ -46,10 +47,34 @@ export async function syncGoogleSheets(): Promise<number> {
         seatNumber,
       ] = row;
 
-      if (!tableNumber || !seatNumber) continue;
+      if (!tableNumber || !seatNumber || !name) continue;
 
       try {
-        // Upsert seat assignment
+        // Upsert registration (using name and tableNumber-seatNumber as a pseudo-unique key if email/id not available)
+        // Ideally, use a real unique field like 'email' or 'id' from your sheet
+        const uniqueKey = `${name}-${tableNumber}-${seatNumber}`;
+        const registration = await prisma.registration.upsert({
+          where: { id: uniqueKey },
+          update: {
+            quote: quote || null,
+            bio: bio || null,
+            involvement: involvement || null,
+            imageUrl: imageUrl || null,
+          },
+          create: {
+            id: uniqueKey,
+            name,
+            quote: quote || null,
+            bio: bio || null,
+            involvement: involvement || null,
+            imageUrl: imageUrl || null,
+            email: "",
+            payment: 0,
+            paymentStatus: false,
+          },
+        });
+
+        // Upsert seat and assign registrationId
         await prisma.seat.upsert({
           where: {
             tableNumber_seatNumber: {
@@ -58,20 +83,12 @@ export async function syncGoogleSheets(): Promise<number> {
             },
           },
           update: {
-            name: name || null,
-            quote: quote || null,
-            bio: bio || null,
-            involvement: involvement || null,
-            imageUrl: imageUrl || null,
+            registrationId: registration.id,
           },
           create: {
             tableNumber: parseInt(tableNumber),
             seatNumber: parseInt(seatNumber),
-            name: name || null,
-            quote: quote || null,
-            bio: bio || null,
-            involvement: involvement || null,
-            imageUrl: imageUrl || null,
+            registrationId: registration.id,
           },
         });
         count++;
