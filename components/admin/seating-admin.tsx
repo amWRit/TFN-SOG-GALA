@@ -317,8 +317,8 @@ export function SeatingAdmin() {
                               {seat.seatNumber}
                             </div>
                             {reg && (
-                              <div className="text-[#D4AF37] text-xs mt-1 truncate">
-                                {reg.name.split(" ")[0]}
+                              <div className="text-[#D4AF37] text-xs mt-1 truncate max-w-[80px] mx-auto" title={reg.name}>
+                                {reg.name}
                               </div>
                             )}
                           </div>

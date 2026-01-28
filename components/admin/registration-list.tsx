@@ -90,8 +90,19 @@ export function RegistrationList() {
 
       {/* Modal for registration details */}
       {selected && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-          <div className={styles.adminCard + " max-w-md w-full relative animate-fade-in"}>
+        <div className="fixed inset-0 z-50 flex justify-center items-start bg-black/60 overflow-y-auto">
+          <div
+            className={styles.adminCard + " w-full relative animate-fade-in mt-4 mb-4 py-4 mx-2"}
+            style={{
+              width: '100%',
+              maxWidth: '100%',
+              maxHeight: 'calc(100vh - 2rem)',
+              overflowY: 'auto',
+              paddingTop: '1rem',
+              paddingBottom: '1rem',
+              ...(window.innerWidth >= 640 ? { maxWidth: '36rem' } : {}) // 36rem = 576px (Tailwind's max-w-lg)
+            }}
+          >
             <button
               className="absolute top-3 right-4 text-2xl text-[#D4AF37] hover:text-[#B8941F] focus:outline-none"
               onClick={() => setSelected(null)}
@@ -144,39 +155,44 @@ export function RegistrationList() {
               <div className="w-full border-t border-[#D4AF37]/20 my-4"></div>
               <div className="w-full space-y-2">
                 {/* Bio removed */}
-                {/* Preferences section */}
-                <div>
-                  <span className="text-xs text-[#D4AF37] font-semibold uppercase">Preferences</span>
-                  <div className="text-[#f5f5f5] text-sm mt-1">
-                    Table {selected.tablePreference || <span className="text-gray-400">(No Pref)</span>}, Seat {selected.seatPreference || <span className="text-gray-400">?</span>}
+                <div className="flex flex-col sm:flex-row gap-2 w-full">
+                  <div className="flex-1 min-w-0">
+                    <span className="text-xs text-[#D4AF37] font-semibold uppercase">Seat Preference</span>
+                    <div className="text-[#f5f5f5] text-sm mt-1 truncate">
+                      Table {selected.tablePreference || <span className="text-gray-400">(No Pref)</span>}, Seat {selected.seatPreference || <span className="text-gray-400">?</span>}
+                    </div>
+                  </div>
+                  {selected.involvement && (
+                    <div className="flex-1 min-w-0">
+                      <span className="text-xs text-[#D4AF37] font-semibold uppercase">Involvement</span>
+                      <div className="text-[#f5f5f5] text-sm mt-1 truncate">{selected.involvement}</div>
+                    </div>
+                  )}
+                </div>
+                <div className="flex flex-col sm:flex-row gap-2 w-full">
+                  {selected.phone && (
+                    <div className="flex-1 min-w-0">
+                      <span className="text-xs text-[#D4AF37] font-semibold uppercase">Phone</span>
+                      <div className="text-[#f5f5f5] text-sm mt-1 truncate">{selected.phone}</div>
+                    </div>
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <span className="text-xs text-[#D4AF37] font-semibold uppercase">Email</span>
+                    <div className="text-blue-400 text-xs truncate"><a href={`mailto:${selected.email}`} className="underline">{selected.email}</a></div>
                   </div>
                 </div>
-                {selected.involvement && (
-                  <div>
-                    <span className="text-xs text-[#D4AF37] font-semibold uppercase">Involvement</span>
-                    <div className="text-[#f5f5f5] text-sm mt-1">{selected.involvement}</div>
+                <div className="flex flex-col sm:flex-row gap-2 w-full mt-2">
+                  <div className="flex-1 min-w-0">
+                    <span className="text-xs text-[#D4AF37] font-semibold uppercase">Payment</span>
+                    <div className="text-[#f5f5f5] text-sm mt-1">{selected.payment} ({selected.paymentStatus ? 'Paid' : 'Unpaid'})</div>
                   </div>
-                )}
-                {selected.phone && (
-                  <div>
-                    <span className="text-xs text-[#D4AF37] font-semibold uppercase">Phone</span>
-                    <div className="text-[#f5f5f5] text-sm mt-1">{selected.phone}</div>
-                  </div>
-                )}
-                <div>
-                  <span className="text-xs text-[#D4AF37] font-semibold uppercase">Email</span>
-                  <div className="text-blue-400 text-xs truncate"><a href={`mailto:${selected.email}`} className="underline">{selected.email}</a></div>
-                </div>
-                <div>
-                  <span className="text-xs text-[#D4AF37] font-semibold uppercase">Payment</span>
-                  <div className="text-[#f5f5f5] text-sm mt-1">{selected.payment} ({selected.paymentStatus ? 'Paid' : 'Unpaid'})</div>
-                </div>
-                <div>
-                  <span className="text-xs text-[#D4AF37] font-semibold uppercase">Seat Assigned</span>
-                  <div className="text-[#f5f5f5] text-sm mt-1">
-                    {registrationIdToSeat[selected.id]
-                      ? `Yes (Table ${registrationIdToSeat[selected.id].tableNumber} Seat ${registrationIdToSeat[selected.id].seatNumber})`
-                      : 'No'}
+                  <div className="flex-1 min-w-0">
+                    <span className="text-xs text-[#D4AF37] font-semibold uppercase">Seat Assigned</span>
+                    <div className="text-[#f5f5f5] text-sm mt-1">
+                      {registrationIdToSeat[selected.id]
+                        ? `Yes (Table ${registrationIdToSeat[selected.id].tableNumber} Seat ${registrationIdToSeat[selected.id].seatNumber})`
+                        : 'No'}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -337,7 +353,14 @@ function RegistrationModalActions({ registration, onClose, onUpdated }: { regist
     }, {});
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-        <div className={styles.adminCard + " max-w-lg w-full relative animate-fade-in p-6"}>
+        <div
+          className={styles.adminCard + " w-full relative animate-fade-in p-6 mx-2"}
+          style={{
+            width: '100%',
+            maxWidth: '100%',
+            ...(typeof window !== 'undefined' && window.innerWidth >= 640 ? { maxWidth: '40rem' } : {}), // 40rem = 640px (Tailwind's max-w-xl)
+          }}
+        >
           <h3 className="text-xl font-bold text-[#D4AF37] mb-4">Assign Seat</h3>
           {error && <div className="text-pink-400 mb-2">{error}</div>}
           <div className="flex flex-wrap gap-4 max-h-96 overflow-y-auto">
@@ -383,8 +406,8 @@ function RegistrationModalActions({ registration, onClose, onUpdated }: { regist
         {error && <div className="text-pink-400 w-full mb-2">{error}</div>}
             {edit ? (
           <>
-            <div className="flex flex-col sm:flex-row gap-4 w-full items-center mb-2">
-              <div className="flex flex-col w-full max-w-[140px]">
+            <div className="flex flex-col sm:flex-row gap-4 w-full mb-2">
+              <div className="flex flex-col w-full max-w-[140px] sm:items-start items-start">
                 <label className="text-xs text-[#D4AF37] font-semibold mb-1" htmlFor="payment-input">Payment</label>
                 <input
                   id="payment-input"
@@ -396,7 +419,7 @@ function RegistrationModalActions({ registration, onClose, onUpdated }: { regist
                   onChange={e => setForm(f => ({ ...f, payment: parseFloat(e.target.value) }))}
                 />
               </div>
-              <div className="flex flex-col w-full max-w-[120px] items-center">
+              <div className="flex flex-col w-full max-w-[120px] sm:items-start items-start mt-2 sm:mt-0">
                 <label className="text-xs text-[#D4AF37] font-semibold mb-1" htmlFor="paid-checkbox">Paid</label>
                 <input
                   id="paid-checkbox"
@@ -462,7 +485,14 @@ function RegistrationModalActions({ registration, onClose, onUpdated }: { regist
             {/* Seat picker modal for change */}
             {showSeatPicker && seats && (
               <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-                <div className={styles.adminCard + " max-w-lg w-full relative animate-fade-in p-6"}>
+                <div
+                  className={styles.adminCard + " w-full relative animate-fade-in p-6 mx-2"}
+                  style={{
+                    width: '100%',
+                    maxWidth: '100%',
+                    ...(typeof window !== 'undefined' && window.innerWidth >= 640 ? { maxWidth: '40rem' } : {}),
+                  }}
+                >
                   <h3 className="text-xl font-bold text-[#D4AF37] mb-4">Change Seat</h3>
                   {error && <div className="text-pink-400 mb-2">{error}</div>}
                   <div className="flex flex-wrap gap-4 max-h-96 overflow-y-auto">
