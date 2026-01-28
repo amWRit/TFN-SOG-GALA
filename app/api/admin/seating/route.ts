@@ -42,16 +42,12 @@ export async function PUT(request: Request) {
 
   try {
     const body = await request.json();
-    const { seatId, name, quote, bio, involvement, imageUrl } = body;
+    const { seatId, registrationId } = body;
 
     const seat = await prisma.seat.update({
       where: { id: seatId },
       data: {
-        name: name || null,
-        quote: quote || null,
-        bio: bio || null,
-        involvement: involvement || null,
-        imageUrl: imageUrl || null,
+        registrationId: registrationId || null,
       },
     });
 

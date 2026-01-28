@@ -23,8 +23,8 @@ async function main() {
   await prisma.registration.deleteMany();
 
   // Shared demo images
-  const seatImg =
-    "https://cdn-icons-png.flaticon.com/256/1683/1683707.png";
+  const userImg =
+    "https://cdn-icons-png.flaticon.com/512/4596/4596193.png";
   const auctionImg =
     "https://cdn-icons-png.flaticon.com/512/433/433013.png";
 
@@ -70,7 +70,7 @@ async function main() {
       quote: `“Education changes everything” — Guest ${i + 1}`,
       bio: `Bio for Guest ${i + 1}. Long-time supporter of education in Nepal.`,
       involvement: i % 2 === 0 ? "Donor" : "Supporter",
-      imageUrl: seatImg,
+      imageUrl: userImg,
       tablePreference,
       seatPreference,
     };
