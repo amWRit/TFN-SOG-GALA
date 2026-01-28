@@ -49,9 +49,67 @@ export function RegistrationList() {
     return acc;
   }, {} as Record<number, Registration[]>);
 
+  // --- CSV Export Logic ---
+  function exportRegistrationsToCSV() {
+    if (!data?.registrations) return;
+    const headers = [
+      'Registration ID', 'Name', 'Email', 'Phone', 'Payment', 'Payment Status',
+      'Table Preference', 'Seat Preference', 'Assigned Table', 'Assigned Seat', 'Seat Assigned Status',
+      'Involvement', 'Bio', 'Quote', 'Image URL', 'Created At', 'Updated At'
+    ];
+    const rows = data.registrations.map(reg => {
+      const seat = registrationIdToSeat[reg.id];
+      return [
+        reg.id,
+        reg.name,
+        reg.email,
+        reg.phone || '',
+        reg.payment,
+        reg.paymentStatus ? 'Paid' : 'Unpaid',
+        reg.tablePreference ?? '',
+        reg.seatPreference ?? '',
+        seat ? seat.tableNumber : '',
+        seat ? seat.seatNumber : '',
+        seat ? 'Yes' : 'No',
+        reg.involvement || '',
+        reg.bio || '',
+        reg.quote || '',
+        reg.imageUrl || '',
+        reg.createdAt,
+        reg.updatedAt
+      ];
+    });
+    const csvContent = [headers, ...rows]
+      .map(row => row.map(field => {
+        if (typeof field === 'string' && (field.includes(',') || field.includes('"') || field.includes('\n'))) {
+          return '"' + field.replace(/"/g, '""') + '"';
+        }
+        return field;
+      }).join(','))
+      .join('\r\n');
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `registrations-${new Date().toISOString().split('T')[0]}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
   return (
     <div className={styles.adminCard}>
-      <h2 className="font-playfair text-2xl font-bold text-[#D4AF37] mb-4">Registrations</h2>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="font-playfair text-2xl font-bold text-[#D4AF37]">Registrations</h2>
+        <button
+          className={styles.adminButtonSmall}
+          onClick={exportRegistrationsToCSV}
+          type="button"
+        >
+          Export CSV
+        </button>
+      </div>
       {isLoading && <div>Loading...</div>}
       {error && <div className="text-pink-400">Error loading registrations.</div>}
       <div className="space-y-6">
@@ -100,7 +158,7 @@ export function RegistrationList() {
               overflowY: 'auto',
               paddingTop: '1rem',
               paddingBottom: '1rem',
-              ...(window.innerWidth >= 640 ? { maxWidth: '36rem' } : {}) // 36rem = 576px (Tailwind's max-w-lg)
+              ...(typeof window !== 'undefined' && window.innerWidth >= 640 ? { maxWidth: '36rem' } : {})
             }}
           >
             <button

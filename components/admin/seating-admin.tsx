@@ -19,10 +19,16 @@ interface SeatData {
 interface RegistrationData {
   id: string;
   name: string;
+  email?: string | null;
+  phone?: string | null;
   quote?: string | null;
   bio?: string | null;
   involvement?: string | null;
   imageUrl?: string | null;
+  payment?: string | null;
+  paymentStatus?: boolean;
+  tablePreference?: string | null;
+  seatPreference?: string | null;
 }
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
@@ -217,25 +223,72 @@ export function SeatingAdmin() {
     }
   };
 
+  // --- CSV Export Logic ---
+  function exportSeatsToCSV() {
+    if (!seats) return;
+    const headers = [
+      'Seat ID', 'Table Number', 'Seat Number',
+      'Registration ID', 'Name', 'Email', 'Phone', 'Payment', 'Payment Status',
+      'Table Preference', 'Seat Preference', 'Involvement', 'Bio', 'Quote', 'Image URL'
+    ];
+    const rows = seats.map(seat => {
+      const reg = seat.registrationId ? registrationMap[seat.registrationId] : null;
+      return [
+        seat.id,
+        seat.tableNumber,
+        seat.seatNumber,
+        reg?.id || '',
+        reg?.name || '',
+        reg?.email || '',
+        reg?.phone || '',
+        reg?.payment ?? '',
+        reg ? (reg.paymentStatus ? 'Paid' : 'Unpaid') : '',
+        reg?.tablePreference ?? '',
+        reg?.seatPreference ?? '',
+        reg?.involvement || '',
+        reg?.bio || '',
+        reg?.quote || '',
+        reg?.imageUrl || ''
+      ];
+    });
+    const csvContent = [headers, ...rows]
+      .map(row => row.map(field => {
+        if (typeof field === 'string' && (field.includes(',') || field.includes('"') || field.includes('\n'))) {
+          return '"' + field.replace(/"/g, '""') + '"';
+        }
+        return field;
+      }).join(','))
+      .join('\r\n');
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `seating-chart-${new Date().toISOString().split('T')[0]}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
   return (
     <>
       {/* Seating Grid with Add Table Button inside Card */}
       <div>
-        <Card className="glass-strong p-6">
+        <div className={styles.adminCard}>
             <div className="flex justify-between items-center mb-6">
               <h2 className="font-playfair text-2xl font-bold text-[#D4AF37]">
                 Seating Chart
               </h2>
               <div className="flex gap-2">
                 <button
-                  className={styles.adminButton}
-                  onClick={handleExportJSON}
+                  className={styles.adminButtonSmall}
+                  onClick={exportSeatsToCSV}
                   type="button"
                 >
-                  Export
+                  Export CSV
                 </button>
                 <button
-                  className={styles.adminButton}
+                  className={styles.adminButtonSmall}
                   onClick={() => setShowAddTableModal(true)}
                   type="button"
                 >
@@ -329,7 +382,7 @@ export function SeatingAdmin() {
                 </div>
               ))}
             </div>
-          </Card>
+          </div>
         {/* Details Modal */}
         {selectedSeat && !showEditModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
