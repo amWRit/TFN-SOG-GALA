@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Users, DollarSign, Calendar } from 'lucide-react';
+import { Users, DollarSign, Calendar, Coins } from 'lucide-react';
 
 const StatsSection = () => {
   const [inView, setInView] = useState(false);
@@ -50,14 +50,14 @@ const StatsSection = () => {
 
   const stats = [
     { icon: Users, value: 150, suffix: '+', label: 'Attendees' },
-    { icon: DollarSign, value: 50, suffix: 'K', label: 'Raised' },
+    { icon: Coins, value: 50, suffix: 'K', label: 'Raised' },
     { icon: Calendar, value: 10, suffix: '', label: 'Years Impact' }
   ];
 
   return (
     <section id="stats" className="py-24 bg-gradient-to-br from-purple-900 via-gray-900 to-pink-900 w-full">
-      <div className="w-full">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+      <div className="w-full flex flex-col items-center justify-center px-4 sm:px-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 w-full max-w-4xl mx-auto">
           {stats.map((stat, index) => (
             <div key={index} className="text-center group">
               <div className="inline-flex items-center justify-center w-20 h-20 bg-white/10 backdrop-blur-md border border-white/20 rounded-full mb-6 group-hover:scale-110 transition-transform duration-300">

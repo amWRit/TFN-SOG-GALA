@@ -24,8 +24,8 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           <div className="flex items-center space-x-3">
-            <Award className="w-8 h-8 text-purple-500" />
-            <span className="text-2xl font-bold text-white">Teach For Nepal</span>
+            <img src="/images/logos/logomini.png" alt="Teach For Nepal Logo" className="w-10 h-10 object-contain mr-2" />
+            <span className="text-2xl font-bold text-white hidden sm:inline">Teach For Nepal</span>
           </div>
           {/* Desktop Links */}
           <div className="hidden md:flex space-x-10">
@@ -46,7 +46,7 @@ const Navbar = () => {
             ))}
           </div>
           {/* Admin & RSVP Buttons */}
-            <div className="flex items-center space-x-2 ml-4">
+            <div className="flex items-center space-x-2 ml-4 hidden md:flex">
               <a
                 href="/admin/dashboard"
                 className="bg-gradient-to-r from-gold to-gold-dark text-[#23272F] px-6 py-2.5 rounded-full font-semibold border border-[#D4AF37] hover:shadow-2xl hover:scale-105 transition-all duration-300"
