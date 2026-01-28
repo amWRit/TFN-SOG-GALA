@@ -10,9 +10,11 @@ interface OkModalProps {
   onCancel: () => void;
   okText?: string;
   cancelText?: string;
+  okDisabled?: boolean;
+  cancelDisabled?: boolean;
 }
 
-export function OkModal({ open, title, message, onOk, onCancel, okText = "OK", cancelText = "Cancel" }: OkModalProps) {
+export function OkModal({ open, title, message, onOk, onCancel, okText = "OK", cancelText = "Cancel", okDisabled = false, cancelDisabled = false }: OkModalProps) {
   if (!open) return null;
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
@@ -23,6 +25,7 @@ export function OkModal({ open, title, message, onOk, onCancel, okText = "OK", c
           <button
             className={styles.adminButton}
             onClick={onOk}
+            disabled={okDisabled}
           >
             {okText}
           </button>
@@ -30,6 +33,7 @@ export function OkModal({ open, title, message, onOk, onCancel, okText = "OK", c
             className={styles.adminButton}
             style={{ background: '#ef4444', color: '#fff', borderColor: '#ef4444', fontWeight: 600, boxShadow: 'none', outline: 'none', borderWidth: 1, borderStyle: 'solid', transition: 'background 0.2s' }}
             onClick={onCancel}
+            disabled={cancelDisabled}
           >
             {cancelText}
           </button>

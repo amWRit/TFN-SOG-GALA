@@ -120,8 +120,10 @@ export function SheetsSync() {
               </span>)}
           onOk={() => modal && doExport(modal.type)}
           onCancel={() => setModal(null)}
-          okText="Export"
+          okText={loading ? 'Exporting...' : 'Export'}
           cancelText="Cancel"
+          okDisabled={loading}
+          cancelDisabled={loading}
         />
       </div>
     </Card>

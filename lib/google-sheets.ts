@@ -6,7 +6,12 @@ import fs from "fs";
 function getSheetsClient() {
   let credentials;
   if (process.env.GOOGLE_SERVICE_ACCOUNT_KEY) {
-    credentials = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_KEY);
+    // Remove possible single quotes from env var (Vercel UI sometimes adds them)
+    let key = process.env.GOOGLE_SERVICE_ACCOUNT_KEY;
+    if (key.startsWith("'") && key.endsWith("'")) {
+      key = key.slice(1, -1);
+    }
+    credentials = JSON.parse(key);
     console.log("Using GOOGLE_SERVICE_ACCOUNT_KEY from env");
   } else if (process.env.GOOGLE_APPLICATION_CREDENTIALS) {
     const credPath = process.env.GOOGLE_APPLICATION_CREDENTIALS;

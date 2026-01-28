@@ -7,17 +7,17 @@ import { prisma } from "@/lib/prisma";
  * Fetch all auction items (admin)
  */
 export async function GET(request: Request) {
-  const isAuthenticated = await getSession();
-  if (!isAuthenticated) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
   const { searchParams } = new URL(request.url);
   const countOnly = searchParams.get('countOnly');
 
   if (countOnly) {
     const count = await prisma.auctionItem.count();
     return NextResponse.json({ count });
+  }
+
+  const isAuthenticated = await getSession();
+  if (!isAuthenticated) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
