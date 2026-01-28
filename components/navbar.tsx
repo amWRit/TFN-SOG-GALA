@@ -45,14 +45,23 @@ const Navbar = () => {
               </a>
             ))}
           </div>
-          {/* RSVP Button */}
-            <a
-              href="/register"
-              className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-9 py-3 rounded-full font-semibold hover:shadow-2xl hover:scale-105 transition-all duration-300 ml-4"
-              aria-label="RSVP Now"
-            >
-              RSVP Now
-            </a>
+          {/* Admin & RSVP Buttons */}
+            <div className="flex items-center space-x-2 ml-4">
+              <a
+                href="/admin/dashboard"
+                className="bg-gradient-to-r from-gold to-gold-dark text-[#23272F] px-6 py-2.5 rounded-full font-semibold border border-[#D4AF37] hover:shadow-2xl hover:scale-105 transition-all duration-300"
+                aria-label="Admin Dashboard"
+              >
+                Admin
+              </a>
+              <a
+                href="/register"
+                className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-9 py-3 rounded-full font-semibold hover:shadow-2xl hover:scale-105 transition-all duration-300"
+                aria-label="RSVP Now"
+              >
+                RSVP Now
+              </a>
+            </div>
           {/* Mobile Menu Toggle */}
           <button
             className="md:hidden ml-4 text-white focus:outline-none"
@@ -70,6 +79,14 @@ const Navbar = () => {
             <a href="#home" className="text-white py-2 w-full text-center hover:bg-purple-700 transition" onClick={() => setMenuOpen(false)}>Home</a>
             <a href="#highlights" className="text-white py-2 w-full text-center hover:bg-purple-700 transition" onClick={() => setMenuOpen(false)}>Highlights</a>
             <a href="#impact" className="text-white py-2 w-full text-center hover:bg-purple-700 transition" onClick={() => setMenuOpen(false)}>Impact</a>
+            <a
+              href="/admin/dashboard"
+              className="bg-gradient-to-r from-gold to-gold-dark text-[#23272F] px-6 py-2.5 rounded-full font-semibold border border-[#D4AF37] mt-3 w-full hover:shadow-2xl transition-all duration-300 text-center"
+              aria-label="Admin Dashboard"
+              onClick={() => setMenuOpen(false)}
+            >
+              Admin
+            </a>
             <a
               href="/register"
               className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-2.5 rounded-full font-semibold mt-3 w-full hover:shadow-2xl transition-all duration-300 text-center"
