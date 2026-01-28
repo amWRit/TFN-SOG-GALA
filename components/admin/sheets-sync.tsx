@@ -12,10 +12,7 @@ export function SheetsSync() {
   const handleSync = async () => {
     setLoading(true);
     try {
-      const res = await fetch("/api/admin/sheets/sync", {
-        method: "POST",
-      });
-
+      const res = await fetch("/api/admin/sheets/sync", { method: "POST" });
       if (res.ok) {
         const data = await res.json();
         toast.success(`Synced ${data.count || 0} records from Google Sheets!`);
@@ -24,6 +21,40 @@ export function SheetsSync() {
       }
     } catch (error) {
       toast.error("Error syncing with Google Sheets");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleExportRegistration = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/admin/sheets/export-registration", { method: "POST" });
+      if (res.ok) {
+        const data = await res.json();
+        toast.success(`Exported ${data.count || 0} registrations to Google Sheets!`);
+      } else {
+        toast.error("Failed to export registrations.");
+      }
+    } catch (error) {
+      toast.error("Error exporting registrations");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleExportSeating = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/admin/sheets/export-seating", { method: "POST" });
+      if (res.ok) {
+        const data = await res.json();
+        toast.success(`Exported ${data.count || 0} seats to Google Sheets!`);
+      } else {
+        toast.error("Failed to export seats.");
+      }
+    } catch (error) {
+      toast.error("Error exporting seats");
     } finally {
       setLoading(false);
     }
@@ -40,25 +71,27 @@ export function SheetsSync() {
         seat_number
       </p>
 
-      <div className="space-y-4">
-        <div className="bg-[#1a1a1a]/50 p-4 rounded-lg">
-          <h3 className="font-semibold text-[#D4AF37] mb-2">
-            Configuration Required
-          </h3>
-          <ul className="text-sm text-[#f5f5f5]/60 space-y-1 list-disc list-inside">
-            <li>Set up Google Service Account</li>
-            <li>Add GOOGLE_SHEETS_ID to .env</li>
-            <li>Add GOOGLE_SERVICE_ACCOUNT_KEY to .env</li>
-            <li>Share your Google Sheet with the service account email</li>
-          </ul>
-        </div>
-
-        <Button onClick={handleSync} disabled={loading}>
-          <RefreshCw
-            size={18}
-            className={`mr-2 ${loading ? "animate-spin" : ""}`}
-          />
-          Sync Now
+      <div className="bg-[#1a1a1a]/50 p-4 rounded-lg mb-4">
+        <h3 className="font-semibold text-[#D4AF37] mb-2">
+          Configuration Required
+        </h3>
+        <ul className="text-sm text-[#f5f5f5]/60 space-y-1 list-disc list-inside">
+          <li>Set up Google Service Account</li>
+          <li>Add GOOGLE_SHEETS_ID to .env</li>
+          <li>Add GOOGLE_SERVICE_ACCOUNT_KEY to .env</li>
+          <li>Share your Google Sheet with the service account email</li>
+        </ul>
+      </div>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4 gap-4">
+        <Button disabled title="Import is currently disabled">
+          <RefreshCw size={18} className="mr-2" />
+          Import from Google Sheets (Disabled)
+        </Button>
+        <Button onClick={handleExportRegistration} disabled={loading} variant="outline">
+          Export Registration to Google Sheets
+        </Button>
+        <Button onClick={handleExportSeating} disabled={loading} variant="outline">
+          Export Seating to Google Sheets
         </Button>
       </div>
     </Card>
