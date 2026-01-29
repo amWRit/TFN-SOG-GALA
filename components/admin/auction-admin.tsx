@@ -174,36 +174,43 @@ export function AuctionAdmin() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-2 gap-2 md:gap-4">
-        <h2 className="font-playfair text-2xl font-bold text-[#D4AF37] md:flex-1">
+      <div className="flex flex-row items-center justify-between mb-2 gap-2 md:gap-4 w-full">
+        <h2 className="font-playfair text-2xl font-bold text-[#D4AF37] hidden md:block">
           Auction Items
         </h2>
-        <div className="flex-1 flex justify-center order-2 md:order-none">
+        <div className="flex-shrink-0 flex justify-center" style={{ minWidth: 0 }}>
           <div className="flex gap-2">
             <button
-              className={`px-4 py-2 rounded-full font-semibold border transition ${statusFilter === 'all' ? 'bg-[#D4AF37] text-[#1a1a1a] border-[#D4AF37]' : 'bg-[#222] text-[#f5f5f5]/80 border-[#444]'}`}
+              className={`px-4 py-2 rounded-full font-semibold border transition flex items-center gap-2 ${statusFilter === 'all' ? 'bg-[#D4AF37] text-[#1a1a1a] border-[#D4AF37]' : 'bg-[#222] text-[#f5f5f5]/80 border-[#444]'}`}
               onClick={() => setStatusFilter('all')}
             >
-              All
+              {/* Icon for All: gray circle, only on small screens */}
+              <span className="inline-block md:hidden w-3 h-3 rounded-full bg-[#888] mr-2"></span>
+              <span className="hidden md:inline">All</span>
             </button>
             <button
-              className={`px-4 py-2 rounded-full font-semibold border transition ${statusFilter === 'active' ? 'bg-[#D4AF37] text-[#1a1a1a] border-[#D4AF37]' : 'bg-[#222] text-[#f5f5f5]/80 border-[#444]'}`}
+              className={`px-4 py-2 rounded-full font-semibold border transition flex items-center gap-2 ${statusFilter === 'active' ? 'bg-[#D4AF37] text-[#1a1a1a] border-[#D4AF37]' : 'bg-[#222] text-[#f5f5f5]/80 border-[#444]'}`}
               onClick={() => setStatusFilter('active')}
             >
-              Active
+              {/* Icon for Active: green circle, only on small screens */}
+              <span className="inline-block md:hidden w-3 h-3 rounded-full bg-green-500 mr-2"></span>
+              <span className="hidden md:inline">Active</span>
             </button>
             <button
-              className={`px-4 py-2 rounded-full font-semibold border transition ${statusFilter === 'paused' ? 'bg-[#D4AF37] text-[#1a1a1a] border-[#D4AF37]' : 'bg-[#222] text-[#f5f5f5]/80 border-[#444]'}`}
+              className={`px-4 py-2 rounded-full font-semibold border transition flex items-center gap-2 ${statusFilter === 'paused' ? 'bg-[#D4AF37] text-[#1a1a1a] border-[#D4AF37]' : 'bg-[#222] text-[#f5f5f5]/80 border-[#444]'}`}
               onClick={() => setStatusFilter('paused')}
             >
-              Paused
+              {/* Icon for Paused: red circle, only on small screens */}
+              <span className="inline-block md:hidden w-3 h-3 rounded-full bg-red-500 mr-2"></span>
+              <span className="hidden md:inline">Paused</span>
             </button>
           </div>
         </div>
-        <div className="flex-1 flex justify-end">
-          <Button variant="red" onClick={handleCreate}>
-            <Plus size={18} className="mr-2" />
-            Add Item
+        <div className="flex-shrink-0 flex justify-end" style={{ minWidth: 0 }}>
+          <Button variant="gold" onClick={handleCreate}>
+            {/* Only icon on small screens, icon+text on md+ */}
+            <span className="inline md:hidden"><Plus size={20} /></span>
+            <span className="hidden md:inline-flex items-center"><Plus size={18} className="mr-2" />Add Item</span>
           </Button>
         </div>
       </div>
@@ -215,6 +222,24 @@ export function AuctionAdmin() {
             {editingItem ? "Edit Item" : "New Item"}
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <style>{`
+              /* Make the calendar icon in datetime-local input white */
+              input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+                filter: invert(1) brightness(2);
+              }
+              input[type="datetime-local"]::-webkit-input-placeholder {
+                color: #f5f5f5;
+              }
+              input[type="datetime-local"]::-moz-placeholder {
+                color: #f5f5f5;
+              }
+              input[type="datetime-local"]:-ms-input-placeholder {
+                color: #f5f5f5;
+              }
+              input[type="datetime-local"]::placeholder {
+                color: #f5f5f5;
+              }
+            `}</style>
             <div>
               <label className="block text-sm font-medium text-[#f5f5f5]/80 mb-2">
                 Title *
@@ -299,9 +324,9 @@ export function AuctionAdmin() {
               <label className="text-sm text-[#f5f5f5]/80">Active</label>
             </div>
           </div>
-          <div className="flex gap-2 mt-4">
-            <Button variant="red" onClick={handleSave}>Save</Button>
-            <Button variant="outline" onClick={() => setShowForm(false)}>
+          <div className="flex gap-2 mt-4 justify-end">
+            <Button variant="gold" onClick={handleSave}>Save</Button>
+            <Button variant="red" onClick={() => setShowForm(false)}>
               Cancel
             </Button>
           </div>
