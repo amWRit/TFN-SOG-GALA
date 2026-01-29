@@ -6,6 +6,7 @@ import CountdownTimer from './countdown-timer';
 
 const VideoHero = () => {
   const [showVideo, setShowVideo] = useState(false);
+  const targetDate = process.env.NEXT_PUBLIC_GALA_TARGET_DATE || "2026-12-31T18:00:00";
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden flex items-center justify-center" id="home">
@@ -30,7 +31,7 @@ const VideoHero = () => {
 
           <div className="py-8 flex justify-center w-full">
             <div className="w-full max-w-xs mx-auto">
-              <CountdownTimer targetDate="2026-12-31T18:00:00" />
+              <CountdownTimer targetDate={targetDate} />
             </div>
           </div>
 

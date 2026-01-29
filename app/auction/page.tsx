@@ -3,8 +3,24 @@ import { Home } from "lucide-react";
 import { AuctionGrid } from "@/components/auction-grid";
 import { AuctionLeaderboard } from "@/components/auction-leaderboard";
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
 export default function AuctionPage() {
+  const [total, setTotal] = useState<number | null>(null);
+  useEffect(() => {
+    async function fetchTotal() {
+      try {
+        const res = await fetch("/api/total-raised");
+        if (res.ok) {
+          const data = await res.json();
+          setTotal(data.total);
+        }
+      } catch {}
+    }
+    fetchTotal();
+    const interval = setInterval(fetchTotal, 5000);
+    return () => clearInterval(interval);
+  }, []);
   return (
     <>
       {/* Home Button (floating, like seating page) */}
@@ -37,7 +53,7 @@ export default function AuctionPage() {
               >
                 <div className="text-sm text-[#f5f5f5]/60 mb-1">Current Total Raised</div>
                 <div className="font-playfair text-3xl md:text-4xl font-bold text-[#D4AF37]">
-                  NPR 25,000
+                  {total === null ? "Loading..." : `NPR ${total.toLocaleString()}`}
                 </div>
               </motion.div>
             </motion.div>

@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
 import useSWR from "swr";
-import { Plus, Edit, Trash2, Gavel } from "lucide-react";
+import { Plus, Edit, Trash2, Gavel, Pause, Play } from "lucide-react";
 
 interface AuctionItem {
   id: string;
@@ -39,6 +39,7 @@ export function AuctionAdmin() {
     endTime: "",
     isActive: true,
   });
+  const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'paused'>('all');
 
   const handleCreate = () => {
     setEditingItem(null);
@@ -48,7 +49,7 @@ export function AuctionAdmin() {
       imageUrl: "",
       startingBid: "",
       endTime: "",
-      isActive: true,
+      isActive: true
     });
     setShowForm(true);
   };
@@ -156,16 +157,55 @@ export function AuctionAdmin() {
     }
   };
 
+  // Add handler to toggle isActive for an item
+  const handleToggleActive = async (item: AuctionItem) => {
+    try {
+      await fetch(`/api/admin/auction/items/${item.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ isActive: !item.isActive }),
+      });
+      mutate();
+      toast.success(`Auction item ${!item.isActive ? "resumed" : "paused"}`);
+    } catch {
+      toast.error("Failed to update item status");
+    }
+  };
+
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center mb-1">
-        <h2 className="font-playfair text-2xl font-bold text-[#D4AF37]">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-2 gap-2 md:gap-4">
+        <h2 className="font-playfair text-2xl font-bold text-[#D4AF37] md:flex-1">
           Auction Items
         </h2>
-        <Button onClick={handleCreate}>
-          <Plus size={18} className="mr-2" />
-          Add Item
-        </Button>
+        <div className="flex-1 flex justify-center order-2 md:order-none">
+          <div className="flex gap-2">
+            <button
+              className={`px-4 py-2 rounded-full font-semibold border transition ${statusFilter === 'all' ? 'bg-[#D4AF37] text-[#1a1a1a] border-[#D4AF37]' : 'bg-[#222] text-[#f5f5f5]/80 border-[#444]'}`}
+              onClick={() => setStatusFilter('all')}
+            >
+              All
+            </button>
+            <button
+              className={`px-4 py-2 rounded-full font-semibold border transition ${statusFilter === 'active' ? 'bg-[#D4AF37] text-[#1a1a1a] border-[#D4AF37]' : 'bg-[#222] text-[#f5f5f5]/80 border-[#444]'}`}
+              onClick={() => setStatusFilter('active')}
+            >
+              Active
+            </button>
+            <button
+              className={`px-4 py-2 rounded-full font-semibold border transition ${statusFilter === 'paused' ? 'bg-[#D4AF37] text-[#1a1a1a] border-[#D4AF37]' : 'bg-[#222] text-[#f5f5f5]/80 border-[#444]'}`}
+              onClick={() => setStatusFilter('paused')}
+            >
+              Paused
+            </button>
+          </div>
+        </div>
+        <div className="flex-1 flex justify-end">
+          <Button onClick={handleCreate}>
+            <Plus size={18} className="mr-2" />
+            Add Item
+          </Button>
+        </div>
       </div>
 
       {/* Form */}
@@ -270,8 +310,12 @@ export function AuctionAdmin() {
 
       {/* Items List */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {items?.slice().sort((a, b) => a.title.localeCompare(b.title)).map((item) => (
-          <Card key={item.id} className="glass-strong p-4">
+        {items?.filter(item => {
+          if (statusFilter === 'all') return true;
+          if (statusFilter === 'active') return item.isActive;
+          if (statusFilter === 'paused') return !item.isActive;
+        }).slice().sort((a, b) => a.title.localeCompare(b.title)).map((item) => (
+          <Card key={item.id} className="glass-strong p-4 relative">
             <div className="flex justify-between items-start mb-2">
               <h3 className="font-playfair text-lg font-bold text-[#D4AF37]">
                 {item.title}
@@ -312,6 +356,15 @@ export function AuctionAdmin() {
             <div className="text-xs text-[#f5f5f5]/60 mb-2">
               Current Bidder: {item.currentBidder ? item.currentBidder : 'NA'}
             </div>
+            {/* Pause/Play Button in bottom right */}
+            <button
+              type="button"
+              className="absolute bottom-4 right-4 w-10 h-10 rounded-full bg-[#D4AF37]/20  hover:bg-[#D4AF37]/40 border-2 border-[#D4AF37] flex items-center justify-center shadow-lg hover:bg-[#D4AF37]/20 transition z-10"
+              onClick={() => handleToggleActive(item)}
+              title={item.isActive ? "Pause Bidding" : "Resume Bidding"}
+            >
+              {item.isActive ? <Pause className="w-6 h-6 text-[#D4AF37]" /> : <Play className="w-6 h-6 text-[#D4AF37]" />}
+            </button>
             {/* Add Bid button moved to header row */}
           </Card>
         ))}
