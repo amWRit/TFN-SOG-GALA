@@ -87,3 +87,25 @@ model Registration {
   @@index([tablePreference, seatPreference])
   @@index([paymentStatus, seatAssignedStatus])
 }
+
+// Program model for event scheduling
+model Program {
+  id            Int       @id @default(autoincrement())
+  title         String
+  description   String?
+  startTime     DateTime
+  endTime       DateTime
+  location      String?
+  sequence      Int?
+  speaker       String?
+  speakerBio    String?
+  type          String?
+  visibility    Boolean   @default(true) // true = public, false = private
+  imageUrl      String?
+  externalLink  String?
+  notes         String?
+  capacity      Int?
+  rsvpRequired  Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
