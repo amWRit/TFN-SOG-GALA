@@ -8,14 +8,14 @@
   font-size: 1.125rem;
   border: none;
   cursor: pointer;
-  transition: box-shadow 0.2s, transform 0.2s, background 0.2s;
-  box-shadow: 0 2px 8px #a78bfa33;
+  transition: transform 0.2s, background 0.2s;
+  /* box-shadow removed */
   margin-top: 0.5rem;
   outline: none;
   display: inline-block;
 }
 .primaryButton:hover, .primaryButton:focus {
-  box-shadow: 0 6px 24px #A78BFA55;
+  /* box-shadow removed */
   background: linear-gradient(90deg, #ec4899 0%, #9333ea 100%);
   transform: scale(1.05);
 }

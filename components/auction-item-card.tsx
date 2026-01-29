@@ -45,11 +45,14 @@ function formatTimeRemaining(endTime: Date | null): string {
 }
 
 export function AuctionItemCard({ item }: AuctionItemCardProps) {
-  const [timeRemaining, setTimeRemaining] = useState(
-    formatTimeRemaining(item.endTime)
-  );
+  const [timeRemaining, setTimeRemaining] = useState(formatTimeRemaining(item.endTime));
   const [showBidModal, setShowBidModal] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [bidAmount, setBidAmount] = useState("");
+  const [bidderName, setBidderName] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string|null>(null);
+  const [success, setSuccess] = useState<string|null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -61,20 +64,16 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
 
   useEffect(() => {
     if (!item.endTime || !item.isActive) return;
-
     const interval = setInterval(() => {
       setTimeRemaining(formatTimeRemaining(item.endTime));
     }, 1000);
-
     return () => clearInterval(interval);
   }, [item.endTime, item.isActive]);
 
   const isClosed = !item.isActive || (item.endTime && new Date(item.endTime).getTime() <= new Date().getTime());
 
   return (
-    <Card className={`bg-white/80 backdrop-blur-md border border-pink-300/30 shadow-xl overflow-hidden hover:scale-105 transition-transform duration-300 ${
-      isClosed ? "opacity-60" : ""
-    }`}>
+    <Card className={`bg-white/10 backdrop-blur-md border border-white/20 overflow-hidden hover:scale-105 transition-transform duration-300 ${isClosed ? "opacity-60" : ""}`}>
       {/* Image */}
       {item.imageUrl && (
         <div className="relative w-full h-48 overflow-hidden">
@@ -96,7 +95,7 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
       )}
 
       <CardHeader>
-        <CardTitle className="line-clamp-2 text-white">{item.title}</CardTitle>
+        <CardTitle className="line-clamp-2 text-white pt-2">{item.title}</CardTitle>
         {item.description && (
           <CardDescription className="line-clamp-2 text-gray-200 overflow-hidden text-ellipsis">
             {item.description}
@@ -121,7 +120,6 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
           </div>
         </div>
 
-
         {/* Time Remaining & Starting Bid - single row */}
         <div className="flex items-center justify-between gap-2 mt-4 pt-4 border-t border-white/20 text-sm text-gray-200 w-full">
           <div className="flex items-center gap-2">
@@ -143,14 +141,14 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
         <div className="mt-6 flex justify-center gap-2">
           <Button
             title="View Item"
-            className="flex items-center gap-1 font-semibold hover:scale-105 transition bg-[#ec4899] hover:bg-pink-600 text-white"
+              className="flex items-center gap-1 font-semibold hover:scale-105 transition bg-[#ec4899] hover:bg-pink-600 text-white"
             onClick={() => window.open(`/auction/${item.id}/`, "_blank")}
           >
             <Eye size={18} /> View
           </Button>
           <Button
             title="Bid"
-            className="flex items-center gap-1 font-semibold hover:scale-105 transition bg-[#ec4899] hover:bg-pink-600 text-white"
+              className="flex items-center gap-1 font-semibold hover:scale-105 transition bg-[#ec4899] hover:bg-pink-600 text-white"
             onClick={() => setShowBidModal(true)}
             disabled={!!isClosed}
           >
@@ -158,26 +156,84 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
           </Button>
         </div>
 
-        {/* Bid Modal Placeholder */}
-        {showBidModal && !isAdmin && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-            <div className="bg-gray-900 rounded-lg p-8 min-w-[300px] max-w-[90vw] text-center relative">
-              <button
-                className="absolute top-2 right-2 text-pink-300 hover:text-white"
-                onClick={() => setShowBidModal(false)}
-                aria-label="Close"
-              >
-                ×
-              </button>
+        {/* Bid Modal Implementation for public users */}
+        {showBidModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md">
+              <div className="bg-gray-900 rounded-lg p-4 md:p-8 min-w-0 w-full max-w-xs md:min-w-[300px] md:max-w-[380px] text-center relative border-2 border-pink-400/60">
+                <button
+                  className="absolute top-2 right-2 text-pink-300 hover:text-white text-2xl"
+                  onClick={() => setShowBidModal(false)}
+                  aria-label="Close"
+                >
+                  ×
+                </button>
               <div className="mb-4 text-2xl font-bold text-pink-300">Place a Bid</div>
-              <div className="mb-6 text-gray-200">Bid modal coming soon.</div>
-              <Button
-                variant="red"
-                className="px-4 py-2 font-semibold hover:scale-105"
-                onClick={() => setShowBidModal(false)}
+              <form
+                className="flex flex-col gap-4 items-center"
+                onSubmit={async (e) => {
+                  e.preventDefault();
+                  if (isClosed || submitting) return;
+                  setError(null);
+                  setSuccess(null);
+                  setSubmitting(true);
+                  try {
+                    const res = await fetch("/api/auction/items/bid", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({
+                        auctionItemId: item.id,
+                        amount: Number(bidAmount),
+                        bidderName: bidderName.trim(),
+                      }),
+                    });
+                    if (res.ok) {
+                      setSuccess("Bid placed successfully!");
+                      setBidAmount("");
+                      setBidderName("");
+                      setTimeout(() => setShowBidModal(false), 1200);
+                    } else {
+                      const data = await res.json();
+                      setError(data.error || "Failed to place bid");
+                    }
+                  } catch (err) {
+                    setError("Network error. Please try again.");
+                  } finally {
+                    setSubmitting(false);
+                  }
+                }}
               >
-                Close
-              </Button>
+                <input
+                  type="text"
+                  className="w-full px-4 py-2 rounded bg-gray-800 text-white border border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-400"
+                  placeholder="Your Name"
+                  value={bidderName}
+                  onChange={e => setBidderName(e.target.value)}
+                  required
+                  minLength={2}
+                  maxLength={32}
+                  disabled={submitting}
+                />
+                <input
+                  type="number"
+                  className="w-full px-4 py-2 rounded bg-gray-800 text-white border border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-400"
+                  placeholder={`Bid Amount (min NPR ${(item.currentBid+1).toLocaleString()})`}
+                  value={bidAmount}
+                  onChange={e => setBidAmount(e.target.value)}
+                  min={item.currentBid+1}
+                  step={1}
+                  required
+                  disabled={submitting}
+                />
+                {error && <div className="text-red-400 text-sm">{error}</div>}
+                {success && <div className="text-green-400 text-sm">{success}</div>}
+                <Button
+                  type="submit"
+                   className="w-full mt-2 font-bold"
+                  disabled={isClosed || submitting}
+                >
+                  {submitting ? "Placing Bid..." : "Place Bid"}
+                </Button>
+              </form>
             </div>
           </div>
         )}
