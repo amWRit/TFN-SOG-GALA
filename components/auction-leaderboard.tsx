@@ -65,7 +65,7 @@ export function AuctionLeaderboard() {
                   {entry.bidderName}
                 </div>
                 <div className="text-sm text-[#f5f5f5]/80">
-                  <div>${entry.highestBid.toLocaleString()} highest</div>
+                  <div>NPR {entry.highestBid.toLocaleString()} highest</div>
                   <div>{entry.itemCount} items</div>
                 </div>
               </Card>

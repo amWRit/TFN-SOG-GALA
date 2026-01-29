@@ -307,7 +307,7 @@ export function AuctionAdmin() {
               </div>
             </div>
             <div className="text-sm text-[#f5f5f5]/80 mb-1">
-              Current Bid: ${item.currentBid.toLocaleString()}
+              Current Bid: NPR {item.currentBid.toLocaleString()}
             </div>
             <div className="text-xs text-[#f5f5f5]/60 mb-2">
               Current Bidder: {item.currentBidder ? item.currentBidder : 'NA'}
@@ -348,7 +348,7 @@ export function AuctionAdmin() {
                   return;
                 }
                 if (amount <= (bidModalItem.currentBid || 0)) {
-                  toast.error(`Bid must be greater than current bid ($${bidModalItem.currentBid.toLocaleString()})`);
+                  toast.error(`Bid must be greater than current bid (NPR ${bidModalItem.currentBid.toLocaleString()})`);
                   setIsSubmittingBid(false);
                   return;
                 }
@@ -364,7 +364,7 @@ export function AuctionAdmin() {
             className="flex flex-col gap-6"
           >
             <div>
-              <label className="block text-sm font-medium text-[#f5f5f5]/80 mb-1">Bid Amount * <span className="text-xs text-[#D4AF37]">(Current: ${bidModalItem.currentBid.toLocaleString()})</span></label>
+              <label className="block text-sm font-medium text-[#f5f5f5]/80 mb-1">Bid Amount * <span className="text-xs text-[#D4AF37]">(Current: NPR {bidModalItem.currentBid.toLocaleString()})</span></label>
               <input
                 type="number"
                 name="amount"

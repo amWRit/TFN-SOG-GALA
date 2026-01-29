@@ -127,7 +127,7 @@ export default function AuctionItemPage() {
         {/* Right column: big current bid and starting bid */}
         <div className={`flex-1 flex flex-col justify-center items-center glass-strong rounded-2xl p-12 ${isClosed ? "opacity-60" : ""}`}>
           <div className="w-full text-center flex flex-col items-center justify-center">
-            <div className="text-lg md:text-xl text-[#f5f5f5]/60 mb-4">Current Bid</div>
+            <div className="text-lg md:text-xl text-[#f5f5f5]/60 mb-4">Current Bid (NPR)</div>
             <motion.div
               key={item.currentBid}
               initial={{ scale: 1.2, boxShadow: "0 0 40px #D4AF37BB" }}
@@ -143,10 +143,10 @@ export default function AuctionItemPage() {
                 repeatType: "reverse",
                 duration: 1.5
               }}
-              className="font-playfair text-6xl md:text-7xl font-extrabold text-[#D4AF37] mb-6 bg-[#1a1a1a] rounded-2xl px-14 py-8 shadow-gold focus:outline-none"
+              className="font-playfair text-6xl md:text-7xl font-extrabold text-[#D4AF37] mb-2 bg-[#1a1a1a] rounded-2xl px-14 py-8 shadow-gold focus:outline-none"
               style={{ boxShadow: "0 0 40px #D4AF37BB" }}
             >
-              ${item.currentBid.toLocaleString()}
+              {item.currentBid.toLocaleString()}
             </motion.div>
             {item.currentBidder && (
               <div className="text-xl text-[#f5f5f5]/80 mt-4 font-semibold">
@@ -155,7 +155,7 @@ export default function AuctionItemPage() {
             )}
             {/* Starting bid moved here */}
             <div className="mt-8 pt-4 border-t border-[#D4AF37]/30 w-full text-sm text-[#f5f5f5]/60 text-center">
-              Starting bid: ${item.startingBid.toLocaleString()}
+              Starting bid: NPR {item.startingBid.toLocaleString()}
             </div>
           </div>
         </div>

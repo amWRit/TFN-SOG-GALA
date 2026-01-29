@@ -113,7 +113,7 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
             animate={{ scale: 1, color: "#D4AF37" }}
             className="font-playfair text-3xl font-bold"
           >
-            ${item.currentBid.toLocaleString()}
+            NPR {item.currentBid.toLocaleString()}
           </motion.div>
           {item.currentBidder && (
             <div className="text-sm text-[#f5f5f5]/80 mt-1">
@@ -134,7 +134,7 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
 
         {/* Starting Bid Info */}
         <div className="mt-4 pt-4 border-t border-[#D4AF37]/20 text-xs text-[#f5f5f5]/60">
-          Starting bid: ${item.startingBid.toLocaleString()}
+          Starting bid: NPR {item.startingBid.toLocaleString()}
         </div>
 
         {/* Action Buttons */}
