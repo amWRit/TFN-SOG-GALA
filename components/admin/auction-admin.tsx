@@ -201,7 +201,7 @@ export function AuctionAdmin() {
           </div>
         </div>
         <div className="flex-1 flex justify-end">
-          <Button onClick={handleCreate}>
+          <Button variant="red" onClick={handleCreate}>
             <Plus size={18} className="mr-2" />
             Add Item
           </Button>
@@ -300,7 +300,7 @@ export function AuctionAdmin() {
             </div>
           </div>
           <div className="flex gap-2 mt-4">
-            <Button onClick={handleSave}>Save</Button>
+            <Button variant="red" onClick={handleSave}>Save</Button>
             <Button variant="outline" onClick={() => setShowForm(false)}>
               Cancel
             </Button>

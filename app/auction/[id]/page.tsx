@@ -4,7 +4,8 @@ import { useParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
-import { Clock, Gavel } from "lucide-react";
+import { Clock, Gavel, Home } from "lucide-react";
+import styles from '../../../styles/homepage.module.css';
 
 interface AuctionItem {
   id: string;
@@ -77,24 +78,28 @@ export default function AuctionItemPage() {
   const isClosed = !item.isActive || (item.endTime && new Date(item.endTime).getTime() <= new Date().getTime());
 
   return (
-    <main className="min-h-screen bg-[#1a1a1a] flex flex-col items-center justify-start p-0 m-0">
-      {/* Title at the top, center-aligned */}
-      <div className="w-full max-w-7xl mx-auto px-8 pt-4 pb-10">
+    <main className={styles.heroContainer + " min-h-screen flex flex-col items-center justify-center p-0 m-0 pb-8"}>
+      {/* Title and Home Button in a horizontal bar at the top */}
+      <div className="w-full max-w-7xl mx-auto flex items-center justify-between px-4 pt-8 pb-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="w-full text-center"
+          className=""
         >
-          <h1 className="font-playfair text-5xl md:text-7xl font-extrabold text-[#D4AF37] m-0 p-0">
+          <h1 className="font-playfair text-3xl md:text-5xl font-extrabold text-white m-0 p-0 text-left">
             {item.title}
           </h1>
         </motion.div>
+        <a href="/" className="flex items-center gap-2 px-4 py-2 bg-white/90 text-gray-900 rounded-full shadow-lg font-semibold hover:bg-white transition-all border border-gray-200">
+          <Home className="w-5 h-5" />
+          Home
+        </a>
       </div>
-      <div className="w-full max-w-7xl mx-auto px-8 flex flex-col md:flex-row gap-12 items-stretch">
+      <div className="w-full max-w-7xl mx-auto px-4 flex-1 flex flex-col md:flex-row gap-8 items-stretch justify-center">
         {/* Left column: image, description, time, starting bid */}
-        <div className="flex-1 flex flex-col items-center md:items-start justify-start">
+        <div className="flex-1 flex flex-col items-center md:items-start justify-center min-h-0">
           {item.imageUrl && (
-            <div className="relative w-full h-[420px] rounded-2xl overflow-hidden shadow-2xl border-4 border-[#D4AF37]/30 mb-8">
+            <div className="relative w-full h-[320px] md:h-[380px] rounded-2xl overflow-hidden shadow-2xl border-4 border-[#ec4899]/30 mb-6">
               <Image
                 src={item.imageUrl}
                 alt={item.title}
@@ -104,7 +109,7 @@ export default function AuctionItemPage() {
               />
               {!isClosed && (
                 <div className="absolute top-4 right-4">
-                  <span className="px-4 py-2 rounded-full bg-[#D4AF37] text-[#1a1a1a] text-lg font-bold uppercase shadow-lg">
+                  <span className="px-4 py-2 rounded-full bg-[#ec4899] text-white text-lg font-bold uppercase shadow-lg">
                     Live
                   </span>
                 </div>
@@ -112,7 +117,7 @@ export default function AuctionItemPage() {
             </div>
           )}
           {/* Description below image, left-aligned */}
-          <p className="text-base md:text-lg text-[#f5f5f5]/80 max-w-2xl mb-6 md:text-left text-center">
+          <p className="text-base md:text-lg text-[#f5f5f5]/80 max-w-2xl mb-4 md:text-left text-center">
             {item.description}
           </p>
           {item.endTime && (
@@ -125,9 +130,9 @@ export default function AuctionItemPage() {
           )}
         </div>
         {/* Right column: big current bid and starting bid */}
-        <div className={`flex-1 flex flex-col justify-center items-center glass-strong rounded-2xl p-12 ${isClosed ? "opacity-60" : ""}`}>
-          <div className="w-full text-center flex flex-col items-center justify-center">
-            <div className="text-lg md:text-xl text-[#f5f5f5]/60 mb-4">Current Bid (NPR)</div>
+        <div className={`flex-1 flex flex-col justify-center items-center glass-strong rounded-2xl p-6 md:p-10 ${isClosed ? "opacity-60" : ""}`}>
+          <div className="w-full text-center flex flex-col items-center justify-center min-h-0">
+            <div className="text-xl md:text-2xl text-[#f5f5f5]/60 mb-4">Current Bid (NPR)</div>
             <motion.div
               key={item.currentBid}
               initial={{ scale: 1.2, boxShadow: "0 0 40px #D4AF37BB" }}
@@ -143,18 +148,18 @@ export default function AuctionItemPage() {
                 repeatType: "reverse",
                 duration: 1.5
               }}
-              className="font-playfair text-6xl md:text-7xl font-extrabold text-[#D4AF37] mb-2 bg-[#1a1a1a] rounded-2xl px-14 py-8 shadow-gold focus:outline-none"
+              className="font-playfair text-7xl md:text-8xl font-extrabold text-[#D4AF37] mb-4 bg-black rounded-2xl px-16 py-10 focus:outline-none"
               style={{ boxShadow: "0 0 40px #D4AF37BB" }}
             >
               {item.currentBid.toLocaleString()}
             </motion.div>
             {item.currentBidder && (
-              <div className="text-xl text-[#f5f5f5]/80 mt-4 font-semibold">
+              <div className="text-2xl md:text-3xl text-[#f5f5f5]/80 mt-6 font-semibold">
                 Leading: {item.currentBidder}
               </div>
             )}
             {/* Starting bid moved here */}
-            <div className="mt-8 pt-4 border-t border-[#D4AF37]/30 w-full text-sm text-[#f5f5f5]/60 text-center">
+            <div className="mt-10 pt-6 border-t border-[#ec4899]/30 w-full text-lg md:text-xl text-[#f5f5f5]/60 text-center">
               Starting bid: NPR {item.startingBid.toLocaleString()}
             </div>
           </div>
