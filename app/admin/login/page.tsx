@@ -30,6 +30,10 @@ export default function AdminLoginPage() {
       const data = await res.json();
 
       if (res.ok) {
+        // Set adminauth in localStorage
+        if (typeof window !== "undefined") {
+          localStorage.setItem("adminauth", "true");
+        }
         toast.success("Login successful!");
         router.push("/admin/dashboard");
       } else {

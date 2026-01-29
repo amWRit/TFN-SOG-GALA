@@ -59,7 +59,7 @@ export function AdminDashboard() {
 
       {/* Tabs */}
       <div className="max-w-[1800px] mx-auto px-4 py-6">
-        <div className="flex flex-wrap gap-2 mb-8">
+        <div className="flex flex-wrap gap-2 mb-4">
           {tabs.map((tab) => {
             const Icon = tab.icon;
             return (

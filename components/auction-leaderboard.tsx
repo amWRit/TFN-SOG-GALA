@@ -29,7 +29,7 @@ export function AuctionLeaderboard() {
 
   const topThree = leaderboard.slice(0, 3);
   const icons = [Trophy, Medal, Award];
-  const colors = ["#D4AF37", "#C0C0C0", "#CD7F32"]; // Gold, Silver, Bronze
+  const iconColors = ["#ec4899", "#a78bfa", "#f472b6"]; // Pink, Purple, Red
 
   return (
     <motion.div
@@ -38,7 +38,7 @@ export function AuctionLeaderboard() {
       viewport={{ once: true }}
       className="mb-16"
     >
-      <h2 className="font-playfair text-3xl md:text-4xl font-bold text-[#D4AF37] mb-8 text-center">
+      <h2 className="font-playfair text-3xl md:text-4xl font-bold text-white mb-8 text-center">
         Top Bidders
       </h2>
       <div className="flex flex-col md:flex-row items-center justify-center gap-6">
@@ -54,18 +54,18 @@ export function AuctionLeaderboard() {
               className={`${index === 0 ? "order-2 md:order-1" : index === 1 ? "order-1 md:order-2" : "order-3"}`}
             >
               <Card
-                className={`glass-strong p-6 text-center min-w-[200px] ${
+                className={`bg-white/10 backdrop-blur-md border border-white/20 p-6 text-center min-w-[200px] ${
                   index === 0 ? "scale-110" : ""
                 }`}
               >
                 <div className="flex justify-center mb-4">
-                  <Icon size={48} color={colors[index]} />
+                  <Icon size={48} color={iconColors[index]} />
                 </div>
-                <div className="font-playfair text-xl font-bold text-[#D4AF37] mb-2">
+                <div className="font-playfair text-xl font-bold text-pink-300 mb-2">
                   {entry.bidderName}
                 </div>
-                <div className="text-sm text-[#f5f5f5]/80">
-                  <div>${entry.highestBid.toLocaleString()} highest</div>
+                <div className="text-sm text-gray-200">
+                  <div>NPR {entry.highestBid.toLocaleString()} highest</div>
                   <div>{entry.itemCount} items</div>
                 </div>
               </Card>
