@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { Eye } from "lucide-react";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
@@ -45,6 +47,16 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
   const [timeRemaining, setTimeRemaining] = useState(
     formatTimeRemaining(item.endTime)
   );
+  const [showBidModal, setShowBidModal] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    // Check admin status from localStorage (adminauth)
+    if (typeof window !== "undefined") {
+      setIsAdmin(!!localStorage.getItem("adminauth"));
+    }
+  }, []);
 
   useEffect(() => {
     if (!item.endTime || !item.isActive) return;
@@ -124,6 +136,51 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
         <div className="mt-4 pt-4 border-t border-[#D4AF37]/20 text-xs text-[#f5f5f5]/60">
           Starting bid: ${item.startingBid.toLocaleString()}
         </div>
+
+        {/* Action Buttons */}
+        <div className="mt-6 flex justify-end gap-2">
+          {isAdmin ? (
+            <button
+              title="View Item"
+              className="flex items-center gap-1 px-3 py-2 rounded bg-[#D4AF37]/80 text-[#1a1a1a] font-semibold hover:bg-[#D4AF37] transition"
+              onClick={() => window.open(`/auction/${item.id}/`, "_blank")}
+            >
+              <Eye size={18} /> View
+            </button>
+          ) : (
+            <button
+              title="Bid"
+              className="flex items-center gap-1 px-3 py-2 rounded bg-[#D4AF37]/80 text-[#1a1a1a] font-semibold hover:bg-[#D4AF37] transition"
+              onClick={() => setShowBidModal(true)}
+              disabled={!!isClosed}
+            >
+              <Gavel size={18} /> Bid
+            </button>
+          )}
+        </div>
+
+        {/* Bid Modal Placeholder */}
+        {showBidModal && !isAdmin && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+            <div className="bg-[#222] rounded-lg p-8 min-w-[300px] max-w-[90vw] text-center relative">
+              <button
+                className="absolute top-2 right-2 text-[#D4AF37] hover:text-white"
+                onClick={() => setShowBidModal(false)}
+                aria-label="Close"
+              >
+                ×
+              </button>
+              <div className="mb-4 text-2xl font-bold text-[#D4AF37]">Place a Bid</div>
+              <div className="mb-6 text-[#f5f5f5]/80">Bid modal coming soon.</div>
+              <button
+                className="px-4 py-2 rounded bg-[#D4AF37]/80 text-[#1a1a1a] font-semibold hover:bg-[#D4AF37]"
+                onClick={() => setShowBidModal(false)}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        )}
       </CardContent>
     </Card>
   );

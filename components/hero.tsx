@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { ChevronRight, Play, Armchair } from 'lucide-react';
+import { ChevronRight, Play, Armchair, Gavel } from 'lucide-react';
 import CountdownTimer from './countdown-timer';
 
 const VideoHero = () => {
@@ -37,19 +37,26 @@ const VideoHero = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center w-full">
             <button 
               onClick={() => setShowVideo(true)}
-              className="group bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-4 rounded-full font-semibold text-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 flex items-center gap-3 w-full sm:w-auto justify-center"
+              className="group bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-4 rounded-full font-semibold text-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 flex items-center gap-3 w-full sm:w-auto justify-center cursor-pointer"
             >
               <Play className="w-5 h-5" />
               Watch 2025 Highlights
             </button>
           </div>
-          <div className="mt-8 flex justify-center w-full">
+          <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center w-full">
             <button
               onClick={() => window.location.href = '/seating'}
-              className="group bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-4 rounded-full font-semibold text-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 flex items-center gap-3 w-full sm:w-auto justify-center"
+              className="group bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-4 rounded-full font-semibold text-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 flex items-center gap-3 w-full sm:w-auto justify-center cursor-pointer"
             >
               <Armchair className="w-5 h-5" />
               View Available Seats
+            </button>
+            <button
+              onClick={() => window.location.href = '/auction'}
+              className="group bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-4 rounded-full font-semibold text-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 flex items-center gap-3 w-full sm:w-auto justify-center cursor-pointer"
+            >
+              <Gavel className="w-5 h-5" />
+              View Auction Items
             </button>
           </div>
         </div>
