@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
 import useSWR from "swr";
-import { Plus, Edit, Trash2 } from "lucide-react";
+import { Plus, Edit, Trash2, Gavel } from "lucide-react";
 
 interface AuctionItem {
   id: string;
@@ -22,6 +22,9 @@ interface AuctionItem {
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export function AuctionAdmin() {
+  const [showBidModal, setShowBidModal] = useState(false);
+  const [bidModalItem, setBidModalItem] = useState<AuctionItem | null>(null);
+  const [isSubmittingBid, setIsSubmittingBid] = useState(false);
   const { data: items, mutate } = useSWR<AuctionItem[]>(
     "/api/admin/auction/items",
     fetcher
@@ -137,7 +140,7 @@ export function AuctionAdmin() {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center mb-1">
         <h2 className="font-playfair text-2xl font-bold text-[#D4AF37]">
           Auction Items
         </h2>
@@ -243,50 +246,134 @@ export function AuctionAdmin() {
       )}
 
       {/* Items List */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {items?.map((item) => (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {items?.slice().sort((a, b) => a.title.localeCompare(b.title)).map((item) => (
           <Card key={item.id} className="glass-strong p-4">
             <div className="flex justify-between items-start mb-2">
               <h3 className="font-playfair text-lg font-bold text-[#D4AF37]">
                 {item.title}
               </h3>
               <div className="flex gap-2">
-                <button onClick={() => handleEdit(item)}>
+                <button
+                  type="button"
+                  className="w-10 h-10 rounded-full bg-[#D4AF37]/20 hover:bg-[#D4AF37]/40 transition flex items-center justify-center"
+                  onClick={() => handleEdit(item)}
+                  title="Edit"
+                >
                   <Edit size={16} className="text-[#D4AF37]" />
                 </button>
-                <button onClick={() => handleDelete(item.id)}>
+                <button
+                  type="button"
+                  className="w-10 h-10 rounded-full bg-[#D4AF37]/20 hover:bg-[#D4AF37]/40 transition flex items-center justify-center"
+                  onClick={() => handleDelete(item.id)}
+                  title="Delete"
+                >
                   <Trash2 size={16} className="text-red-400" />
+                </button>
+                <button
+                  type="button"
+                  className="w-10 h-10 rounded-full bg-[#D4AF37]/20 hover:bg-[#D4AF37]/40 transition flex items-center justify-center"
+                  onClick={() => {
+                    setBidModalItem(item);
+                    setShowBidModal(true);
+                  }}
+                  title="Add Bid"
+                >
+                  <Gavel className="h-5 w-5 text-[#D4AF37]" />
                 </button>
               </div>
             </div>
-            <div className="text-sm text-[#f5f5f5]/80 mb-2">
+            <div className="text-sm text-[#f5f5f5]/80 mb-1">
               Current Bid: ${item.currentBid.toLocaleString()}
             </div>
-            {item.currentBidder && (
-              <div className="text-xs text-[#f5f5f5]/60 mb-3">
-                Leading: {item.currentBidder}
-              </div>
-            )}
-            <div className="flex gap-2">
-              <input
-                type="number"
-                placeholder="New bid"
-                className="flex-1 px-2 py-1 bg-[#1a1a1a]/50 border border-[#D4AF37]/30 rounded text-sm text-[#f5f5f5]"
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    const amount = parseFloat(e.currentTarget.value);
-                    const bidder = prompt("Bidder name:");
-                    if (bidder && amount) {
-                      handleUpdateBid(item.id, amount, bidder);
-                      e.currentTarget.value = "";
-                    }
-                  }
-                }}
-              />
+            <div className="text-xs text-[#f5f5f5]/60 mb-2">
+              Current Bidder: {item.currentBidder ? item.currentBidder : 'NA'}
             </div>
+            {/* Add Bid button moved to header row */}
           </Card>
         ))}
       </div>
-    </div>
+    {/* Bid Modal */}
+    {showBidModal && bidModalItem && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+        <div className="bg-[#222] rounded-2xl p-12 w-full max-w-xl min-h-[420px] relative border-4 border-[#D4AF37] shadow-2xl animate-pulse-slow flex flex-col justify-center">
+          <button
+            className="absolute top-4 right-4 text-[#D4AF37] text-4xl font-extrabold hover:text-white transition drop-shadow-lg z-10"
+            onClick={() => setShowBidModal(false)}
+            title="Close"
+            style={{ lineHeight: 1, padding: 0 }}
+          >
+            ×
+          </button>
+          <h3 className="font-playfair text-xl font-bold text-[#D4AF37] mb-4 text-center">
+            Add Bid for {bidModalItem.title}
+          </h3>
+          <form
+            onSubmit={async (e) => {
+              e.preventDefault();
+              if (isSubmittingBid) return;
+              setIsSubmittingBid(true);
+              try {
+                const form = e.target as HTMLFormElement;
+                const amountInput = form.elements.namedItem('amount') as HTMLInputElement;
+                const bidderInput = form.elements.namedItem('bidder') as HTMLInputElement;
+                const amount = parseFloat(amountInput.value);
+                let bidder = bidderInput.value.trim();
+                if (!amount || isNaN(amount)) {
+                  toast.error('Please enter a valid bid amount.');
+                  setIsSubmittingBid(false);
+                  return;
+                }
+                if (amount <= (bidModalItem.currentBid || 0)) {
+                  toast.error(`Bid must be greater than current bid ($${bidModalItem.currentBid.toLocaleString()})`);
+                  setIsSubmittingBid(false);
+                  return;
+                }
+                if (!bidder) bidder = 'NA';
+                await handleUpdateBid(bidModalItem.id, amount, bidder);
+                // Clear the form fields after successful submission
+                amountInput.value = '';
+                bidderInput.value = '';
+              } finally {
+                setIsSubmittingBid(false);
+              }
+            }}
+            className="flex flex-col gap-6"
+          >
+            <div>
+              <label className="block text-sm font-medium text-[#f5f5f5]/80 mb-1">Bid Amount * <span className="text-xs text-[#D4AF37]">(Current: ${bidModalItem.currentBid.toLocaleString()})</span></label>
+              <input
+                type="number"
+                name="amount"
+                min={((bidModalItem.currentBid || 0) + 0.01).toFixed(2)}
+                step="0.01"
+                required
+                className="w-full px-3 py-2 rounded bg-[#1a1a1a] border border-[#D4AF37]/30 text-[#f5f5f5] text-2xl"
+              />
+            </div>
+            <div className="mt-4">
+              <label className="block text-sm font-medium text-[#f5f5f5]/80 mb-1">Bidder Name (optional)</label>
+              <input
+                type="text"
+                name="bidder"
+                placeholder="Leave blank for 'NA'"
+                className="w-full px-3 py-2 rounded bg-[#1a1a1a] border border-[#D4AF37]/30 text-[#f5f5f5] text-2xl"
+              />
+            </div>
+            <div className="flex gap-2 justify-end mt-6">
+              {/* Cancel button hidden for now */}
+              <button
+                type="submit"
+                className="px-4 py-2 rounded bg-[#D4AF37] text-[#1a1a1a] font-bold hover:bg-[#bfa134] disabled:opacity-60 disabled:cursor-not-allowed"
+                disabled={isSubmittingBid}
+              >
+                {isSubmittingBid ? 'Submitting...' : 'Submit Bid'}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    )}
+  </div>
   );
 }
