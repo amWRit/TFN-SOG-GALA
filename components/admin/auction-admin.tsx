@@ -75,11 +75,23 @@ export function AuctionAdmin() {
         : "/api/admin/auction/items";
       const method = editingItem ? "PUT" : "POST";
 
+      // Convert Google Drive share link to direct image link if needed
+      let imageUrl = formData.imageUrl.trim();
+      // More robust Google Drive link extraction
+      const driveMatch = imageUrl.match(
+        /^https?:\/\/drive\.google\.com\/file\/d\/([\w-]+)\//
+      );
+      if (driveMatch) {
+        const fileId = driveMatch[1];
+        imageUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;
+      }
+
       const res = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...formData,
+          imageUrl,
           startingBid: parseFloat(formData.startingBid),
           endTime: formData.endTime ? new Date(formData.endTime).toISOString() : null,
         }),
@@ -132,6 +144,12 @@ export function AuctionAdmin() {
       if (res.ok) {
         toast.success("Bid updated!");
         mutate();
+        // Update modal label immediately
+        setBidModalItem((prev) =>
+          prev && prev.id === itemId
+            ? { ...prev, currentBid: newBid, currentBidder: bidder }
+            : prev
+        );
       }
     } catch (error) {
       toast.error("Error updating bid");
@@ -209,7 +227,12 @@ export function AuctionAdmin() {
                   setFormData({ ...formData, imageUrl: e.target.value })
                 }
                 className="w-full px-4 py-2 bg-[#1a1a1a]/50 border border-[#D4AF37]/30 rounded-lg text-[#f5f5f5]"
+                placeholder="Paste Google Drive shareable link or direct image URL"
               />
+              <p className="text-xs text-[#D4AF37] mt-1">
+                You can use a Google Drive shareable link set to <b>Anyone with the link can view</b>.<br/>
+                <span className="text-[#D4AF37]">(e.g. <span className="break-all">https://drive.google.com/file/d/FILE_ID/view?usp=sharing</span>).</span><br/>
+              </p>
             </div>
             <div>
               <label className="block text-sm font-medium text-[#f5f5f5]/80 mb-2">
