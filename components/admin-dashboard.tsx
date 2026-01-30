@@ -10,11 +10,12 @@ import { RegistrationList } from "@/components/admin/registration-list";
 import { AuctionAdmin } from "@/components/admin/auction-admin";
 import { EventAdmin } from "@/components/admin/event-admin";
 import { SheetsSync } from "@/components/admin/sheets-sync";
-import { LogOut, Users, Gavel, Calendar, RefreshCw, Home, Shield } from "lucide-react";
+import { ProgramAdmin } from "@/components/admin/program-admin";
+import { LogOut, Users, Gavel, Calendar, RefreshCw, Home, Shield, List as ListIcon } from "lucide-react";
 import toast from "react-hot-toast";
 import styles from '../styles/admin-dashboard.module.css';
 
-type Tab = "seating" | "auction" | "event" | "sheets";
+type Tab = "seating" | "auction" | "program" | "event" | "sheets";
 
 export function AdminDashboard() {
   const router = useRouter();
@@ -33,6 +34,7 @@ export function AdminDashboard() {
   const tabs = [
     { id: "seating" as Tab, label: "Seating", icon: Users },
     { id: "auction" as Tab, label: "Auction", icon: Gavel },
+    { id: "program" as Tab, label: "Program", icon: ListIcon },
     { id: "event" as Tab, label: "Event", icon: Calendar },
     { id: "sheets" as Tab, label: "Sheets Sync", icon: RefreshCw },
   ];
@@ -97,6 +99,7 @@ export function AdminDashboard() {
             </div>
           )}
           {activeTab === "auction" && <AuctionAdmin />}
+          {activeTab === "program" && <ProgramAdmin />}
           {activeTab === "event" && <EventAdmin />}
           {activeTab === "sheets" && <SheetsSync />}
         </motion.div>
