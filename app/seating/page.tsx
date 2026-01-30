@@ -71,9 +71,20 @@ type SeatCardProps = {
 
 const SeatCard: React.FC<SeatCardProps> = ({ seat, tableId, onClose }) => {
   const assigned = !!seat.registration;
+  const [bioExpanded, setBioExpanded] = React.useState(false);
+  const [quoteExpanded, setQuoteExpanded] = React.useState(false);
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/70 backdrop-blur-sm animate-fadeIn">
-      <div className="relative bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 rounded-3xl shadow-2xl w-full max-w-xs sm:max-w-md border border-purple-500/20 overflow-hidden">
+      <div
+        className="relative bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 rounded-3xl shadow-2xl w-full max-w-xs sm:max-w-md border border-purple-500/20 overflow-hidden"
+        style={{
+          maxHeight: '95vh',
+          display: 'flex',
+          flexDirection: 'column',
+          marginTop: '2.5vh',
+          marginBottom: '2.5vh',
+        }}
+      >
         {/* Close button */}
         <button
           onClick={onClose}
@@ -82,19 +93,21 @@ const SeatCard: React.FC<SeatCardProps> = ({ seat, tableId, onClose }) => {
           <X className="w-6 h-6" />
         </button>
 
-        {/* Decorative gradient */}
-        <div className="absolute top-0 left-0 right-0 h-24 sm:h-32 bg-gradient-to-br from-purple-600/20 to-pink-600/20" />
+        {/* Decorative gradient moved inside profile image container */}
 
         {/* Content */}
-        <div className="relative p-4 pt-10 sm:p-8 sm:pt-12">
+        <div
+          className="relative p-4 pt-10 sm:p-8 sm:pt-12 overflow-y-auto"
+          style={{ maxHeight: '80vh' }}
+        >
           {/* Profile Image or Placeholder */}
           <div className="flex justify-center mb-4 sm:mb-6">
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-600 to-pink-600 rounded-full blur-xl opacity-50" />
+            <div className="relative w-20 h-20 sm:w-32 sm:h-32 flex items-center justify-center">
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-600 to-pink-600 rounded-full blur-xl opacity-50 z-0" />
               <img
                 src={assigned ? (seat.registration?.imageUrl || "/images/userplaceholder.png") : "/images/seatplaceholder.png"}
                 alt={assigned ? seat.registration?.name : "Vacant Seat"}
-                className="relative w-20 h-20 sm:w-32 sm:h-32 rounded-full object-cover border-4 border-white/10 shadow-xl"
+                className="relative w-20 h-20 sm:w-32 sm:h-32 rounded-full object-cover border-4 border-white/10 shadow-xl z-10"
               />
             </div>
           </div>
@@ -119,28 +132,63 @@ const SeatCard: React.FC<SeatCardProps> = ({ seat, tableId, onClose }) => {
             )}
           </div>
 
-          {/* Quote or Placeholder */}
+          {/* Quote (collapsible) */}
           {assigned && seat.registration?.quote ? (
             <blockquote className="mb-4 sm:mb-6 text-center">
               <p className="text-lg text-gray-300 italic" style={{ fontFamily: 'Playfair Display, serif' }}>
-                "{seat.registration?.quote}"
+                {(seat.registration?.quote ?? '').length > 120 ? (
+                  <>
+                    {quoteExpanded
+                      ? '“' + seat.registration?.quote + '”'
+                      : '“' + (seat.registration?.quote ?? '').slice(0, 120) + '...”'}
+                    <button
+                      className="ml-2 text-xs text-purple-400 underline focus:outline-none"
+                      onClick={() => setQuoteExpanded((v) => !v)}
+                      type="button"
+                    >
+                      {quoteExpanded ? 'Show less' : 'Show more'}
+                    </button>
+                  </>
+                ) : (
+                  <>“{seat.registration?.quote}”</>
+                )}
               </p>
             </blockquote>
           ) : null}
 
-
-          {/* Bio or Placeholder + Reserve Button */}
+          {/* Bio (collapsible) or Placeholder + Reserve Button */}
           <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-3 sm:p-5 border border-white/10 min-h-[48px] flex flex-col items-center gap-3">
-            <p className="text-gray-300 leading-relaxed text-sm sm:text-base">
-              {assigned && seat.registration?.bio ? seat.registration?.bio : "Reserve this spot for yourself!"}
-            </p>
-            {!assigned && (
-              <a
-                href="/register"
-                className="mt-2 px-5 py-2 rounded-full bg-gradient-to-r from-purple-600 to-pink-500 text-white font-semibold shadow hover:from-pink-500 hover:to-purple-600 transition"
-              >
-                Reserve this seat
-              </a>
+            {assigned && seat.registration?.bio ? (
+              <p className="text-gray-300 leading-relaxed text-sm sm:text-base">
+                {(seat.registration?.bio ?? '').length > 120 ? (
+                  <>
+                    {bioExpanded
+                      ? seat.registration?.bio
+                      : (seat.registration?.bio ?? '').slice(0, 120) + '...'}
+                    <button
+                      className="ml-2 text-xs text-purple-400 underline focus:outline-none"
+                      onClick={() => setBioExpanded((v) => !v)}
+                      type="button"
+                    >
+                      {bioExpanded ? 'Show less' : 'Show more'}
+                    </button>
+                  </>
+                ) : (
+                  seat.registration?.bio
+                )}
+              </p>
+            ) : (
+              <>
+                <p className="text-gray-300 leading-relaxed text-sm sm:text-base">
+                  Reserve this spot for yourself!
+                </p>
+                <a
+                  href="/register"
+                  className="mt-2 px-5 py-2 rounded-full bg-gradient-to-r from-purple-600 to-pink-500 text-white font-semibold shadow hover:from-pink-500 hover:to-purple-600 transition"
+                >
+                  Reserve this seat
+                </a>
+              </>
             )}
           </div>
 

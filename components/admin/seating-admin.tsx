@@ -393,7 +393,7 @@ export function SeatingAdmin() {
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
             <div
               className={styles.adminCard + " max-w-md w-full relative animate-fade-in p-0"}
-              style={{ maxHeight: '90vh', overflowY: 'auto', marginTop: '5vh', marginBottom: '5vh', minWidth: 0 }}
+              style={{ maxHeight: '90vh', overflowY: 'auto', marginTop: '2vh', marginBottom: '2vh', minWidth: 0 }}
             >
               <button
                 className="absolute top-3 right-4 text-2xl text-[#D4AF37] hover:text-[#B8941F] focus:outline-none"
@@ -403,11 +403,11 @@ export function SeatingAdmin() {
               >
                 ×
               </button>
-              <div className="flex flex-col items-center p-6 pt-10">
-                <div className="flex flex-col items-center w-full">
+              <div className="flex flex-col items-center p-3 pt-2">
+                <div className="flex flex-col items-center w-full" style={{paddingTop: 12, paddingBottom: 12}}>
                   <div className="flex gap-2 mb-4 w-full justify-center">
                     <span className="bg-[#D4AF37]/10 text-[#D4AF37] font-bold px-3 py-1 rounded-full text-xs tracking-wide border border-[#D4AF37]/30">Table {selectedSeat.tableNumber}</span>
-                    <span className="bg-[#f5f5f5]/10 text-[#f5f5f5] font-bold px-3 py-1 rounded-full text-xs tracking-wide border border-[#f5f5f5]/20">Seat {selectedSeat.seatNumber}</span>
+                    <span className="bg-[#D4AF37]/10 text-[#D4AF37] font-bold px-3 py-1 rounded-full text-xs tracking-wide border border-[#D4AF37]/30">Seat {selectedSeat.seatNumber}</span>
                   </div>
                   {selectedSeat.registrationId && registrationMap[selectedSeat.registrationId]?.imageUrl ? (
                     <img
@@ -432,7 +432,7 @@ export function SeatingAdmin() {
                   {selectedSeat.registrationId && registrationMap[selectedSeat.registrationId]?.quote && (
                     <div>
                       <span className="text-xs text-[#D4AF37] font-semibold uppercase">Quote</span>
-                      <div className="italic text-[#f5f5f5]/80 text-sm mt-1 border-l-4 border-[#D4AF37] pl-3 mx-auto max-w-xs">
+                      <div className="italic text-[#f5f5f5]/80 text-sm mt-1 pl-3 max-w-xs text-left">
                         {(registrationMap[selectedSeat.registrationId]?.quote ?? "").length > 120 ? (
                           <>
                             {quoteExpanded
