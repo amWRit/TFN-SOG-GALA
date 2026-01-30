@@ -1,3 +1,24 @@
+.adminButtonRed {
+  background: linear-gradient(90deg, #dc2626 0%, #b91c1c 100%);
+  color: #fff;
+  padding: 0.85rem 2.2rem;
+  border-radius: 0.75rem;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  letter-spacing: 0.01em;
+  box-shadow: 0 2px 8px #dc262633;
+  transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+  margin-top: 0.5rem;
+  outline: none;
+  display: inline-block;
+}
+.adminButtonRed:hover, .adminButtonRed:focus {
+  box-shadow: 0 6px 24px #dc262655;
+  background: linear-gradient(90deg, #b91c1c 0%, #dc2626 100%);
+  transform: scale(1.05);
+}
 /* Admin Dashboard specific styles */
 
 .adminCard {
@@ -78,5 +99,28 @@
   color: #23272F;
   box-shadow: none;
   border-color: #B8941F;
+  transform: scale(1.05);
+}
+
+.adminButtonSmallRed {
+  background: #dc2626;
+  color: #fff;
+  padding: 0.45rem 1.1rem;
+  border-radius: 0.6rem;
+  font-weight: bold;
+  border: 1.5px solid #dc2626;
+  cursor: pointer;
+  font-size: 0.98rem;
+  letter-spacing: 0.01em;
+  box-shadow: none;
+  transition: transform 0.2s, background 0.2s;
+  margin-top: 0.2rem;
+  outline: none;
+  display: inline-block;
+}
+.adminButtonSmallRed:hover, .adminButtonSmallRed:focus {
+  background: #b91c1c;
+  color: #fff;
+  border-color: #b91c1c;
   transform: scale(1.05);
 }

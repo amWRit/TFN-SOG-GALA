@@ -80,15 +80,11 @@ export const ProgramModal: React.FC<ProgramModalProps> = ({ open, mode, item, on
               {onDelete && (
                 <button
                   type="button"
-                  onClick={() => {
-                    if (window.confirm("Are you sure you want to delete this program? This action cannot be undone.")) {
-                      onDelete();
-                    }
-                  }}
+                  onClick={onDelete}
                   className="flex items-center gap-1 px-4 py-2 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-700 transition"
                   title="Delete"
                 >
-                  <Trash2 size={18} /> Delete
+                  <Trash2 size={18} />
                 </button>
               )}
           </div>
@@ -231,7 +227,14 @@ export const ProgramModal: React.FC<ProgramModalProps> = ({ open, mode, item, on
             {isView ? (
               <div className="w-full px-4 py-2 rounded-lg text-[#f5f5f5] bg-transparent border border-transparent break-all">
                 {form.externalLink ? (
-                  <a href={form.externalLink} target="_blank" rel="noopener noreferrer" className="underline text-[#D4AF37]">{form.externalLink}</a>
+                  (() => {
+                    const url = form.externalLink.match(/^https?:\/\//i)
+                      ? form.externalLink
+                      : `https://${form.externalLink}`;
+                    return (
+                      <a href={url} target="_blank" rel="noopener noreferrer" className="underline text-[#D4AF37]">{form.externalLink}</a>
+                    );
+                  })()
                 ) : ""}
               </div>
             ) : (

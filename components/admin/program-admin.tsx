@@ -3,6 +3,7 @@ import toast from "react-hot-toast";
 import ProgramListCard from "./program-list-card";
 import ProgramDetailCard from "./program-detail-card";
 import ProgramModal, { ProgramModalMode } from "./program-modal";
+import { ConfirmModal } from "./index";
 import styles from "../../styles/admin-dashboard.module.css";
 import { Button } from "../ui/button";
 import { Plus } from "lucide-react";
@@ -34,6 +35,8 @@ export function ProgramAdmin() {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState<ProgramModalMode>("view");
   const [saving, setSaving] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     fetchPrograms().then((data) => {
@@ -61,9 +64,32 @@ export function ProgramAdmin() {
     setSelected(null);
   };
   const handleDelete = () => {
-    // TODO: Implement delete logic
-    setModalOpen(false);
-    setSelected(null);
+    setConfirmOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!selected?.id) return;
+    setDeleting(true);
+    try {
+      const res = await fetch(`/api/program/${selected.id}`, { method: "DELETE" });
+      if (res.ok) {
+        toast.success("Program deleted!");
+        setModalOpen(false);
+        setSelected(null);
+        setLoading(true);
+        fetchPrograms().then((data) => {
+          setPrograms(data);
+          setLoading(false);
+        });
+      } else {
+        toast.error("Failed to delete program");
+      }
+    } catch (e) {
+      toast.error("Error deleting program");
+    } finally {
+      setDeleting(false);
+      setConfirmOpen(false);
+    }
   };
   const handleSave = async (data: any) => {
     setSaving(true);
@@ -173,6 +199,16 @@ export function ProgramAdmin() {
           onEdit={modalMode === "view" ? handleEdit : undefined}
           onDelete={modalMode === "view" ? handleDelete : undefined}
           saving={saving}
+        />
+        <ConfirmModal
+          open={confirmOpen}
+          title="Delete Program"
+          message="Are you sure you want to delete this program item? This action cannot be undone."
+          confirmLabel="Delete"
+          cancelLabel="Cancel"
+          loading={deleting}
+          onConfirm={handleConfirmDelete}
+          onCancel={() => setConfirmOpen(false)}
         />
     </div>
   );
