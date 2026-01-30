@@ -169,11 +169,14 @@ export function ProgramAdmin() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
-        <h2 className={styles.sectionTitle}>Program Schedule</h2>
-        <Button variant="default" className="flex items-center gap-2" onClick={handleAdd}>
-          <Plus size={18} /> Add Program
-        </Button>
+      <div className="flex items-center justify-between mb-2">
+        {/* <h2 className={styles.sectionTitle}>Program Schedule</h2> */}
+        <h2 className="font-playfair text-2xl font-bold text-[#D4AF37] hidden md:block">
+          Program Schedule
+        </h2>
+        <button className={styles.adminButtonSmall} onClick={handleAdd} type="button">
+          <Plus size={18} className="mr-2" /> Add Program
+        </button>
       </div>
       {loading ? (
         <div className="text-gray-400 py-10 text-center">Loading programs...</div>

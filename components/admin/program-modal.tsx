@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2, CalendarClock, MapPin, User, Link2, Info, AlignLeft } from "lucide-react";
 import styles from '../../styles/admin-dashboard.module.css';
 
 export type ProgramModalMode = "add" | "edit" | "view";
@@ -59,10 +59,10 @@ export const ProgramModal: React.FC<ProgramModalProps> = ({ open, mode, item, on
         >
           ×
         </button>
-        <h2 className="text-2xl font-bold mb-4 text-center">
-          {isAdd && "Add Program"}
-          {isEdit && "Edit Program"}
-          {isView && "View Program"}
+        <h2 className="text-2xl font-bold mb-4 text-center flex items-center gap-2 justify-center">
+          {isAdd && <><Info className="inline-block mb-1" size={24}/> Add Program</>}
+          {isEdit && <><Pencil className="inline-block mb-1" size={22}/> Edit Program</>}
+          {isView && <><Info className="inline-block mb-1" size={24}/> Program Details</>}
         </h2>
         {/* Edit/Delete buttons in view mode */}
         {isView && (onEdit || onDelete) && (
@@ -71,30 +71,32 @@ export const ProgramModal: React.FC<ProgramModalProps> = ({ open, mode, item, on
               <button
                 type="button"
                 onClick={onEdit}
-                className="flex items-center gap-1 px-4 py-2 rounded-lg bg-[#D4AF37] text-[#18181b] font-semibold hover:bg-[#bfa43a] transition"
+                className={styles.adminButtonSmall}
                 title="Edit"
               >
                 <Pencil size={18} />
               </button>
             )}
-              {onDelete && (
-                <button
-                  type="button"
-                  onClick={onDelete}
-                  className="flex items-center gap-1 px-4 py-2 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-700 transition"
-                  title="Delete"
-                >
-                  <Trash2 size={18} />
-                </button>
-              )}
+            {onDelete && (
+              <button
+                type="button"
+                onClick={onDelete}
+                className={styles.adminButtonSmallRed}
+                title="Delete"
+              >
+                <Trash2 size={18} />
+              </button>
+            )}
           </div>
         )}
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Title */}
           <div>
-            <label className="block text-sm font-semibold mb-1">Title</label>
+            <label className="block text-sm font-semibold mb-1 flex items-center gap-2"><AlignLeft size={18}/> Title</label>
             {isView ? (
-              <div className="w-full px-4 py-2 rounded-lg text-[#f5f5f5] bg-transparent border border-transparent font-bold text-lg">{form.title}</div>
+              <div className="w-full px-4 py-2 rounded-lg text-[#f5f5f5] bg-transparent border border-transparent font-bold text-lg flex items-center gap-2">
+                <AlignLeft size={20} className="opacity-70" /> {form.title}
+              </div>
             ) : (
               <input
                 className="w-full px-4 py-2 bg-[#1a1a1a]/50 border border-[#D4AF37]/30 rounded-lg text-[#f5f5f5]"
@@ -108,9 +110,11 @@ export const ProgramModal: React.FC<ProgramModalProps> = ({ open, mode, item, on
           </div>
           {/* Description */}
           <div>
-            <label className="block text-sm font-semibold mb-1">Description</label>
+            <label className="block text-sm font-semibold mb-1 flex items-center gap-2"><Info size={18}/> Description</label>
             {isView ? (
-              <div className="w-full px-4 py-2 rounded-lg text-[#f5f5f5] bg-transparent border border-transparent whitespace-pre-line">{form.description}</div>
+              <div className="w-full px-4 py-2 rounded-lg text-[#f5f5f5] bg-transparent border border-transparent whitespace-pre-line flex items-start gap-2">
+                <Info size={18} className="opacity-70 mt-1" /> <span>{form.description}</span>
+              </div>
             ) : (
               <textarea
                 className="w-full px-4 py-2 bg-[#1a1a1a]/50 border border-[#D4AF37]/30 rounded-lg text-[#f5f5f5]"
@@ -125,9 +129,11 @@ export const ProgramModal: React.FC<ProgramModalProps> = ({ open, mode, item, on
           {/* Type & Location */}
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1">
-              <label className="block text-sm font-semibold mb-1">Type</label>
+              <label className="block text-sm font-semibold mb-1 flex items-center gap-2"><Info size={16}/> Type</label>
               {isView ? (
-                <div className="w-full px-4 py-2 rounded-lg text-[#f5f5f5] bg-transparent border border-transparent">{form.type}</div>
+                <div className="w-full px-4 py-2 rounded-lg text-[#f5f5f5] bg-transparent border border-transparent flex items-center gap-2">
+                  <Info size={16} className="opacity-70" /> {form.type}
+                </div>
               ) : (
                 <input
                   className="w-full px-4 py-2 bg-[#1a1a1a]/50 border border-[#D4AF37]/30 rounded-lg text-[#f5f5f5]"
@@ -139,9 +145,11 @@ export const ProgramModal: React.FC<ProgramModalProps> = ({ open, mode, item, on
               )}
             </div>
             <div className="flex-1">
-              <label className="block text-sm font-semibold mb-1">Location</label>
+              <label className="block text-sm font-semibold mb-1 flex items-center gap-2"><MapPin size={16}/> Location</label>
               {isView ? (
-                <div className="w-full px-4 py-2 rounded-lg text-[#f5f5f5] bg-transparent border border-transparent">{form.location}</div>
+                <div className="w-full px-4 py-2 rounded-lg text-[#f5f5f5] bg-transparent border border-transparent flex items-center gap-2">
+                  <MapPin size={16} className="opacity-70" /> {form.location}
+                </div>
               ) : (
                 <input
                   className="w-full px-4 py-2 bg-[#1a1a1a]/50 border border-[#D4AF37]/30 rounded-lg text-[#f5f5f5]"
@@ -156,10 +164,10 @@ export const ProgramModal: React.FC<ProgramModalProps> = ({ open, mode, item, on
           {/* Start & End Time */}
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1">
-              <label className="block text-sm font-semibold mb-1">Start Time</label>
+              <label className="block text-sm font-semibold mb-1 flex items-center gap-2"><CalendarClock size={16}/> Start Time</label>
               {isView ? (
-                <div className="w-full px-4 py-2 rounded-lg text-[#f5f5f5] bg-transparent border border-transparent">
-                  {form.startTime ? new Date(form.startTime).toLocaleString() : ""}
+                <div className="w-full px-4 py-2 rounded-lg text-[#f5f5f5] bg-transparent border border-transparent flex items-center gap-2">
+                  <CalendarClock size={16} className="opacity-70" /> {form.startTime ? new Date(form.startTime).toLocaleString() : ""}
                 </div>
               ) : (
                 <input
@@ -173,10 +181,10 @@ export const ProgramModal: React.FC<ProgramModalProps> = ({ open, mode, item, on
               )}
             </div>
             <div className="flex-1">
-              <label className="block text-sm font-semibold mb-1">End Time</label>
+              <label className="block text-sm font-semibold mb-1 flex items-center gap-2"><CalendarClock size={16}/> End Time</label>
               {isView ? (
-                <div className="w-full px-4 py-2 rounded-lg text-[#f5f5f5] bg-transparent border border-transparent">
-                  {form.endTime ? new Date(form.endTime).toLocaleString() : ""}
+                <div className="w-full px-4 py-2 rounded-lg text-[#f5f5f5] bg-transparent border border-transparent flex items-center gap-2">
+                  <CalendarClock size={16} className="opacity-70" /> {form.endTime ? new Date(form.endTime).toLocaleString() : ""}
                 </div>
               ) : (
                 <input
@@ -193,9 +201,11 @@ export const ProgramModal: React.FC<ProgramModalProps> = ({ open, mode, item, on
           {/* Speaker & Bio */}
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1">
-              <label className="block text-sm font-semibold mb-1">Speaker</label>
+              <label className="block text-sm font-semibold mb-1 flex items-center gap-2"><User size={16}/> Speaker</label>
               {isView ? (
-                <div className="w-full px-4 py-2 rounded-lg text-[#f5f5f5] bg-transparent border border-transparent">{form.speaker}</div>
+                <div className="w-full px-4 py-2 rounded-lg text-[#f5f5f5] bg-transparent border border-transparent flex items-center gap-2">
+                  <User size={16} className="opacity-70" /> {form.speaker}
+                </div>
               ) : (
                 <input
                   className="w-full px-4 py-2 bg-[#1a1a1a]/50 border border-[#D4AF37]/30 rounded-lg text-[#f5f5f5]"
@@ -207,9 +217,11 @@ export const ProgramModal: React.FC<ProgramModalProps> = ({ open, mode, item, on
               )}
             </div>
             <div className="flex-1">
-              <label className="block text-sm font-semibold mb-1">Speaker Bio</label>
+              <label className="block text-sm font-semibold mb-1 flex items-center gap-2"><User size={16}/> Speaker Bio</label>
               {isView ? (
-                <div className="w-full px-4 py-2 rounded-lg text-[#f5f5f5] bg-transparent border border-transparent">{form.speakerBio}</div>
+                <div className="w-full px-4 py-2 rounded-lg text-[#f5f5f5] bg-transparent border border-transparent flex items-center gap-2">
+                  <User size={16} className="opacity-70" /> {form.speakerBio}
+                </div>
               ) : (
                 <input
                   className="w-full px-4 py-2 bg-[#1a1a1a]/50 border border-[#D4AF37]/30 rounded-lg text-[#f5f5f5]"
@@ -223,9 +235,10 @@ export const ProgramModal: React.FC<ProgramModalProps> = ({ open, mode, item, on
           </div>
           {/* External Link */}
           <div>
-            <label className="block text-sm font-semibold mb-1">External Link</label>
+            <label className="block text-sm font-semibold mb-1 flex items-center gap-2"><Link2 size={16}/> External Link</label>
             {isView ? (
-              <div className="w-full px-4 py-2 rounded-lg text-[#f5f5f5] bg-transparent border border-transparent break-all">
+              <div className="w-full px-4 py-2 rounded-lg text-[#f5f5f5] bg-transparent border border-transparent break-all flex items-center gap-2">
+                <Link2 size={16} className="opacity-70" />
                 {form.externalLink ? (
                   (() => {
                     const url = form.externalLink.match(/^https?:\/\//i)
@@ -252,7 +265,7 @@ export const ProgramModal: React.FC<ProgramModalProps> = ({ open, mode, item, on
             <div className="flex gap-2 mt-2">
               <button
                 type="submit"
-                className="flex-1 py-2 rounded-lg bg-[#D4AF37] text-[#18181b] font-semibold hover:bg-[#bfa43a] transition disabled:opacity-60 disabled:cursor-not-allowed"
+                className={styles.adminButtonSmall + " flex-1"}
                 disabled={saving}
               >
                 {saving ? (isAdd ? "Adding..." : "Saving...") : (isAdd ? "Add Program" : "Save Changes")}
@@ -260,7 +273,7 @@ export const ProgramModal: React.FC<ProgramModalProps> = ({ open, mode, item, on
               {isEdit && (
                 <button
                   type="button"
-                  className="flex-1 py-2 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-700 transition disabled:opacity-60 disabled:cursor-not-allowed"
+                  className={styles.adminButtonSmallRed + " flex-1"}
                   onClick={onClose}
                   disabled={saving}
                 >

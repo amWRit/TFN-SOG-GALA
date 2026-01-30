@@ -299,14 +299,14 @@ export function SeatingAdmin() {
               </div>
             </div>
             {showAddTableModal && (
-              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
                 <div className={styles.adminCard + " max-w-md w-full relative animate-fade-in"}>
                   <button
                     className="absolute top-3 right-4 text-2xl text-[#D4AF37] hover:text-[#B8941F] focus:outline-none"
                     onClick={() => setShowAddTableModal(false)}
                     aria-label="Close"
                     type="button"
-                  >
+                  > 
                     ×
                   </button>
                   <h2 className="font-playfair text-xl font-bold text-[#D4AF37] mb-4">Add Table & Seats</h2>

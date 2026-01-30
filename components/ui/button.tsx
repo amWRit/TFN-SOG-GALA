@@ -8,11 +8,19 @@ export interface ButtonProps
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = "default", size = "default", ...props }, ref) => {
+  ({ className = '', variant = "default", size = "default", ...props }, ref) => {
+    // Remove focus ring for adminButtonSmall and adminButtonSmallRed
+    const isAdminButton =
+      typeof className === 'string' &&
+      (className.includes('adminButtonSmall') || className.includes('adminButtonSmallRed'));
+    const baseClasses = [
+      "inline-flex items-center justify-center rounded-lg font-medium transition-all duration-300 disabled:pointer-events-none disabled:opacity-50",
+      !isAdminButton && "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]"
+    ];
     return (
       <button
         className={cn(
-          "inline-flex items-center justify-center rounded-lg font-medium transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] disabled:pointer-events-none disabled:opacity-50",
+          baseClasses,
           {
             "bg-[#D4AF37] text-[#1a1a1a] hover:bg-[#B8941F] hover:scale-105 glow-gold-hover":
               variant === "default" || variant === "gold",

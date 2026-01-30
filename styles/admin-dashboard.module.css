@@ -1,3 +1,18 @@
+/* Make calendar icon in datetime-local input white */
+input[type='datetime-local']::-webkit-calendar-picker-indicator {
+  filter: invert(1) brightness(2);
+  opacity: 0.85;
+}
+input[type='datetime-local']::-moz-calendar-picker-indicator {
+  filter: invert(1) brightness(2);
+  opacity: 0.85;
+}
+input[type='datetime-local']::-ms-input-placeholder {
+  color: #fff;
+}
+input[type='datetime-local']::placeholder {
+  color: #fff;
+}
 .adminButtonRed {
   background: linear-gradient(90deg, #dc2626 0%, #b91c1c 100%);
   color: #fff;
@@ -22,7 +37,8 @@
 /* Admin Dashboard specific styles */
 
 .adminCard {
-  background: rgba(31, 41, 55, 0.97);
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(212, 175, 55, 0.3);
   border-radius: 1.25rem;
   box-shadow: 0 8px 32px 0 rgba(0,0,0,0.37), 0 0 0 2px #d4af3722;
   padding: 2rem 1.5rem;
@@ -66,39 +82,36 @@
   cursor: pointer;
   font-size: 1.1rem;
   letter-spacing: 0.01em;
-  box-shadow: 0 2px 8px #d4af3733;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: transform 0.2s;
   margin-top: 0.5rem;
   outline: none;
   display: inline-block;
 }
 .adminButton:hover, .adminButton:focus {
-  box-shadow: 0 6px 24px #D4AF3755;
   background: linear-gradient(90deg, #B8941F 0%, #D4AF37 100%);
   transform: scale(1.05);
 }
 
 .adminButtonSmall {
-  background: #f5f5f5;
-  color: #23272F;
+  background: linear-gradient(90deg, #D4AF37 0%, #B8941F 100%);
+  color: #1a1a1a;
   padding: 0.45rem 1.1rem;
   border-radius: 0.6rem;
   font-weight: bold;
-  border: 1.5px solid #d4af3744;
+  border: none;
   cursor: pointer;
   font-size: 0.98rem;
   letter-spacing: 0.01em;
-  box-shadow: none;
   transition: transform 0.2s;
   margin-top: 0.2rem;
   outline: none;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4em;
 }
 .adminButtonSmall:hover, .adminButtonSmall:focus {
-  background: #e5e7eb;
-  color: #23272F;
-  box-shadow: none;
-  border-color: #B8941F;
+  background: linear-gradient(90deg, #B8941F 0%, #D4AF37 100%);
   transform: scale(1.05);
 }
 
@@ -123,4 +136,14 @@
   color: #fff;
   border-color: #b91c1c;
   transform: scale(1.05);
+}
+
+/* Remove focus-visible ring for admin buttons */
+.adminButtonSmall:focus-visible,
+.adminButtonSmallRed:focus-visible {
+  box-shadow: none !important;
+  outline: none !important;
+  --tw-ring-shadow: none !important;
+  --tw-ring-color: transparent !important;
+  transition: none !important;
 }
