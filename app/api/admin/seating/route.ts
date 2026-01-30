@@ -75,15 +75,10 @@ export async function POST(request: Request) {
     if (!tableNumber || !seatCount) {
       return NextResponse.json({ error: 'Missing tableNumber or seatCount' }, { status: 400 });
     }
-    // Create seats for the table
+    // Create seats for the table (only valid fields)
     const seats = Array.from({ length: seatCount }, (_, i) => ({
       tableNumber: Number(tableNumber),
       seatNumber: i + 1,
-      name: null,
-      quote: null,
-      bio: null,
-      involvement: null,
-      imageUrl: null,
     }));
     await prisma.seat.createMany({ data: seats, skipDuplicates: true });
     return NextResponse.json({ success: true });

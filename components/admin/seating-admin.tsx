@@ -34,6 +34,9 @@ interface RegistrationData {
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export function SeatingAdmin() {
+    // Collapsible state for guest detail modal
+    const [bioExpanded, setBioExpanded] = useState(false);
+    const [quoteExpanded, setQuoteExpanded] = useState(false);
   const { data: seats, mutate } = useSWR<SeatData[]>("/api/admin/seating", fetcher);
   const { data: registrationsData } = useSWR("/api/admin/registration", fetcher);
   const registrations: RegistrationData[] = registrationsData?.registrations || [];
@@ -299,14 +302,14 @@ export function SeatingAdmin() {
               </div>
             </div>
             {showAddTableModal && (
-              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
                 <div className={styles.adminCard + " max-w-md w-full relative animate-fade-in"}>
                   <button
                     className="absolute top-3 right-4 text-2xl text-[#D4AF37] hover:text-[#B8941F] focus:outline-none"
                     onClick={() => setShowAddTableModal(false)}
                     aria-label="Close"
                     type="button"
-                  >
+                  > 
                     ×
                   </button>
                   <h2 className="font-playfair text-xl font-bold text-[#D4AF37] mb-4">Add Table & Seats</h2>
@@ -387,8 +390,11 @@ export function SeatingAdmin() {
           </div>
         {/* Details Modal */}
         {selectedSeat && !showEditModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-            <div className={styles.adminCard + " max-w-md w-full relative animate-fade-in p-0 overflow-visible"}>
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+            <div
+              className={styles.adminCard + " max-w-md w-full relative animate-fade-in p-0"}
+              style={{ maxHeight: '90vh', overflowY: 'auto', marginTop: '2vh', marginBottom: '2vh', minWidth: 0 }}
+            >
               <button
                 className="absolute top-3 right-4 text-2xl text-[#D4AF37] hover:text-[#B8941F] focus:outline-none"
                 onClick={() => { setSelectedSeat(null); setShowEditModal(false); }}
@@ -397,11 +403,11 @@ export function SeatingAdmin() {
               >
                 ×
               </button>
-              <div className="flex flex-col items-center p-6 pt-10">
-                <div className="flex flex-col items-center w-full">
+              <div className="flex flex-col items-center p-3 pt-2">
+                <div className="flex flex-col items-center w-full" style={{paddingTop: 12, paddingBottom: 12}}>
                   <div className="flex gap-2 mb-4 w-full justify-center">
                     <span className="bg-[#D4AF37]/10 text-[#D4AF37] font-bold px-3 py-1 rounded-full text-xs tracking-wide border border-[#D4AF37]/30">Table {selectedSeat.tableNumber}</span>
-                    <span className="bg-[#f5f5f5]/10 text-[#f5f5f5] font-bold px-3 py-1 rounded-full text-xs tracking-wide border border-[#f5f5f5]/20">Seat {selectedSeat.seatNumber}</span>
+                    <span className="bg-[#D4AF37]/10 text-[#D4AF37] font-bold px-3 py-1 rounded-full text-xs tracking-wide border border-[#D4AF37]/30">Seat {selectedSeat.seatNumber}</span>
                   </div>
                   {selectedSeat.registrationId && registrationMap[selectedSeat.registrationId]?.imageUrl ? (
                     <img
@@ -418,25 +424,66 @@ export function SeatingAdmin() {
                     <h2 className="font-playfair text-2xl font-bold text-[#D4AF37] mb-1">
                       {selectedSeat.registrationId && registrationMap[selectedSeat.registrationId]?.name ? registrationMap[selectedSeat.registrationId].name : <span className="text-gray-400">(Empty)</span>}
                     </h2>
-                    {selectedSeat.registrationId && registrationMap[selectedSeat.registrationId]?.quote && (
-                      <div className="italic text-[#f5f5f5]/80 text-base mb-2 border-l-4 border-[#D4AF37] pl-3 mx-auto max-w-xs">“{registrationMap[selectedSeat.registrationId].quote}”</div>
-                    )}
                   </div>
                 </div>
                 <div className="w-full border-t border-[#D4AF37]/20 my-4"></div>
                 <div className="w-full space-y-2">
+                  {/* Collapsible Quote */}
+                  {selectedSeat.registrationId && registrationMap[selectedSeat.registrationId]?.quote && (
+                    <div>
+                      <span className="text-xs text-[#D4AF37] font-semibold uppercase">Quote</span>
+                      <div className="italic text-[#f5f5f5]/80 text-sm mt-1 pl-3 max-w-xs text-left">
+                        {(registrationMap[selectedSeat.registrationId]?.quote ?? "").length > 120 ? (
+                          <>
+                            {quoteExpanded
+                              ? '“' + registrationMap[selectedSeat.registrationId]?.quote + '”'
+                              : '“' + (registrationMap[selectedSeat.registrationId]?.quote ?? '').slice(0, 120) + '...”'}
+                            <button
+                              className="ml-2 text-xs text-[#D4AF37] underline focus:outline-none"
+                              onClick={() => setQuoteExpanded((v) => !v)}
+                              type="button"
+                            >
+                              {quoteExpanded ? 'Show less' : 'Show more'}
+                            </button>
+                          </>
+                        ) : (
+                          <>“{registrationMap[selectedSeat.registrationId]?.quote}”</>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                  {/* Collapsible Bio */}
                   {selectedSeat.registrationId && registrationMap[selectedSeat.registrationId]?.bio && (
                     <div>
                       <span className="text-xs text-[#D4AF37] font-semibold uppercase">Bio</span>
-                      <div className="text-[#f5f5f5] text-sm mt-1">{registrationMap[selectedSeat.registrationId].bio}</div>
+                      <div className="text-[#f5f5f5] text-sm mt-1">
+                        {registrationMap[selectedSeat.registrationId]?.bio && (registrationMap[selectedSeat.registrationId]?.bio ?? "").length > 120 ? (
+                          <>
+                            {bioExpanded
+                              ? registrationMap[selectedSeat.registrationId]?.bio
+                              : (registrationMap[selectedSeat.registrationId]?.bio ?? '').slice(0, 120) + '...'}
+                            <button
+                              className="ml-2 text-xs text-[#D4AF37] underline focus:outline-none"
+                              onClick={() => setBioExpanded((v) => !v)}
+                              type="button"
+                            >
+                              {bioExpanded ? 'Show less' : 'Show more'}
+                            </button>
+                          </>
+                        ) : (
+                          registrationMap[selectedSeat.registrationId]?.bio
+                        )}
+                      </div>
                     </div>
                   )}
+                  {/* Involvement */}
                   {selectedSeat.registrationId && registrationMap[selectedSeat.registrationId]?.involvement && (
                     <div>
                       <span className="text-xs text-[#D4AF37] font-semibold uppercase">Involvement</span>
                       <div className="text-[#f5f5f5] text-sm mt-1">{registrationMap[selectedSeat.registrationId].involvement}</div>
                     </div>
                   )}
+                  {/* Image URL */}
                   {selectedSeat.registrationId && registrationMap[selectedSeat.registrationId]?.imageUrl && (
                     <div>
                       <span className="text-xs text-[#D4AF37] font-semibold uppercase">Image URL</span>
@@ -464,8 +511,11 @@ export function SeatingAdmin() {
         )}
         {/* Edit Modal */}
         {selectedSeat && showEditModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-            <div className={styles.adminCard + " max-w-md w-full relative animate-fade-in"}>
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+            <div
+              className={styles.adminCard + " max-w-md w-full relative animate-fade-in"}
+              style={{ maxHeight: '90vh', overflowY: 'auto', marginTop: '5vh', marginBottom: '5vh', minWidth: 0 }}
+            >
               <button
                 className="absolute top-3 right-4 text-2xl text-[#D4AF37] hover:text-[#B8941F] focus:outline-none"
                 onClick={() => { setShowEditModal(false); }}
@@ -493,23 +543,33 @@ export function SeatingAdmin() {
                   <label className={styles.adminFormLabel}>
                     Quote
                   </label>
-                  <textarea
-                    value={formData.quote}
-                    onChange={(e) => setFormData({ ...formData, quote: e.target.value })}
-                    className={styles.adminInput}
-                    rows={2}
-                  />
+                  <div className="relative">
+                    <textarea
+                      value={formData.quote}
+                      onChange={(e) => setFormData({ ...formData, quote: e.target.value })}
+                      className={styles.adminInput}
+                      rows={2}
+                      maxLength={1000}
+                      style={{ marginBottom: 0 }}
+                    />
+                    <div className="text-xs text-gray-400 text-right mt-1">Max length: 1000 characters</div>
+                  </div>
                 </div>
                 <div>
                   <label className={styles.adminFormLabel}>
                     Bio
                   </label>
-                  <input
-                    type="text"
-                    value={formData.bio}
-                    onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
-                    className={styles.adminInput}
-                  />
+                  <div className="relative">
+                    <textarea
+                      value={formData.bio}
+                      onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
+                      className={styles.adminInput}
+                      rows={3}
+                      maxLength={1000}
+                      style={{ marginBottom: 0 }}
+                    />
+                    <div className="text-xs text-gray-400 text-right mt-1">Max length: 1000 characters</div>
+                  </div>
                 </div>
                 <div>
                   <label className={styles.adminFormLabel}>

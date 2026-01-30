@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
 import useSWR from "swr";
 import { Plus, Edit, Trash2, Gavel, Pause, Play } from "lucide-react";
+import styles from '../../styles/admin-dashboard.module.css';
 
 interface AuctionItem {
   id: string;
@@ -207,11 +208,10 @@ export function AuctionAdmin() {
           </div>
         </div>
         <div className="flex-shrink-0 flex justify-end" style={{ minWidth: 0 }}>
-          <Button variant="gold" onClick={handleCreate}>
-            {/* Only icon on small screens, icon+text on md+ */}
+          <button className={styles.adminButtonSmall} onClick={handleCreate} type="button">
             <span className="inline md:hidden"><Plus size={20} /></span>
             <span className="hidden md:inline-flex items-center"><Plus size={18} className="mr-2" />Add Item</span>
-          </Button>
+          </button>
         </div>
       </div>
 
@@ -325,10 +325,20 @@ export function AuctionAdmin() {
             </div>
           </div>
           <div className="flex gap-2 mt-4 justify-end">
-            <Button variant="gold" onClick={handleSave}>Save</Button>
-            <Button variant="red" onClick={() => setShowForm(false)}>
+            <button
+              className={styles.adminButtonSmall}
+              type="button"
+              onClick={handleSave}
+            >
+              Save
+            </button>
+            <button
+              className={styles.adminButtonSmallRed}
+              type="button"
+              onClick={() => setShowForm(false)}
+            >
               Cancel
-            </Button>
+            </button>
           </div>
         </Card>
       )}

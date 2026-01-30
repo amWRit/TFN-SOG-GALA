@@ -73,7 +73,9 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
   const isClosed = !item.isActive || (item.endTime && new Date(item.endTime).getTime() <= new Date().getTime());
 
   return (
-    <Card className={`bg-white/10 backdrop-blur-md border border-white/20 overflow-hidden hover:scale-105 transition-transform duration-300 ${isClosed ? "opacity-60" : ""}`}>
+    <Card className={`bg-white/10 backdrop-blur-md border border-white/20 overflow-hidden hover:scale-105 transition-transform duration-300 ${isClosed ? "opacity-60" : ""}`} style={{
+      background: "rgba(36,24,64,0.93)"
+    }}>
       {/* Image */}
       {item.imageUrl && (
         <div className="relative w-full h-48 overflow-hidden">

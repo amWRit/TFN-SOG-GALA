@@ -29,21 +29,21 @@ const Navbar = () => {
           </div>
           {/* Desktop Links */}
           <div className="hidden md:flex space-x-10">
-            {[
-              { href: '#home', label: 'Home' },
-              { href: '#highlights', label: 'Highlights' },
-              { href: '#impact', label: 'Impact' },
-            ].map(link => (
-              <a
-                key={link.href}
-                href={link.href}
-                className="relative text-white font-semibold tracking-wide px-2 py-1 transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold"
-                tabIndex={0}
-              >
-                <span className="relative z-10">{link.label}</span>
-                <span className="absolute left-0 bottom-0 w-full h-0.5 bg-gradient-to-r from-gold to-gold-dark scale-x-0 group-hover:scale-x-100 group-focus:scale-x-100 transition-transform duration-300 origin-left" aria-hidden="true"></span>
-              </a>
-            ))}
+              {[
+                { href: '#home', label: 'Home' },
+                { href: '#highlights', label: 'Highlights' },
+                { href: '/program', label: 'Program' },
+              ].map(link => (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  className="relative text-white font-semibold tracking-wide px-2 py-1 transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+                  tabIndex={0}
+                >
+                  <span className="relative z-10">{link.label}</span>
+                  <span className="absolute left-0 bottom-0 w-full h-0.5 bg-gradient-to-r from-gold to-gold-dark scale-x-0 group-hover:scale-x-100 group-focus:scale-x-100 transition-transform duration-300 origin-left" aria-hidden="true"></span>
+                </a>
+              ))}
           </div>
           {/* Admin & RSVP Buttons */}
             <div className="flex items-center space-x-2 ml-4 hidden md:flex">
@@ -78,7 +78,6 @@ const Navbar = () => {
           <div className="md:hidden flex flex-col items-center bg-gray-900/95 backdrop-blur-md py-4 rounded-b-xl shadow-xl animate-fade-in">
             <a href="#home" className="text-white py-2 w-full text-center hover:bg-purple-700 transition" onClick={() => setMenuOpen(false)}>Home</a>
             <a href="#highlights" className="text-white py-2 w-full text-center hover:bg-purple-700 transition" onClick={() => setMenuOpen(false)}>Highlights</a>
-            <a href="#impact" className="text-white py-2 w-full text-center hover:bg-purple-700 transition" onClick={() => setMenuOpen(false)}>Impact</a>
             <a
               href="/admin/dashboard"
               className="bg-gradient-to-r from-gold to-gold-dark text-[#23272F] px-6 py-2.5 rounded-full font-semibold border border-[#D4AF37] mt-3 w-full hover:shadow-2xl transition-all duration-300 text-center"
