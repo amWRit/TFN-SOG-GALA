@@ -16,7 +16,7 @@ const ProgramCard: React.FC<ProgramCardProps> = ({ item, truncate = defaultTrunc
       borderRadius: 32,
       boxShadow: "0 8px 32px #0005",
       color: "#fff",
-      width: "min(100%, 370px)",
+      width: "min(100%, 500px)",
       minHeight: 0,
       padding: "2rem 1.5rem 1.5rem 1.5rem",
       display: "flex",
@@ -25,7 +25,13 @@ const ProgramCard: React.FC<ProgramCardProps> = ({ item, truncate = defaultTrunc
       position: "relative",
       overflow: "hidden",
       transition: "transform 0.2s, box-shadow 0.2s",
+      cursor: 'pointer',
+      touchAction: 'manipulation',
     }}
+    onMouseOver={e => { e.currentTarget.style.boxShadow = '0 12px 36px #0007'; e.currentTarget.style.transform = 'scale(1.025)'; }}
+    onMouseOut={e => { e.currentTarget.style.boxShadow = '0 8px 32px #0005'; e.currentTarget.style.transform = 'scale(1)'; }}
+    onTouchStart={e => { e.currentTarget.style.boxShadow = '0 12px 36px #0007'; e.currentTarget.style.transform = 'scale(1.025)'; }}
+    onTouchEnd={e => { e.currentTarget.style.boxShadow = '0 8px 32px #0005'; e.currentTarget.style.transform = 'scale(1)'; }}
   >
     {/* Sequence Badge */}
     {typeof item.sequence !== 'undefined' && (
@@ -84,7 +90,7 @@ const ProgramCard: React.FC<ProgramCardProps> = ({ item, truncate = defaultTrunc
       <span
         style={{
           fontWeight: 700,
-          fontSize: 22,
+          fontSize: 18,
           letterSpacing: 0.5,
           maxWidth: "90%",
           whiteSpace: "nowrap",

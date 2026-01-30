@@ -9,6 +9,7 @@ type ProgramItem = {
   endTime?: string;
   type?: string;
   speaker?: string;
+  speakerBio?: string;
   location?: string;
   description?: string;
   imageUrl?: string;
@@ -23,9 +24,9 @@ interface ProgramModalProps {
 }
 
 export default function ProgramModal({ open, onClose, item }: ProgramModalProps) {
+  const [descOpen, setDescOpen] = React.useState(false);
+  const [speakerModalOpen, setSpeakerModalOpen] = React.useState(false);
   if (!open || !item) return null;
-
-    const [descOpen, setDescOpen] = React.useState(false);
 
   return (
     <div
@@ -140,7 +141,7 @@ export default function ProgramModal({ open, onClose, item }: ProgramModalProps)
           </div>
         )}
         {/* Title */}
-        <h2 style={{ fontWeight: 800, fontSize: 28, marginBottom: 8, lineHeight: 1.2 }}>{item.title || 'No Title'}</h2>
+        <h2 style={{ fontWeight: 800, fontSize: 28, marginBottom: 8, lineHeight: 1.2, textAlign: 'left' }}>{item.title || 'No Title'}</h2>
         {/* Type and Sequence */}
         <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 8 }}>
           <span style={{ color: "#F472B6", fontWeight: 700, fontSize: 16, display: "flex", alignItems: "center", gap: 6 }}>
@@ -158,8 +159,90 @@ export default function ProgramModal({ open, onClose, item }: ProgramModalProps)
         </div>
         {/* Speaker */}
         <div style={{ fontSize: 15, color: "#fff", opacity: 0.8, marginBottom: 8, display: "flex", alignItems: "center", gap: 8 }}>
-          <User size={16} style={{ marginRight: 4, verticalAlign: "middle" }} /> Host/Speaker: {item.speaker ? item.speaker : '--'}
+          <User size={16} style={{ marginRight: 4, verticalAlign: "middle" }} /> Host/Speaker: {item.speaker ? (
+            <button
+              style={{
+                background: "none",
+                border: "none",
+                color: "#F472B6",
+                textDecoration: "underline",
+                cursor: "pointer",
+                fontWeight: 600,
+                fontSize: 15,
+                padding: 0,
+              }}
+              onClick={() => setSpeakerModalOpen(true)}
+              aria-label={`Show details for ${item.speaker}`}
+            >
+              {item.speaker}
+            </button>
+          ) : '--'}
         </div>
+        {/* Speaker Detail Modal */}
+        {speakerModalOpen && item.speaker && (
+          <div
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              width: "100vw",
+              height: "100vh",
+              background: "rgba(0,0,0,0.45)",
+              backdropFilter: "blur(8px)",
+              WebkitBackdropFilter: "blur(8px)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              zIndex: 2000,
+            }}
+          >
+            <div
+              style={{
+                background: "rgba(36,24,64,0.99)",
+                borderRadius: 24,
+                boxShadow: "0 8px 32px #0008",
+                color: "#fff",
+                width: "min(95vw, 420px)",
+                maxWidth: "95vw",
+                padding: "2.2rem 1.7rem 1.7rem 1.7rem",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-start",
+                position: "relative",
+                maxHeight: "90vh",
+                overflow: "auto",
+              }}
+            >
+              <button
+                onClick={() => setSpeakerModalOpen(false)}
+                style={{
+                  position: "absolute",
+                  top: 16,
+                  right: 16,
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  color: "#fff",
+                  zIndex: 2,
+                }}
+                aria-label="Close Speaker Detail"
+              >
+                <X size={28} />
+              </button>
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", marginBottom: 12 }}>
+                <User size={40} style={{ marginBottom: 12, color: "#60A5FA", flexShrink: 0 }} />
+                <h3 style={{ fontWeight: 700, fontSize: 22, marginBottom: 8, textAlign: "center", width: "100%" }}>{item.speaker}</h3>
+              </div>
+              <div style={{ width: "100%" }}>
+                {item.speakerBio ? (
+                  <div style={{ fontSize: 15, color: "#fff", lineHeight: 1.5, textAlign: "left", wordBreak: "break-word" }}>{item.speakerBio}</div>
+                ) : (
+                  <div style={{ fontSize: 15, color: "#fff", opacity: 0.7, textAlign: "left" }}>No bio available.</div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
         {/* Location */}
         <div style={{ fontSize: 15, color: "#fff", opacity: 0.8, marginBottom: 8, display: "flex", alignItems: "center", gap: 8 }}>
           <MapPin size={16} style={{ marginRight: 4, verticalAlign: "middle" }} /> {item.location ? item.location : '--'}

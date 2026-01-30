@@ -109,21 +109,24 @@ export const ProgramModal: React.FC<ProgramModalProps> = ({ open, mode, item, on
             )}
           </div>
           {/* Description */}
-          <div>
+          <div className="my-4">
             <label className="block text-sm font-semibold mb-1 flex items-center gap-2"><Info size={18}/> Description</label>
             {isView ? (
               <div className="w-full px-4 py-2 rounded-lg text-[#f5f5f5] bg-transparent border border-transparent whitespace-pre-line flex items-start gap-2">
                 <Info size={18} className="opacity-70 mt-1" /> <span>{form.description}</span>
               </div>
             ) : (
-              <textarea
-                className="w-full px-4 py-2 bg-[#1a1a1a]/50 border border-[#D4AF37]/30 rounded-lg text-[#f5f5f5]"
-                name="description"
-                value={form.description ?? ""}
-                onChange={handleChange}
-                rows={3}
-                maxLength={500}
-              />
+              <>
+                <textarea
+                  className="w-full px-4 py-2 bg-[#1a1a1a]/50 border border-[#D4AF37]/30 rounded-lg text-[#f5f5f5]"
+                  name="description"
+                  value={form.description ?? ""}
+                  onChange={handleChange}
+                  rows={3}
+                  maxLength={1000}
+                />
+                <div className="text-xs text-gray-400 mt-1 text-right">Max length: 1000 characters</div>
+              </>
             )}
           </div>
           {/* Type & Location */}
@@ -199,39 +202,41 @@ export const ProgramModal: React.FC<ProgramModalProps> = ({ open, mode, item, on
             </div>
           </div>
           {/* Speaker & Bio */}
-          <div className="flex flex-col md:flex-row gap-4">
-            <div className="flex-1">
-              <label className="block text-sm font-semibold mb-1 flex items-center gap-2"><User size={16}/> Speaker</label>
-              {isView ? (
-                <div className="w-full px-4 py-2 rounded-lg text-[#f5f5f5] bg-transparent border border-transparent flex items-center gap-2">
-                  <User size={16} className="opacity-70" /> {form.speaker}
-                </div>
-              ) : (
-                <input
-                  className="w-full px-4 py-2 bg-[#1a1a1a]/50 border border-[#D4AF37]/30 rounded-lg text-[#f5f5f5]"
-                  name="speaker"
-                  value={form.speaker ?? ""}
-                  onChange={handleChange}
-                  maxLength={60}
-                />
-              )}
-            </div>
-            <div className="flex-1">
-              <label className="block text-sm font-semibold mb-1 flex items-center gap-2"><User size={16}/> Speaker Bio</label>
-              {isView ? (
-                <div className="w-full px-4 py-2 rounded-lg text-[#f5f5f5] bg-transparent border border-transparent flex items-center gap-2">
-                  <User size={16} className="opacity-70" /> {form.speakerBio}
-                </div>
-              ) : (
-                <input
+          <div>
+            <label className="block text-sm font-semibold mb-1 flex items-center gap-2"><User size={16}/> Speaker</label>
+            {isView ? (
+              <div className="w-full px-4 py-2 rounded-lg text-[#f5f5f5] bg-transparent border border-transparent flex items-center gap-2">
+                <User size={16} className="opacity-70" /> {form.speaker}
+              </div>
+            ) : (
+              <input
+                className="w-full px-4 py-2 bg-[#1a1a1a]/50 border border-[#D4AF37]/30 rounded-lg text-[#f5f5f5]"
+                name="speaker"
+                value={form.speaker ?? ""}
+                onChange={handleChange}
+                maxLength={60}
+              />
+            )}
+          </div>
+          <div className="mt-2">
+            <label className="block text-sm font-semibold mb-1 flex items-center gap-2"><User size={16}/> Speaker Bio</label>
+            {isView ? (
+              <div className="w-full px-4 py-2 rounded-lg text-[#f5f5f5] bg-transparent border border-transparent flex items-center gap-2">
+                <User size={16} className="opacity-70" /> {form.speakerBio}
+              </div>
+            ) : (
+              <>
+                <textarea
                   className="w-full px-4 py-2 bg-[#1a1a1a]/50 border border-[#D4AF37]/30 rounded-lg text-[#f5f5f5]"
                   name="speakerBio"
                   value={form.speakerBio ?? ""}
                   onChange={handleChange}
-                  maxLength={200}
+                  rows={3}
+                  maxLength={1000}
                 />
-              )}
-            </div>
+                <div className="text-xs text-gray-400 mt-1 text-right">Max length: 1000 characters</div>
+              </>
+            )}
           </div>
           {/* External Link */}
           <div>
