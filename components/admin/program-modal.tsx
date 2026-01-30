@@ -1,3 +1,30 @@
+// Comprehensive list of program types
+const programTypes = [
+  "Welcome",
+  "Registration",
+  "Opening Remarks",
+  "Speech",
+  "Keynote",
+  "Fireside Chat",
+  "Workshop",
+  "Panel",
+  "Q&A",
+  "Dinner",
+  "Auction",
+  "Raffle",
+  "Performance",
+  "Entertainment",
+  "Break",
+  "Intermission",
+  "Award",
+  "Sponsor Recognition",
+  "Group Photo",
+  "Networking",
+  "Refreshments",
+  "Farewell",
+  "Closing",
+  "Other"
+];
 import React, { useState } from "react";
 import { Pencil, Trash2, CalendarClock, MapPin, User, Link2, Info, AlignLeft } from "lucide-react";
 import styles from '../../styles/admin-dashboard.module.css';
@@ -37,7 +64,9 @@ export const ProgramModal: React.FC<ProgramModalProps> = ({ open, mode, item, on
     setForm(item ? { ...defaultProgram, ...item } : defaultProgram);
   }, [item, open]);
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
+  function handleChange(
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
 
@@ -138,13 +167,18 @@ export const ProgramModal: React.FC<ProgramModalProps> = ({ open, mode, item, on
                   <Info size={16} className="opacity-70" /> {form.type}
                 </div>
               ) : (
-                <input
+                <select
                   className="w-full px-4 py-2 bg-[#1a1a1a]/50 border border-[#D4AF37]/30 rounded-lg text-[#f5f5f5]"
                   name="type"
                   value={form.type ?? ""}
                   onChange={handleChange}
-                  maxLength={30}
-                />
+                  required
+                >
+                  <option value="" disabled>Select type…</option>
+                  {programTypes.map((type) => (
+                    <option key={type} value={type}>{type}</option>
+                  ))}
+                </select>
               )}
             </div>
             <div className="flex-1">

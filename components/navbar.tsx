@@ -32,7 +32,6 @@ const Navbar = () => {
               {[
                 { href: '#home', label: 'Home' },
                 { href: '#highlights', label: 'Highlights' },
-                { href: '#impact', label: 'Impact' },
                 { href: '/program', label: 'Program' },
               ].map(link => (
                 <a
@@ -79,7 +78,6 @@ const Navbar = () => {
           <div className="md:hidden flex flex-col items-center bg-gray-900/95 backdrop-blur-md py-4 rounded-b-xl shadow-xl animate-fade-in">
             <a href="#home" className="text-white py-2 w-full text-center hover:bg-purple-700 transition" onClick={() => setMenuOpen(false)}>Home</a>
             <a href="#highlights" className="text-white py-2 w-full text-center hover:bg-purple-700 transition" onClick={() => setMenuOpen(false)}>Highlights</a>
-            <a href="#impact" className="text-white py-2 w-full text-center hover:bg-purple-700 transition" onClick={() => setMenuOpen(false)}>Impact</a>
             <a
               href="/admin/dashboard"
               className="bg-gradient-to-r from-gold to-gold-dark text-[#23272F] px-6 py-2.5 rounded-full font-semibold border border-[#D4AF37] mt-3 w-full hover:shadow-2xl transition-all duration-300 text-center"
