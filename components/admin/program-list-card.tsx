@@ -26,7 +26,7 @@ const ProgramListCard: React.FC<ProgramListCardProps> = ({ item, onView, dragHan
       >
         <GripVertical size={22} />
       </div>
-      <div className="text-2xl font-bold text-[#D4AF37] w-6 text-center select-none">{item.sequence}</div>
+      <div className="text-2xl font-bold text-[#D4AF37] w-10 text-center select-none">{item.sequence}</div>
       <div className="flex-1 min-w-0 flex items-center gap-1 overflow-hidden">
         <span className="font-semibold text-lg text-white truncate block max-w-[180px] sm:max-w-[220px] md:max-w-[320px] mr-4" title={item.title} style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.title}</span>
         <span className="hidden md:inline text-sm text-gray-400 font-normal whitespace-nowrap max-w-[80px] mr-4">

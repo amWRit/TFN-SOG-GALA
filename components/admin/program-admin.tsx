@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import ProgramListCard from "./program-list-card";
 import ProgramDetailCard from "./program-detail-card";
+import ProgramModal, { ProgramModalMode } from "./program-modal";
 import styles from "../../styles/admin-dashboard.module.css";
 import { Button } from "../ui/button";
 import { Plus } from "lucide-react";
@@ -29,7 +31,9 @@ export function ProgramAdmin() {
   const [programs, setPrograms] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<any | null>(null);
-  const [showDetail, setShowDetail] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState<ProgramModalMode>("view");
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     fetchPrograms().then((data) => {
@@ -40,11 +44,62 @@ export function ProgramAdmin() {
 
   const handleView = (item: any) => {
     setSelected(item);
-    setShowDetail(true);
+    setModalMode("view");
+    setModalOpen(true);
   };
-  const handleCloseDetail = () => {
-    setShowDetail(false);
+  const handleAdd = () => {
     setSelected(null);
+    setModalMode("add");
+    setModalOpen(true);
+  };
+  const handleEdit = () => {
+    setModalMode("edit");
+    setModalOpen(true);
+  };
+  const handleCloseModal = () => {
+    setModalOpen(false);
+    setSelected(null);
+  };
+  const handleDelete = () => {
+    // TODO: Implement delete logic
+    setModalOpen(false);
+    setSelected(null);
+  };
+  const handleSave = async (data: any) => {
+    setSaving(true);
+    try {
+      let res;
+      if (modalMode === "add") {
+        res = await fetch("/api/program", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
+      } else if (modalMode === "edit" && selected?.id) {
+        res = await fetch(`/api/program/${selected.id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
+      }
+      if (res?.ok) {
+        toast.success(modalMode === "add" ? "Program added!" : "Program updated!");
+        // Refresh list
+        setLoading(true);
+        fetchPrograms().then((data) => {
+          setPrograms(data);
+          setLoading(false);
+        });
+        setModalOpen(false);
+        setSelected(null);
+      } else {
+        toast.error("Failed to save program");
+      }
+    } catch (e) {
+      toast.error("Error saving program");
+    } finally {
+      setSaving(false);
+    }
   };
 
   // dnd-kit setup
@@ -90,7 +145,7 @@ export function ProgramAdmin() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <h2 className={styles.sectionTitle}>Program Schedule</h2>
-        <Button variant="default" className="flex items-center gap-2">
+        <Button variant="default" className="flex items-center gap-2" onClick={handleAdd}>
           <Plus size={18} /> Add Program
         </Button>
       </div>
@@ -108,21 +163,17 @@ export function ProgramAdmin() {
         </DndContext>
       )}
 
-      {/* Detail Modal */}
-      {showDetail && selected && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-          <div className="relative">
-            <button
-              onClick={handleCloseDetail}
-              className="absolute top-2 right-2 text-gray-400 hover:text-white z-10 text-2xl font-bold"
-              aria-label="Close"
-            >
-              ×
-            </button>
-            <ProgramDetailCard item={selected} isAdmin className={styles.auctionDetailCard} onEdit={() => {}} onDelete={() => {}} />
-          </div>
-        </div>
-      )}
+      {/* Program Modal for add/edit/view */}
+        <ProgramModal
+          open={modalOpen}
+          mode={modalMode}
+          item={selected}
+          onSave={handleSave}
+          onClose={handleCloseModal}
+          onEdit={modalMode === "view" ? handleEdit : undefined}
+          onDelete={modalMode === "view" ? handleDelete : undefined}
+          saving={saving}
+        />
     </div>
   );
 }
