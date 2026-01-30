@@ -27,6 +27,32 @@ const ProgramCard: React.FC<ProgramCardProps> = ({ item, truncate = defaultTrunc
       transition: "transform 0.2s, box-shadow 0.2s",
     }}
   >
+    {/* Sequence Badge */}
+    {typeof item.sequence !== 'undefined' && (
+      <div
+        style={{
+          position: "absolute",
+          top: 18,
+          left: 18,
+          background: "#F472B6",
+          color: "#fff",
+          width: 36,
+          height: 36,
+          borderRadius: "50%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontWeight: 800,
+          fontSize: 17,
+          boxShadow: "0 2px 8px #0003",
+          zIndex: 3,
+          border: "2px solid #fff2",
+        }}
+        title="Sequence Number"
+      >
+        {item.sequence}
+      </div>
+    )}
     {item.imageUrl ? (
       <img
         src={item.imageUrl}
