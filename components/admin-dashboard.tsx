@@ -56,9 +56,11 @@ export function AdminDashboard() {
           <div className="flex items-center gap-4">
             <a href="/" className={styles.adminButtonSmall + " flex items-center px-4 py-2"} style={{ justifyContent: 'center'}}>
               <Home size={18} className="mr-1" />
+              <span className="hidden sm:inline">Home</span>
             </a>
             <button onClick={handleLogout} className={styles.adminButtonSmall + " flex items-center px-4 py-2"} style={{justifyContent: 'center'}}>
               <LogOut size={18} className="mr-1" />
+              <span className="hidden sm:inline">Logout</span>
             </button>
           </div>
         </div>
