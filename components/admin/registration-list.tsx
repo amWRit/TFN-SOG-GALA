@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Pencil, Trash2 } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Pencil, Trash2, ChevronDown, ChevronUp } from "lucide-react";
 import useSWR from "swr";
 import styles from '../../styles/admin-dashboard.module.css';
 
@@ -31,9 +31,29 @@ interface Seat {
 const fetcher = (url: string) => fetch(url).then(res => res.json());
 
 export function RegistrationList() {
+  // Collapsible state for each table
+  const [openTables, setOpenTables] = useState<{ [key: number]: boolean }>({});
+
   const { data, isLoading, error, mutate } = useSWR<{ registrations: Registration[] }>('/api/admin/registration', fetcher);
   const { data: seatData, isLoading: seatsLoading, error: seatsError, mutate: mutateSeats } = useSWR<Seat[]>('/api/admin/seating', fetcher);
   const [selected, setSelected] = useState<Registration | null>(null);
+
+  useEffect(() => {
+    if (data?.registrations) {
+      const tables = Array.from(new Set(data.registrations.map(r => r.tablePreference || 0)));
+      setOpenTables(prev => {
+        const updated = { ...prev };
+        tables.forEach(t => {
+          if (!(t in updated)) updated[t] = false; // collapsed by default
+        });
+        return updated;
+      });
+    }
+  }, [data]);
+
+  const toggleTable = (tableNum: number) => {
+    setOpenTables((prev) => ({ ...prev, [tableNum]: !prev[tableNum] }));
+  };
 
   // Map registrationId to seat
   const registrationIdToSeat: Record<string, Seat> = {};
@@ -112,43 +132,58 @@ export function RegistrationList() {
       </div>
       {isLoading && <div>Loading...</div>}
       {error && <div className="text-pink-400">Error loading registrations.</div>}
-      <div className="space-y-6">
+      <div className="space-y-6 max-h-[60vh] overflow-y-auto">
         {Object.keys(grouped).sort((a, b) => Number(a) - Number(b)).map(table => (
           <div key={table}>
-            <h3 className="text-lg font-semibold text-[#D4AF37] mb-2">Table {table === '0' ? <span className="text-gray-400">(No Pref)</span> : table}</h3>
-            <div className="space-y-2">
-              {grouped[Number(table)].sort((a, b) => (a.seatPreference || 0) - (b.seatPreference || 0)).map(reg => (
-                <button
-                  key={reg.id}
-                  className="w-full flex items-center justify-between bg-[#23272F] rounded-lg px-4 py-2 hover:bg-[#D4AF37]/10 transition border border-[#D4AF37]/20"
-                  onClick={() => setSelected(reg)}
-                >
-                  <div className="flex flex-col text-left">
-                    <span className="font-semibold text-[#f5f5f5]">{reg.name}</span>
-                    <span className="text-xs text-[#D4AF37]">
-                      {registrationIdToSeat[reg.id]
-                        ? `Seat ${registrationIdToSeat[reg.id].seatNumber}`
-                        : <span className="text-gray-400">Unassigned</span>}
-                    </span>
-                  </div>
-                  <div className="flex gap-3 items-center">
-                    <span className={reg.paymentStatus ? "text-green-400 font-bold" : "text-pink-400 font-bold"}>
-                      {reg.paymentStatus ? "Paid" : "Unpaid"}
-                    </span>
-                    <span className={registrationIdToSeat[reg.id] ? "text-green-400 font-bold" : "text-pink-400 font-bold"}>
-                      {registrationIdToSeat[reg.id] ? "Assigned" : "Unassigned"}
-                    </span>
-                  </div>
-                </button>
-              ))}
-            </div>
+            <button
+              className="flex items-center gap-2 text-lg font-semibold text-[#D4AF37] mb-2 focus:outline-none w-full"
+              onClick={() => toggleTable(Number(table))}
+              aria-expanded={openTables[Number(table)]}
+              aria-controls={`table-content-${table}`}
+              type="button"
+            >
+              <span>
+                Preference: {table === '0' ? <span className="text-gray-400">(No Pref)</span> : `Table ${table}`}
+              </span>
+              <span className="ml-2 text-base cursor-pointer">
+                {openTables[Number(table)] ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+              </span>
+            </button>
+            {openTables[Number(table)] && (
+              <div id={`table-content-${table}`} className="space-y-2">
+                {grouped[Number(table)].sort((a, b) => (a.seatPreference || 0) - (b.seatPreference || 0)).map(reg => (
+                  <button
+                    key={reg.id}
+                    className="w-full flex items-center justify-between bg-[#23272F] rounded-lg px-4 py-2 hover:bg-[#D4AF37]/10 transition border border-[#D4AF37]/20"
+                    onClick={() => setSelected(reg)}
+                  >
+                    <div className="flex flex-col text-left">
+                      <span className="font-semibold text-[#f5f5f5]">{reg.name}</span>
+                      <span className="text-xs text-[#D4AF37]">
+                        {registrationIdToSeat[reg.id]
+                          ? `Seat ${registrationIdToSeat[reg.id].seatNumber}`
+                          : <span className="text-gray-400">Unassigned</span>}
+                      </span>
+                    </div>
+                    <div className="flex gap-3 items-center">
+                      <span className={reg.paymentStatus ? "text-green-400 font-bold" : "text-pink-400 font-bold"}>
+                        {reg.paymentStatus ? "Paid" : "Unpaid"}
+                      </span>
+                      <span className={registrationIdToSeat[reg.id] ? "text-green-400 font-bold" : "text-pink-400 font-bold"}>
+                        {registrationIdToSeat[reg.id] ? "Assigned" : "Unassigned"}
+                      </span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         ))}
       </div>
 
       {/* Modal for registration details */}
       {selected && (
-        <div className="fixed inset-0 z-50 flex justify-center items-start bg-black/60 overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex justify-center items-start bg-black/60  backdrop-blur-md overflow-y-auto">
           <div
             className={styles.adminCard + " w-full relative animate-fade-in mt-4 mb-4 py-4 mx-2"}
             style={{
@@ -207,12 +242,10 @@ export function RegistrationList() {
                   <h2 className="font-playfair text-2xl font-bold text-[#D4AF37] mb-1">
                     {selected.name}
                   </h2>
-                  {/* Quote removed */}
                 </div>
               </div>
               <div className="w-full border-t border-[#D4AF37]/20 my-4"></div>
               <div className="w-full space-y-2">
-                {/* Bio removed */}
                 <div className="flex flex-col sm:flex-row gap-2 w-full">
                   <div className="flex-1 min-w-0">
                     <span className="text-xs text-[#D4AF37] font-semibold uppercase">Seat Preference</span>
@@ -445,7 +478,7 @@ function RegistrationModalActions({ registration, onClose, onUpdated }: { regist
             ))}
           </div>
           <div className="flex gap-2 mt-6 justify-end">
-            <button className={styles.adminButton + " bg-transparent text-[#D4AF37] border border-[#D4AF37]"} type="button" onClick={() => setShowSeatPicker(false)}>
+            <button className={styles.adminButtonRed + " bg-transparent text-[#D4AF37] border border-[#D4AF37]"} type="button" onClick={() => setShowSeatPicker(false)}>
               Cancel
             </button>
             <button className={styles.adminButton} onClick={handleConfirmSeat} disabled={saving}>
@@ -536,13 +569,13 @@ function RegistrationModalActions({ registration, onClose, onUpdated }: { regist
               <button className={styles.adminButton + " flex-1"} onClick={handleSave} disabled={saving}>
                 {saving ? "Saving..." : "Save"}
               </button>
-              <button className={styles.adminButton + " flex-1 bg-transparent text-[#D4AF37] border border-[#D4AF37]"} type="button" onClick={() => setEdit(false)}>
+              <button className={styles.adminButtonRed + " flex-1 bg-transparent text-[#D4AF37] border border-[#D4AF37]"} type="button" onClick={() => setEdit(false)}>
                 Cancel
               </button>
             </div>
             {/* Seat picker modal for change */}
             {showSeatPicker && seats && (
-              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md">
                 <div
                   className={styles.adminCard + " w-full relative animate-fade-in p-6 mx-2"}
                   style={{
@@ -583,11 +616,11 @@ function RegistrationModalActions({ registration, onClose, onUpdated }: { regist
                     ))}
                   </div>
                   <div className="flex gap-2 mt-6 justify-end">
-                    <button className={styles.adminButton + " bg-transparent text-[#D4AF37] border border-[#D4AF37]"} type="button" onClick={() => setShowSeatPicker(false)}>
+                    <button className={styles.adminButtonRed + " bg-transparent text-[#D4AF37] border border-[#D4AF37]"} type="button" onClick={() => setShowSeatPicker(false)}>
                       Cancel
                     </button>
                     <button className={styles.adminButton} onClick={handleConfirmSeat} disabled={saving}>
-                      {saving ? 'Changing...' : 'Change'}
+                      {saving ? 'Saving...' : 'Save'}
                     </button>
                   </div>
                 </div>
@@ -596,17 +629,12 @@ function RegistrationModalActions({ registration, onClose, onUpdated }: { regist
           </>
         ) : (
           <>
-            <button className={styles.adminButton + " flex-1"} onClick={onClose}>
+            <button className={styles.adminButtonRed + " flex-1"} onClick={onClose}>
               Close
             </button>
             <button className={styles.adminButton + " flex-1"} onClick={() => setEdit(true)}>
               Edit
             </button>
-            {registration.paymentStatus && !registration.seatAssignedStatus && (
-              <button className={styles.adminButton + " flex-1 bg-green-600 hover:bg-green-700 text-white"} onClick={handleAssignSeat}>
-                Assign Seat
-              </button>
-            )}
           </>
         )}
       </div>

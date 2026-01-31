@@ -112,7 +112,7 @@ export function SheetsSync() {
             : (<span>
                 You are about to overwrite all data in the {seatingSheetUrl ? (
                   <a href={seatingSheetUrl} target="_blank" rel="noopener noreferrer" className="underline text-blue-400" style={{ wordBreak: 'break-all' }}><br></br>
-                    TFN-GALA 2026 Seating Sheet'
+                    TFN-GALA 2026 Seating Sheet
                   </a>
                 ) : 'TFN-GALA 2026 Seating Google Sheet'}.
                 <br /><br />

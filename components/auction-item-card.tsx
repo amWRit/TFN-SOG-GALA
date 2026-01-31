@@ -44,9 +44,32 @@ function formatTimeRemaining(endTime: Date | null): string {
   return `${minutes}m ${seconds}s`;
 }
 
+// CollapsibleDescription for auction card (must be at module scope)
+
+function DescriptionPreview({ description, title, onReadMore }: { description: string, title: string, onReadMore: () => void }) {
+  const isLong = description.length > 120;
+  return (
+    <div className="text-gray-200 text-sm mt-1">
+      <span className="whitespace-pre-line">
+        {isLong ? description.slice(0, 120) + "..." : description}
+      </span>
+      {isLong && (
+        <button
+          className="ml-2 text-pink-400 hover:underline font-semibold focus:outline-none"
+          type="button"
+          onClick={e => { e.stopPropagation(); onReadMore(); }}
+        >
+          Read more
+        </button>
+      )}
+    </div>
+  );
+}
+
 export function AuctionItemCard({ item }: AuctionItemCardProps) {
   const [timeRemaining, setTimeRemaining] = useState(formatTimeRemaining(item.endTime));
   const [showBidModal, setShowBidModal] = useState(false);
+  const [showDescModal, setShowDescModal] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [bidAmount, setBidAmount] = useState("");
   const [bidderName, setBidderName] = useState("");
@@ -73,14 +96,45 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
   const isClosed = !item.isActive || (item.endTime && new Date(item.endTime).getTime() <= new Date().getTime());
 
   return (
-    <Card className={`bg-white/10 backdrop-blur-md border border-white/20 overflow-hidden hover:scale-105 transition-transform duration-300 ${isClosed ? "opacity-60" : ""}`} style={{
-      background: "rgba(36,24,64,0.93)"
-    }}>
+    <>
+      {/* Description Modal (overlay, not inside Card) */}
+      {showDescModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md">
+          <div className="bg-gray-900 rounded-lg p-4 md:p-8 min-w-0 w-full max-w-xs md:min-w-[320px] md:max-w-md text-left relative border-2 border-pink-400/60 shadow-xl overflow-y-auto max-h-[90vh]">
+            <button
+              className="fixed md:absolute top-4 right-4 md:top-2 md:right-2 text-pink-300 hover:text-white text-3xl md:text-2xl z-50"
+              style={{lineHeight: 1, background: 'none', border: 'none'}}
+              onClick={e => { e.stopPropagation(); setShowDescModal(false); }}
+              aria-label="Close"
+            >
+              ×
+            </button>
+            <div className="pt-8 md:pt-2 mb-4 text-xl md:text-2xl font-bold text-pink-300 break-words text-center">{item.title}</div>
+            <div className="text-gray-200 whitespace-pre-line text-base break-words" style={{wordBreak: 'break-word'}}>
+              {item.description}
+            </div>
+          </div>
+        </div>
+      )}
+      <Card
+        className={`bg-white/10 backdrop-blur-md border border-white/20 overflow-hidden hover:scale-105 transition-transform duration-300 ${isClosed ? "opacity-60" : "cursor-pointer"}`}
+        style={{ background: "rgba(36,24,64,0.93)" }}
+        onClick={() => {
+          if (isAdmin) {
+            window.open(`/auction/${item.id}`, '_blank');
+          } else if (!isClosed && !showDescModal) {
+            setShowBidModal(true);
+          }
+        }}
+        tabIndex={isClosed ? -1 : 0}
+        role="button"
+        aria-disabled={isClosed ? true : undefined}
+      >
       {/* Image */}
       {item.imageUrl && (
         <div className="relative w-full h-48 overflow-hidden">
           <Image
-            src={item.imageUrl}
+            src={item.imageUrl ?? "/images/auctionitemplaceholder.png"}
             alt={item.title}
             fill
             className="object-cover"
@@ -99,9 +153,11 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
       <CardHeader>
         <CardTitle className="line-clamp-2 text-white pt-2">{item.title}</CardTitle>
         {item.description && (
-          <CardDescription className="line-clamp-2 text-gray-200 overflow-hidden text-ellipsis">
-            {item.description}
-          </CardDescription>
+          <DescriptionPreview
+            description={item.description ?? "NA"}
+            title={item.title}
+            onReadMore={() => setShowDescModal(true)}
+          />
         )}
       </CardHeader>
 
@@ -141,21 +197,17 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
 
         {/* Action Buttons */}
         <div className="mt-6 flex justify-center gap-2">
-          <Button
-            title="View Item"
-              className="flex items-center gap-1 font-semibold hover:scale-105 transition bg-[#ec4899] hover:bg-pink-600 text-white"
-            onClick={() => window.open(`/auction/${item.id}/`, "_blank")}
-          >
-            <Eye size={18} /> View
-          </Button>
-          <Button
-            title="Bid"
-              className="flex items-center gap-1 font-semibold hover:scale-105 transition bg-[#ec4899] hover:bg-pink-600 text-white"
-            onClick={() => setShowBidModal(true)}
-            disabled={!!isClosed}
-          >
-            <Gavel size={18} /> Bid
-          </Button>
+          {isAdmin ? (
+            <div className="text-pink-300 font-semibold flex items-center gap-2 justify-center mt-2">
+              <Eye size={18} /> Click to View
+            </div>
+          ) : (
+            !isClosed && (
+              <div className="text-pink-300 font-semibold flex items-center gap-2 justify-center mt-2">
+                <Gavel size={18} /> Click to Bid
+              </div>
+            )
+          )}
         </div>
 
         {/* Bid Modal Implementation for public users */}
@@ -164,7 +216,7 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
               <div className="bg-gray-900 rounded-lg p-4 md:p-8 min-w-0 w-full max-w-xs md:min-w-[300px] md:max-w-[380px] text-center relative border-2 border-pink-400/60">
                 <button
                   className="absolute top-2 right-2 text-pink-300 hover:text-white text-2xl"
-                  onClick={() => setShowBidModal(false)}
+                  onClick={e => { e.stopPropagation(); setShowBidModal(false); }}
                   aria-label="Close"
                 >
                   ×
@@ -241,5 +293,6 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
         )}
       </CardContent>
     </Card>
+    </>
   );
 }

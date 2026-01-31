@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
 import useSWR from "swr";
 import styles from '../../styles/admin-dashboard.module.css';
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2, ChevronDown, ChevronUp } from "lucide-react";
 import { OkModal } from "@/components/admin/ok-modal";
 
 interface SeatData {
@@ -34,6 +34,17 @@ interface RegistrationData {
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export function SeatingAdmin() {
+      // Collapsible state for each table
+      const [openTables, setOpenTables] = useState<{ [key: number]: boolean }>(() => {
+        // By default, all tables are collapsed (closed)
+        const initial: { [key: number]: boolean } = {};
+        for (let i = 1; i <= 12; i++) initial[i] = false;
+        return initial;
+      });
+
+      const toggleTable = (tableNum: number) => {
+        setOpenTables((prev) => ({ ...prev, [tableNum]: !prev[tableNum] }));
+      };
     // Collapsible state for guest detail modal
     const [bioExpanded, setBioExpanded] = useState(false);
     const [quoteExpanded, setQuoteExpanded] = useState(false);
@@ -280,7 +291,7 @@ export function SeatingAdmin() {
       {/* Seating Grid with Add Table Button inside Card */}
       <div>
         <div className={styles.adminCard}>
-            <div className="flex justify-between items-center mb-6">
+            <div className="flex justify-between items-center mb-4">
               <h2 className="font-playfair text-2xl font-bold text-[#D4AF37]">
                 Seating Chart
               </h2>
@@ -349,41 +360,53 @@ export function SeatingAdmin() {
                 </div>
               </div>
             )}
-            <div className="space-y-8">
+            <div className="space-y-6 max-h-[60vh] overflow-y-auto">
               {Array.from({ length: 12 }, (_, i) => i + 1).map((tableNum) => (
                 <div key={tableNum}>
-                  <h3 className="text-lg font-semibold text-[#D4AF37] mb-3">
-                    Table {tableNum}
-                  </h3>
-                  <div className="grid grid-cols-5 gap-2">
-                    {tables[tableNum]?.map((seat) => {
-                      const reg = seat.registrationId ? registrationMap[seat.registrationId] : null;
-                      return (
-                        <button
-                          key={seat.id}
-                          onClick={() => handleSeatClick(seat)}
-                          className={`p-3 rounded-lg border-2 transition-all ${
-                            selectedSeat?.id === seat.id
-                              ? "border-[#D4AF37] bg-[#D4AF37]/20"
-                              : reg
-                              ? "border-[#D4AF37]/50 bg-[#D4AF37]/10"
-                              : "border-[#f5f5f5]/20 bg-[#1a1a1a]/50"
-                          }`}
-                        >
-                          <div className="text-xs text-center">
-                            <div className="font-medium text-[#f5f5f5]">
-                              {seat.seatNumber}
-                            </div>
-                            {reg && (
-                              <div className="text-[#D4AF37] text-xs mt-1 truncate max-w-[80px] mx-auto" title={reg.name}>
-                                {reg.name}
+                  <button
+                    className="flex items-center gap-2 text-lg font-semibold text-[#D4AF37] mb-3 focus:outline-none"
+                    style={{ width: '100%' }}
+                    onClick={() => toggleTable(tableNum)}
+                    aria-expanded={openTables[tableNum]}
+                    aria-controls={`table-content-${tableNum}`}
+                    type="button"
+                  >
+                    <span>Table {tableNum}</span>
+                    <span className="ml-2 text-base cursor-pointer">
+                      {openTables[tableNum] ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+                    </span>
+                  </button>
+                  {openTables[tableNum] && (
+                    <div id={`table-content-${tableNum}`} className="grid grid-cols-5 gap-2">
+                      {tables[tableNum]?.map((seat) => {
+                        const reg = seat.registrationId ? registrationMap[seat.registrationId] : null;
+                        return (
+                          <button
+                            key={seat.id}
+                            onClick={() => handleSeatClick(seat)}
+                            className={`p-3 rounded-lg border-2 transition-all hover:bg-[#D4AF37]/30 hover:border-[#D4AF37] hover:shadow-lg ${
+                              selectedSeat?.id === seat.id
+                                ? "border-[#D4AF37] bg-[#D4AF37]/20"
+                                : reg
+                                ? "border-[#D4AF37]/50 bg-[#D4AF37]/10"
+                                : "border-[#f5f5f5]/20 bg-[#1a1a1a]/50"
+                            }`}
+                          >
+                            <div className="text-xs text-center">
+                              <div className="font-medium text-[#f5f5f5]">
+                                {seat.seatNumber}
                               </div>
-                            )}
-                          </div>
-                        </button>
-                      );
-                    })}
-                  </div>
+                              {reg && (
+                                <div className="text-[#D4AF37] text-xs mt-1 truncate max-w-[80px] mx-auto" title={reg.name}>
+                                  {reg.name}
+                                </div>
+                              )}
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
@@ -599,7 +622,7 @@ export function SeatingAdmin() {
                   <button onClick={handleSave} className={styles.adminButton + " flex-1"}>
                     Save
                   </button>
-                  <button type="button" className={styles.adminButton + " flex-1 bg-transparent text-[#D4AF37] border border-[#D4AF37]"} onClick={() => setShowEditModal(false)}>
+                  <button type="button" className={styles.adminButtonRed + " flex-1 bg-transparent text-[#D4AF37] border border-[#D4AF37]"} onClick={() => setShowEditModal(false)}>
                     Cancel
                   </button>
                 </div>

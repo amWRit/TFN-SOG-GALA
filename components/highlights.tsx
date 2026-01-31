@@ -1,15 +1,15 @@
 "use client";
 
 import React from 'react';
+import { Gavel, TableOfContents } from "lucide-react";
 
 const EventHighlights = () => {
   const highlights = [
     { id: 1, img: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=600&h=800&fit=crop', title: 'Gala Night 2025' },
-    { id: 2, img: 'https://images.unsplash.com/photo-1464047736614-af63643285bf?w=600&h=400&fit=crop', title: 'Award Ceremony' },
+    { id: 2, img: 'https://images.unsplash.com/photo-1522543558187-768b6df7c25c?w=600&h=800&fit=crop', title: 'Networking' },
     { id: 3, img: 'https://images.unsplash.com/photo-1505236858219-8359eb29e329?w=600&h=800&fit=crop', title: 'Cultural Performance' },
     { id: 4, img: 'https://images.unsplash.com/photo-1531058020387-3be344556be6?w=600&h=400&fit=crop', title: 'Community Impact' },
     { id: 5, img: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=600&h=600&fit=crop', title: 'Live Auction' },
-    { id: 6, img: 'https://images.unsplash.com/photo-1522543558187-768b6df7c25c?w=600&h=800&fit=crop', title: 'Networking' }
   ];
 
   return (
@@ -17,7 +17,7 @@ const EventHighlights = () => {
       <div className="w-full">
         <div className="text-center mb-16">
           <h2 className="text-5xl font-bold text-white mb-4">Event Highlights</h2>
-          <p className="text-xl text-gray-400">Moments that made a difference</p>
+          {/* <p className="text-xl text-gray-400">Moments that made a difference</p> */}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full px-4 sm:px-6 lg:px-8">
@@ -37,6 +37,16 @@ const EventHighlights = () => {
               </div>
             </div>
           ))}
+        </div>
+        {/* Add program details button below highlights grid */}
+        <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center w-full">
+          <button
+            onClick={() => window.location.href = '/program'}
+            className="group bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-4 rounded-full font-semibold text-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 flex items-center gap-3 w-full sm:w-auto justify-center cursor-pointer"
+          >
+            <TableOfContents className="w-5 h-5" />
+            View Program Details
+          </button>
         </div>
       </div>
     </section>
