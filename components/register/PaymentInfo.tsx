@@ -1,0 +1,66 @@
+import React, { useState } from 'react';
+import Image from 'next/image';
+import styles from '../../styles/register.module.css';
+// Simple magnifier SVG icon
+const ZoomIcon = () => (
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#9333ea" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ background: '#fff', borderRadius: '50%', boxShadow: '0 1px 4px #0002' }}>
+    <circle cx="11" cy="11" r="8" />
+    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+  </svg>
+);
+import { PAYMENT_QRS, PAYMENT_LINKS } from './payment-constants';
+
+export default function PaymentInfo() {
+  const [zoomed, setZoomed] = useState<null | { img: string; alt: string; label: string }>(null);
+  return (
+    <div
+      className={styles['payment-info-card']}
+      style={{ maxWidth: '100vw'}}
+    >
+      <h2 className={styles.gradientText} style={{ fontSize: '2.2rem', marginBottom: 18, lineHeight: 1.2, textAlign: 'center' }}>Support Teach For Nepal</h2>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16, justifyContent: 'center', marginBottom: 24, maxWidth: '100%' }}>
+        {PAYMENT_QRS.map(qr => (
+          <div key={qr.label} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: 120 }}>
+            <div style={{ position: 'relative', background: '#fff', borderRadius: 16, padding: 8, marginBottom: 6, boxShadow: '0 2px 8px #0002', cursor: 'pointer' }}
+              onClick={() => setZoomed(qr)}
+            >
+              <Image src={qr.img} alt={qr.alt} width={100} height={100} style={{ width: 100, height: 100, objectFit: 'contain', borderRadius: 12 }} />
+              <span style={{ position: 'absolute', right: 6, bottom: 6, background: 'rgba(255,255,255,0.85)', borderRadius: '50%', padding: 2, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <ZoomIcon />
+              </span>
+            </div>
+            <span style={{ fontSize: 15, fontWeight: 500, color: '#F472B6', textAlign: 'center' }}>{qr.label}</span>
+          </div>
+        ))}
+      </div>
+      <div style={{ marginTop: 18, marginBottom: 8, fontWeight: 600, fontSize: 16, color: '#fff', textAlign: 'center' }}>Other Ways to Give</div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10, alignItems: 'center' }}>
+        {PAYMENT_LINKS.map((link: { label: string; url: string; instructions?: string }) => (
+          <div key={link.label} style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <a href={link.url} target="_blank" rel="noopener noreferrer" className={styles.primaryButton + ' w-full mt-1'} style={{ textAlign: 'center', fontWeight: 600, fontSize: 15, marginBottom: 2 }}>
+              {link.label}
+            </a>
+            {link.instructions && (
+              <span style={{ fontSize: 13, color: '#fbbf24', marginTop: 2, textAlign: 'center', maxWidth: 320 }}>
+                {link.instructions}
+              </span>
+            )}
+          </div>
+        ))}
+      </div>
+      {/* Modal for zoomed QR */}
+      {zoomed && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: 'rgba(0,0,0,0.7)', zIndex: 1000,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+        }} onClick={() => setZoomed(null)}>
+          <div style={{ background: '#fff', borderRadius: 18, padding: 24, boxShadow: '0 4px 32px #0008', maxWidth: '90vw', maxHeight: '90vh', display: 'flex', flexDirection: 'column', alignItems: 'center' }} onClick={e => e.stopPropagation()}>
+            <Image src={zoomed.img} alt={zoomed.alt} width={320} height={320} style={{ maxWidth: '320', height: 'auto', objectFit: 'contain', borderRadius: 12, marginBottom: 12, display: 'block' }} />
+            <div style={{ fontWeight: 600, color: '#9333ea', fontSize: 18, marginBottom: 8 }}>{zoomed.label}</div>
+            <button onClick={() => setZoomed(null)} style={{ marginTop: 8, background: '#9333ea', color: '#fff', border: 'none', borderRadius: 8, padding: '8px 20px', fontWeight: 600, fontSize: 16, cursor: 'pointer' }}>Close</button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
