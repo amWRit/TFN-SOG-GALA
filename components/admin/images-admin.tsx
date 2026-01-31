@@ -154,7 +154,7 @@ export function ImagesAdmin() {
   return (
     <div>
       <h2 className="text-xl font-bold mb-4 text-[#D4AF37]">Images</h2>
-      <div className="flex flex-col md:flex-row gap-6 items-stretch" style={{ minHeight: 340, height: 340 }}>
+      <div className="flex flex-col md:flex-row gap-6 items-stretch" style={{ minHeight: 340 }}>
         {/* Left: Add Image Form */}
         <div className="flex-1 min-w-[260px] flex flex-col" style={{ height: 610 }}>
           <div className={`${styles.adminCard} h-full flex flex-col`} style={{ height: '100%' }}>
@@ -203,7 +203,7 @@ export function ImagesAdmin() {
                 type="text"
                 value={form.type}
                 onChange={e => setForm(f => ({ ...f, type: e.target.value }))}
-                placeholder="e.g. payment_qr, banner"
+                placeholder="e.g. payment_qr"
               />
               {formError && <div className="text-red-400 mb-2">{formError}</div>}
               {formSuccess && <div className="text-green-400 mb-2">{formSuccess}</div>}

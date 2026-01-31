@@ -101,7 +101,7 @@ export function AdminAccounts() {
   return (
     <div>
       <h2 className="text-xl font-bold mb-4 text-[#D4AF37]">Admin Accounts</h2>
-      <div className="flex flex-col md:flex-row gap-6 items-stretch" style={{ minHeight: 340, height: 340 }}>
+      <div className="flex flex-col md:flex-row gap-6 items-stretch" style={{ minHeight: 340}}>
         {/* Left: Add Admin Form */}
         <div className="flex-1 min-w-[260px] flex flex-col" style={{ height: 480 }}>
           <div className={`${styles.adminCard} h-full flex flex-col`} style={{ height: '100%' }}>

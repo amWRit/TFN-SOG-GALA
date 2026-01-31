@@ -67,7 +67,7 @@ export function AdminDashboard() {
       </div>
 
       {/* Tabs */}
-      <div className="max-w-[1800px] mx-auto px-4 py-6 flex flex-col flex-grow">
+      <div className="max-w-[1800px] mx-auto px-4 py-6">
         <div className="flex flex-wrap gap-2 mb-4">
           {tabs.map((tab) => {
             const Icon = tab.icon;
@@ -94,7 +94,6 @@ export function AdminDashboard() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
-          className="flex-grow"
         >
           {activeTab === "seating" && (
             <div className="flex flex-col lg:flex-row lg:gap-8">
