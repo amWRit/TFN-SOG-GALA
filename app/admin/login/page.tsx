@@ -16,11 +16,21 @@ export default function AdminLoginPage() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [isSignedIn, setIsSignedIn] = useState(false);
+  const [checkingSession, setCheckingSession] = useState(true);
 
   useEffect(() => {
-    if (typeof window !== "undefined" && localStorage.getItem("adminauth") === "true") {
-      setIsSignedIn(true);
+    async function checkSession() {
+      let local = false;
+      if (typeof window !== "undefined" && localStorage.getItem("adminauth") === "true") {
+        local = true;
+      }
+      // Check server session
+      const res = await fetch("/api/admin/session");
+      const data = await res.json();
+      setIsSignedIn(local && data.authenticated === true);
+      setCheckingSession(false);
     }
+    checkSession();
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -52,6 +62,10 @@ export default function AdminLoginPage() {
       setLoading(false);
     }
   };
+
+  if (checkingSession) {
+    return null;
+  }
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center px-4 bg-gradient-to-b from-[#1a1a1a] to-[#0f0f0f]">

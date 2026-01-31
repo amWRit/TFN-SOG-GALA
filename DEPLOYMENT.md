@@ -34,24 +34,19 @@ npx tsx scripts/init-seats.ts
 
 ## Step 2: Environment Variables
 
+
 Create a `.env.local` file in the root directory:
 
 ```env
 DATABASE_URL="your-neon-connection-string"
-ADMIN_EMAIL="gala@teachfornepal.org"
-ADMIN_PASSWORD_HASH="" # Leave empty for default password "admin123"
 GOOGLE_SHEETS_ID="your-sheet-id" # Optional
 GOOGLE_SERVICE_ACCOUNT_KEY='{"type":"service_account",...}' # Optional
 NEXT_PUBLIC_APP_URL="https://your-domain.com"
+# For Google Drive image management:
+# (see admin portal Images tab)
 ```
 
-### Generate Admin Password Hash
-
-```bash
-node -e "const bcrypt = require('bcryptjs'); bcrypt.hash('your-secure-password', 10).then(console.log)"
-```
-
-Copy the hash to `ADMIN_PASSWORD_HASH` in your `.env.local`.
+> **Note:** Admin accounts are now created and managed via the admin portal. No need to set admin email or password hash in environment variables.
 
 ## Step 3: Google Sheets Setup (Optional)
 
@@ -112,31 +107,30 @@ vercel
 ### Post-Deployment Steps
 
 1. **Run database migrations on production:**
-   ```bash
-   npx prisma db push --schema=./prisma/schema.prisma
-   ```
+    ```bash
+    npx prisma migrate deploy --schema=./prisma/schema.prisma
+    ```
 
 2. **Initialize seats:**
-   ```bash
-   npx tsx scripts/init-seats.ts
-   ```
-   (You may need to set `DATABASE_URL` in your local `.env` to point to production DB temporarily)
+    ```bash
+    npx tsx scripts/init-seats.ts
+    ```
+    (You may need to set `DATABASE_URL` in your local `.env` to point to production DB temporarily)
 
 3. **Upload images:**
-   - Place images in `/public/images/` folder
-   - Structure:
-     ```
-     /public/images/
-       /people/
-         priya.jpg
-         rajesh.jpg
-       /auction/
-         dinner.jpg
-         trek.jpg
-       /highlights/
-         reception.jpg
-         dinner.jpg
-     ```
+    - Preferred: Use the admin portal Images tab to manage images (Google Drive integration, label, alt, type, fallback support)
+    - For static assets: Place images in `/public/images/` folder
+    - Structure:
+       ```
+       /public/images/
+          /logos/
+             favicon.ico
+             tfnlogo.png
+          auctionitemplaceholder.jpg
+          placeholderimg.png
+          seatplaceholder.png
+          userplaceholder.png
+       ```
 
 ## Step 5: Configure Custom Domain (Optional)
 
@@ -168,7 +162,8 @@ vercel
 
 ### Images Not Loading
 
-- Ensure images are in `/public/images/` folder
+- If using Google Drive images, ensure they are managed via the admin portal and have correct label/fileId
+- For static images, ensure they are in `/public/images/` folder
 - Check image paths match exactly (case-sensitive)
 - Verify images are committed to git or uploaded to hosting platform
 
@@ -182,7 +177,7 @@ vercel
 - [ ] Test all admin functions
 - [ ] Test seating chart on mobile devices
 - [ ] Test auction page real-time updates
-- [ ] Upload all required images
+- [ ] Upload all required images (via admin portal or `/public/images/`)
 - [ ] Update RSVP form link in homepage
 - [ ] Update event date in homepage
 - [ ] Test Google Sheets sync (if using)
@@ -193,3 +188,5 @@ For issues or questions, check:
 - Next.js docs: https://nextjs.org/docs
 - Prisma docs: https://www.prisma.io/docs
 - Vercel docs: https://vercel.com/docs
+
+For API and feature reference, see `PROJECT_SUMMARY.md` and `README.tech.md`.

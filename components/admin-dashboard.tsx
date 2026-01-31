@@ -11,11 +11,12 @@ import { AuctionAdmin } from "@/components/admin/auction-admin";
 import { EventAdmin } from "@/components/admin/event-admin";
 import { SheetsSync } from "@/components/admin/sheets-sync";
 import { ProgramAdmin } from "@/components/admin/program-admin";
-import { LogOut, Users, Gavel, Calendar, RefreshCw, Home, Shield, List as ListIcon } from "lucide-react";
+import { SettingsAdmin } from "@/components/admin/settings-admin";
+import { LogOut, Users, Gavel, Calendar, RefreshCw, Home, Shield, List as ListIcon, Settings } from "lucide-react";
 import toast from "react-hot-toast";
 import styles from '../styles/admin-dashboard.module.css';
 
-type Tab = "seating" | "auction" | "program" | "event" | "sheets";
+type Tab = "seating" | "auction" | "program" | "event" | "sheets" | "settings";
 
 export function AdminDashboard() {
   const router = useRouter();
@@ -40,6 +41,7 @@ export function AdminDashboard() {
     { id: "program" as Tab, label: "Program", icon: ListIcon },
     // { id: "event" as Tab, label: "Event", icon: Calendar },
     { id: "sheets" as Tab, label: "Sheets Sync", icon: RefreshCw },
+    { id: "settings" as Tab, label: "Settings", icon: Settings },
   ];
 
   return (
@@ -54,9 +56,11 @@ export function AdminDashboard() {
           <div className="flex items-center gap-4">
             <a href="/" className={styles.adminButtonSmall + " flex items-center px-4 py-2"} style={{ justifyContent: 'center'}}>
               <Home size={18} className="mr-1" />
+              <span className="hidden sm:inline">Home</span>
             </a>
             <button onClick={handleLogout} className={styles.adminButtonSmall + " flex items-center px-4 py-2"} style={{justifyContent: 'center'}}>
               <LogOut size={18} className="mr-1" />
+              <span className="hidden sm:inline">Logout</span>
             </button>
           </div>
         </div>
@@ -71,7 +75,7 @@ export function AdminDashboard() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all ${
+                className={`flex items-center gap-2 px-4 sm:px-6 py-3 rounded-lg font-medium transition-all ${
                   activeTab === tab.id
                     ? "bg-[#D4AF37] text-[#1a1a1a]"
                     : "glass text-[#f5f5f5]/80 hover:text-[#D4AF37]"
@@ -105,6 +109,7 @@ export function AdminDashboard() {
           {activeTab === "program" && <ProgramAdmin />}
           {activeTab === "event" && <EventAdmin />}
           {activeTab === "sheets" && <SheetsSync />}
+          {activeTab === "settings" && <SettingsAdmin />}
         </motion.div>
       </div>
     </main>

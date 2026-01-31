@@ -1,20 +1,19 @@
 import { cookies } from "next/headers";
 import bcrypt from "bcryptjs";
+import { prisma } from "./prisma";
 
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "gala@teachfornepal.org";
-const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH || "";
+
+
 
 /**
- * Simple session-based authentication
- * In production, consider using NextAuth.js or similar
+ * Verify admin credentials against the Admin table in the database
  */
-export async function verifyPassword(password: string): Promise<boolean> {
-  if (!ADMIN_PASSWORD_HASH) {
-    // Default password: "admin123" (change in production!)
-    const defaultHash = await bcrypt.hash("admin123", 10);
-    return bcrypt.compare(password, defaultHash);
+export async function verifyPassword(email: string, password: string): Promise<boolean> {
+  const admin = await prisma.admin.findUnique({ where: { email } });
+  if (!admin) {
+    return false;
   }
-  return bcrypt.compare(password, ADMIN_PASSWORD_HASH);
+  return bcrypt.compare(password, admin.password);
 }
 
 export async function createSession() {

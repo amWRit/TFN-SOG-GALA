@@ -71,6 +71,7 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
   const [showBidModal, setShowBidModal] = useState(false);
   const [showDescModal, setShowDescModal] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [checkingAdmin, setCheckingAdmin] = useState(true);
   const [bidAmount, setBidAmount] = useState("");
   const [bidderName, setBidderName] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -79,10 +80,14 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
   const router = useRouter();
 
   useEffect(() => {
-    // Check admin status from localStorage (adminauth)
-    if (typeof window !== "undefined") {
-      setIsAdmin(!!localStorage.getItem("adminauth"));
+    async function checkAdmin() {
+      // Check server session
+      const res = await fetch("/api/admin/session");
+      const data = await res.json();
+      setIsAdmin(data.authenticated === true);
+      setCheckingAdmin(false);
     }
+    checkAdmin();
   }, []);
 
   useEffect(() => {
@@ -94,6 +99,8 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
   }, [item.endTime, item.isActive]);
 
   const isClosed = !item.isActive || (item.endTime && new Date(item.endTime).getTime() <= new Date().getTime());
+
+  if (checkingAdmin) return null;
 
   return (
     <>
