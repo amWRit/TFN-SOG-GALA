@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { verifyPassword, createSession } from "@/lib/auth";
 
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "gala@teachfornepal.org";
+
 
 /**
  * POST /api/admin/login
@@ -12,14 +12,8 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { email, password } = body;
 
-    if (email !== ADMIN_EMAIL) {
-      return NextResponse.json(
-        { error: "Invalid credentials" },
-        { status: 401 }
-      );
-    }
 
-    const isValid = await verifyPassword(password);
+    const isValid = await verifyPassword(email, password);
     if (!isValid) {
       return NextResponse.json(
         { error: "Invalid credentials" },
