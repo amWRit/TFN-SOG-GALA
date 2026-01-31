@@ -1,17 +1,55 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Award } from 'lucide-react';
 
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [showAdmin, setShowAdmin] = useState(false);
+  const logoRef = useRef<HTMLImageElement | null>(null);
+  let longPressTimer = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Secret key sequence for desktop
+  useEffect(() => {
+    let buffer = '';
+    const handler = (e: KeyboardEvent) => {
+      buffer += e.key.toLowerCase();
+      if (buffer.endsWith('admin')) {
+        setShowAdmin(true);
+        buffer = '';
+      }
+      if (buffer.length > 10) buffer = buffer.slice(-10);
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, []);
+
+  // Long-press for mobile
+  useEffect(() => {
+    const logo = logoRef.current;
+    if (!logo) return;
+    const handleTouchStart = () => {
+      longPressTimer.current = setTimeout(() => setShowAdmin(true), 1200);
+    };
+    const handleTouchEnd = () => {
+      if (longPressTimer.current !== null) {
+        clearTimeout(longPressTimer.current);
+      }
+    };
+    logo.addEventListener('touchstart', handleTouchStart);
+    logo.addEventListener('touchend', handleTouchEnd);
+    return () => {
+      logo.removeEventListener('touchstart', handleTouchStart);
+      logo.removeEventListener('touchend', handleTouchEnd);
+    };
   }, []);
 
   return (
@@ -24,7 +62,7 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           <div className="flex items-center space-x-3">
-            <img src="/images/logos/logomini.png" alt="Teach For Nepal Logo" className="w-10 h-10 object-contain mr-2" />
+            <img ref={logoRef} src="/images/logos/logomini.png" alt="Teach For Nepal Logo" className="w-10 h-10 object-contain mr-2" />
             <span className="text-2xl font-bold text-white hidden sm:inline">Teach For Nepal</span>
           </div>
           {/* Desktop Links */}
@@ -47,13 +85,15 @@ const Navbar = () => {
           </div>
           {/* Admin & RSVP Buttons */}
             <div className="flex items-center space-x-2 ml-4 hidden md:flex">
-              <a
-                href="/admin/dashboard"
-                className="bg-gradient-to-r from-gold to-gold-dark text-[#23272F] px-6 py-2.5 rounded-full font-semibold border border-[#D4AF37] hover:shadow-2xl hover:scale-105 transition-all duration-300"
-                aria-label="Admin Dashboard"
-              >
-                Admin
-              </a>
+              {showAdmin && (
+                <a
+                  href="/admin/dashboard"
+                  className="bg-gradient-to-r from-gold to-gold-dark text-[#23272F] px-6 py-2.5 rounded-full font-semibold border border-[#D4AF37] hover:shadow-2xl hover:scale-105 transition-all duration-300"
+                  aria-label="Admin Dashboard"
+                >
+                  Admin
+                </a>
+              )}
               <a
                 href="/register"
                 className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-9 py-3 rounded-full font-semibold hover:shadow-2xl hover:scale-105 transition-all duration-300"
@@ -80,14 +120,6 @@ const Navbar = () => {
             <a href="#highlights" className="text-white py-2 w-full text-center hover:bg-purple-700 transition" onClick={() => setMenuOpen(false)}>Highlights</a>
             <a href="/program" className="text-white py-2 w-full text-center hover:bg-purple-700 transition" onClick={() => setMenuOpen(false)}>Program</a>
             <a
-              href="/admin/dashboard"
-              className="bg-gradient-to-r from-gold to-gold-dark text-[#23272F] px-6 py-2.5 rounded-full font-semibold border border-[#D4AF37] mt-3 w-full hover:shadow-2xl transition-all duration-300 text-center"
-              aria-label="Admin Dashboard"
-              onClick={() => setMenuOpen(false)}
-            >
-              Admin
-            </a>
-            <a
               href="/register"
               className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-2.5 rounded-full font-semibold mt-3 w-full hover:shadow-2xl transition-all duration-300 text-center"
               aria-label="RSVP Now"
@@ -95,6 +127,16 @@ const Navbar = () => {
             >
               RSVP Now
             </a>
+            {showAdmin && (
+              <a
+                href="/admin/dashboard"
+                className="bg-gradient-to-r from-gold to-gold-dark text-[#23272F] px-6 py-2.5 rounded-full font-semibold border border-[#D4AF37] mt-3 w-full hover:shadow-2xl transition-all duration-300 text-center"
+                aria-label="Admin Dashboard"
+                onClick={() => setMenuOpen(false)}
+              >
+                Admin
+              </a>
+            )}
           </div>
         )}
       </div>
