@@ -68,15 +68,17 @@ export default function AuctionItemPage() {
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
   const router = require('next/navigation').useRouter();
 
-  // Admin check: Only allow access if adminauth is present
+  // Admin check: Only allow access if server session is present
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const admin = !!localStorage.getItem("adminauth");
-      setIsAdmin(admin);
-      if (!admin) {
+    async function checkAdmin() {
+      const res = await fetch("/api/admin/session");
+      const data = await res.json();
+      setIsAdmin(data.authenticated === true);
+      if (!data.authenticated) {
         router.replace("/auction");
       }
     }
+    checkAdmin();
   }, [router]);
 
   // Fetch item details and update bid/time regularly
