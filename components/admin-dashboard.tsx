@@ -75,7 +75,7 @@ export function AdminDashboard() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all ${
+                className={`flex items-center gap-2 px-4 sm:px-6 py-3 rounded-lg font-medium transition-all ${
                   activeTab === tab.id
                     ? "bg-[#D4AF37] text-[#1a1a1a]"
                     : "glass text-[#f5f5f5]/80 hover:text-[#D4AF37]"
