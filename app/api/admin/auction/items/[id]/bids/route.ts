@@ -13,7 +13,9 @@ export async function GET(
   }
 
   try {
-    const { id } = context.params;
+    // Next.js 14+ dynamic API routes: context.params may be a Promise
+    const params = await context.params;
+    const { id } = params;
     const bids = await prisma.bid.findMany({
       where: { auctionItemId: id },
       orderBy: { createdAt: "desc" },
