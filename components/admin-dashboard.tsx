@@ -24,6 +24,9 @@ export function AdminDashboard() {
   const handleLogout = async () => {
     try {
       await fetch("/api/admin/logout", { method: "POST" });
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("adminauth");
+      }
       toast.success("Logged out successfully");
       router.push("/admin/login");
     } catch (error) {
