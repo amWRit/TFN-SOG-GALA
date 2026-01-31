@@ -51,7 +51,8 @@ const defaultProgram = {
   location: "",
   speaker: "",
   speakerBio: "",
-  externalLink: ""
+  externalLink: "",
+  speakerImgUrl: ""
 };
 
 export const ProgramModal: React.FC<ProgramModalProps> = ({ open, mode, item, onSave, onClose, onEdit, onDelete, saving }) => {
@@ -72,7 +73,16 @@ export const ProgramModal: React.FC<ProgramModalProps> = ({ open, mode, item, on
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    onSave(form);
+    // Convert Google Drive share link to direct image link if needed for speakerImgUrl
+    let speakerImgUrl = form.speakerImgUrl?.trim() || "";
+    const driveMatch = speakerImgUrl.match(
+      /^https?:\/\/drive\.google\.com\/file\/d\/([\w-]+)\//
+    );
+    if (driveMatch) {
+      const fileId = driveMatch[1];
+      speakerImgUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;
+    }
+    onSave({ ...form, speakerImgUrl });
   }
 
   if (!open) return null;
@@ -299,6 +309,30 @@ export const ProgramModal: React.FC<ProgramModalProps> = ({ open, mode, item, on
               />
             )}
           </div>
+          {/* Speaker Image URL */}
+          <div className="mt-2">
+            <label className="block text-sm font-semibold mb-1 flex items-center gap-2"><User size={16}/> Speaker Image URL</label>
+            {isView ? (
+              <div className="w-full px-4 py-2 rounded-lg text-[#f5f5f5] bg-transparent border border-transparent flex items-center gap-2">
+                <User size={16} className="opacity-70" /> {form.speakerImgUrl}
+              </div>
+            ) : (
+              <>
+                <input
+                  className="w-full px-4 py-2 bg-[#1a1a1a]/50 border border-[#D4AF37]/30 rounded-lg text-[#f5f5f5]"
+                  name="speakerImgUrl"
+                  value={form.speakerImgUrl ?? ""}
+                  onChange={handleChange}
+                  placeholder=""
+                  maxLength={300}
+                />
+                <p className="text-xs text-[#D4AF37] mt-1">
+                  You can use a Google Drive shareable link set to <b>Anyone with the link can view</b>.<br/>
+                  <span className="text-[#D4AF37]">(e.g. <span className="break-all">https://drive.google.com/file/d/FILE_ID/view?usp=sharing</span>).</span><br/>
+                </p>
+              </>
+            )}
+          </div>
           {/* Save/Cancel buttons for add/edit only */}
           {!isView && (
             <div className="flex gap-2 mt-2">
@@ -307,18 +341,16 @@ export const ProgramModal: React.FC<ProgramModalProps> = ({ open, mode, item, on
                 className={styles.adminButtonSmall + " flex-1"}
                 disabled={saving}
               >
-                {saving ? (isAdd ? "Adding..." : "Saving...") : (isAdd ? "Add Program" : "Save Changes")}
+                {saving ? "Saving..." : "Save"}
               </button>
-              {isEdit && (
-                <button
-                  type="button"
-                  className={styles.adminButtonSmallRed + " flex-1"}
-                  onClick={onClose}
-                  disabled={saving}
-                >
-                  Cancel
-                </button>
-              )}
+              <button
+                type="button"
+                className={styles.adminButtonSmallRed + " flex-1"}
+                onClick={onClose}
+                disabled={saving}
+              >
+                Cancel
+              </button>
             </div>
           )}
         </form>
