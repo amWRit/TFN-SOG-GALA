@@ -1,6 +1,7 @@
 import React from "react";
 // import styles from "../styles/homepage.module.css";
 import { X, Calendar, MapPin, Info, ExternalLink as ExternalLinkIcon, Hash, Tag, User } from "lucide-react";
+import Image from "next/image";
 
 type ProgramItem = {
   id: string | number;
@@ -10,6 +11,7 @@ type ProgramItem = {
   type?: string;
   speaker?: string;
   speakerBio?: string;
+  speakerImgUrl?: string;
   location?: string;
   description?: string;
   imageUrl?: string;
@@ -26,6 +28,7 @@ interface ProgramModalProps {
 export default function ProgramModal({ open, onClose, item }: ProgramModalProps) {
   const [descOpen, setDescOpen] = React.useState(false);
   const [speakerModalOpen, setSpeakerModalOpen] = React.useState(false);
+  const [speakerImgError, setSpeakerImgError] = React.useState(false);
   if (!open || !item) return null;
 
   return (
@@ -202,9 +205,9 @@ export default function ProgramModal({ open, onClose, item }: ProgramModalProps)
                 borderRadius: 24,
                 boxShadow: "0 8px 32px #0008",
                 color: "#fff",
-                width: "min(95vw, 420px)",
-                maxWidth: "95vw",
-                padding: "2.2rem 1.7rem 1.7rem 1.7rem",
+                width: "min(95vw, 520px)",
+                maxWidth: 600,
+                padding: "2.2rem 2.2rem 2rem 2.2rem",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "flex-start",
@@ -230,7 +233,41 @@ export default function ProgramModal({ open, onClose, item }: ProgramModalProps)
                 <X size={28} />
               </button>
               <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", marginBottom: 12 }}>
-                <User size={40} style={{ marginBottom: 12, color: "#60A5FA", flexShrink: 0 }} />
+                {item.speakerImgUrl && !speakerImgError ? (
+                  <Image
+                    src={item.speakerImgUrl}
+                    alt={item.speaker || "Speaker"}
+                    width={96}
+                    height={96}
+                    style={{
+                      width: 96,
+                      height: 96,
+                      objectFit: "cover",
+                      borderRadius: "50%",
+                      marginBottom: 16,
+                      boxShadow: "0 2px 12px #0005",
+                      background: "#222",
+                      display: 'block'
+                    }}
+                    onError={() => setSpeakerImgError(true)}
+                  />
+                ) : (
+                  <Image
+                    src={"/images/userplaceholder.png"}
+                    alt="User Placeholder"
+                    width={96}
+                    height={96}
+                    style={{
+                      width: 96,
+                      height: 96,
+                      objectFit: "cover",
+                      borderRadius: "50%",
+                      marginBottom: 16,
+                      boxShadow: "0 2px 12px #0005",
+                      background: "#222"
+                    }}
+                  />
+                )}
                 <h3 style={{ fontWeight: 700, fontSize: 22, marginBottom: 8, textAlign: "center", width: "100%" }}>{item.speaker}</h3>
               </div>
               <div style={{ width: "100%" }}>
