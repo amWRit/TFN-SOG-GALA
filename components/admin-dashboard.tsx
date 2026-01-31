@@ -11,11 +11,12 @@ import { AuctionAdmin } from "@/components/admin/auction-admin";
 import { EventAdmin } from "@/components/admin/event-admin";
 import { SheetsSync } from "@/components/admin/sheets-sync";
 import { ProgramAdmin } from "@/components/admin/program-admin";
-import { LogOut, Users, Gavel, Calendar, RefreshCw, Home, Shield, List as ListIcon } from "lucide-react";
+import { SettingsAdmin } from "@/components/admin/settings-admin";
+import { LogOut, Users, Gavel, Calendar, RefreshCw, Home, Shield, List as ListIcon, Settings } from "lucide-react";
 import toast from "react-hot-toast";
 import styles from '../styles/admin-dashboard.module.css';
 
-type Tab = "seating" | "auction" | "program" | "event" | "sheets";
+type Tab = "seating" | "auction" | "program" | "event" | "sheets" | "settings";
 
 export function AdminDashboard() {
   const router = useRouter();
@@ -40,6 +41,7 @@ export function AdminDashboard() {
     { id: "program" as Tab, label: "Program", icon: ListIcon },
     // { id: "event" as Tab, label: "Event", icon: Calendar },
     { id: "sheets" as Tab, label: "Sheets Sync", icon: RefreshCw },
+    { id: "settings" as Tab, label: "Settings", icon: Settings },
   ];
 
   return (
@@ -105,6 +107,7 @@ export function AdminDashboard() {
           {activeTab === "program" && <ProgramAdmin />}
           {activeTab === "event" && <EventAdmin />}
           {activeTab === "sheets" && <SheetsSync />}
+          {activeTab === "settings" && <SettingsAdmin />}
         </motion.div>
       </div>
     </main>
