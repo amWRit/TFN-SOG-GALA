@@ -5,7 +5,8 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
 import useSWR from "swr";
-import { Plus, Edit, Trash2, Gavel, Pause, Play } from "lucide-react";
+import { Plus, Edit, Trash2, Gavel, Pause, Play, Pencil } from "lucide-react";
+import { OkModal } from "@/components/admin/ok-modal";
 import styles from '../../styles/admin-dashboard.module.css';
 
 interface AuctionItem {
@@ -112,14 +113,21 @@ export function AuctionAdmin() {
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this item?")) return;
+  // Modal state for delete confirmation
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
+  const handleDelete = (id: string) => {
+    setDeleteId(id);
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteId) return;
+    setDeleting(true);
     try {
-      const res = await fetch(`/api/admin/auction/items/${id}`, {
+      const res = await fetch(`/api/admin/auction/items/${deleteId}`, {
         method: "DELETE",
       });
-
       if (res.ok) {
         toast.success("Item deleted!");
         mutate();
@@ -129,6 +137,8 @@ export function AuctionAdmin() {
     } catch (error) {
       toast.error("Error deleting item");
     }
+    setDeleting(false);
+    setDeleteId(null);
   };
 
   const handleUpdateBid = async (itemId: string, newBid: number, bidder: string) => {
@@ -362,15 +372,7 @@ export function AuctionAdmin() {
                   onClick={() => handleEdit(item)}
                   title="Edit"
                 >
-                  <Edit size={16} className="text-[#D4AF37]" />
-                </button>
-                <button
-                  type="button"
-                  className="w-10 h-10 rounded-full bg-[#D4AF37]/20 hover:bg-[#D4AF37]/40 transition flex items-center justify-center"
-                  onClick={() => handleDelete(item.id)}
-                  title="Delete"
-                >
-                  <Trash2 size={16} className="text-red-400" />
+                  <Pencil size={16} className="text-[#D4AF37]" />
                 </button>
                 <button
                   type="button"
@@ -383,6 +385,26 @@ export function AuctionAdmin() {
                 >
                   <Gavel className="h-5 w-5 text-[#D4AF37]" />
                 </button>
+                <button
+                  type="button"
+                  className="w-10 h-10 rounded-full bg-[#D4AF37]/20 hover:bg-[#D4AF37]/40 transition flex items-center justify-center"
+                  onClick={() => handleDelete(item.id)}
+                  title="Delete"
+                >
+                  <Trash2 size={16} className="text-red-400" />
+                </button>
+                    {/* Delete Confirm Modal */}
+                    <OkModal
+                      open={!!deleteId}
+                      title="Delete Auction Item"
+                      message="Are you sure you want to delete this auction item? This cannot be undone."
+                      onOk={confirmDelete}
+                      onCancel={() => setDeleteId(null)}
+                      okText={deleting ? "Deleting..." : "Delete"}
+                      cancelText="Cancel"
+                      okDisabled={deleting}
+                      cancelDisabled={deleting}
+                    />
               </div>
             </div>
             <div className="text-sm text-[#f5f5f5]/80 mb-1">
