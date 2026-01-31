@@ -32,13 +32,22 @@
 - ✅ Active/closed item sections
 
 ### 4. Admin Portal (`/admin`)
+
 - ✅ Email/password authentication
 - ✅ Protected routes with middleware
-- ✅ Dashboard with 4 tabs:
-  1. **Seating** - Click-to-edit interface, JSON export
-  2. **Auction** - CRUD for auction items, manual bid entry
-  3. **Event** - Edit highlights text, image upload instructions
-  4. **Sheets Sync** - Google Sheets integration button
+- ✅ Dashboard with tabs:
+  1. **Seating** — Click-to-edit interface, JSON export, registration list
+  2. **Auction** — CRUD for auction items, manual bid entry, bid history
+  3. **Program** — Manage event schedule, speakers, and details
+  4. **Event** — Edit highlights text, image upload instructions
+  5. **Sheets Sync** — Google Sheets integration button
+  6. **Settings** — Admin settings and configuration
+  7. **Images** — Manage Google Drive images (add/edit/delete, label, alt, type)
+
+  - Confirm modals for destructive actions
+  - Client-side validation for unique fields
+  - Dynamic alt text for images
+  - Fallback image support for missing/broken images
 
 ### 5. Technical Implementation
 - ✅ Next.js 15 App Router + TypeScript
@@ -74,22 +83,51 @@
 ## 📁 Project Structure
 
 ```
-tfn-sog-gala/
-├── app/                      # Next.js pages
-│   ├── page.tsx             # Homepage
-│   ├── seating/             # Seating chart page
-│   ├── auction/             # Live auction page
-│   ├── admin/               # Admin portal
-│   └── api/                 # API routes
-├── components/              # React components
-│   ├── ui/                 # Reusable UI components
-│   └── admin/              # Admin components
-├── lib/                     # Utilities
-│   ├── prisma.ts           # Database client
-│   ├── auth.ts             # Authentication
-│   └── google-sheets.ts    # Sheets integration
-├── prisma/                  # Database schema
-└── scripts/                # Utility scripts
+TFN-SOG-GALA-Git/
+├── app/
+│   ├── globals.css
+│   ├── layout.tsx
+│   ├── page.tsx
+│   ├── admin/
+│   │   ├── layout.tsx
+│   │   ├── dashboard/page.tsx
+│   │   ├── login/page.tsx
+│   │   └── seating/page.tsx
+│   ├── auction/page.tsx
+│   ├── auction/[id]/page.tsx
+│   ├── program/page.tsx
+│   ├── register/page.tsx
+│   ├── seating/page.tsx
+│   └── api/ ... (see README.tech.md for full API tree)
+├── components/
+│   ├── admin-dashboard.tsx
+│   ├── ... (UI, admin, register, and ui/ subfolders)
+├── lib/
+│   ├── auth.ts
+│   ├── google-service-account.json
+│   ├── google-sheets.ts
+│   ├── prisma.ts
+│   ├── sample-data.ts
+│   └── utils.ts
+├── prisma/
+│   ├── schema.prisma
+│   ├── seed-program.ts
+│   ├── seed.ts
+│   └── migrations/
+├── public/
+│   ├── images/
+│   │   ├── auctionitemplaceholder.jpg
+│   │   ├── logos/
+│   │   ├── placeholderimg.png
+│   │   ├── seatplaceholder.png
+│   │   └── userplaceholder.png
+├── scripts/
+│   ├── hash-password.ts
+│   └── init-seats.ts
+├── styles/
+│   ├── admin-dashboard.module.css
+│   ├── ...
+├── ... (config files, docs)
 ```
 
 ## 🗄️ Database Schema
@@ -98,6 +136,7 @@ tfn-sog-gala/
 - **AuctionItem**: Auction items with current bid
 - **Bid**: Bid history records
 - **Admin**: Admin users (simple auth)
+- **ImageResource**: Google Drive image metadata (label, fileId, alt, type)
 
 ## 🔐 Authentication
 
@@ -109,21 +148,31 @@ tfn-sog-gala/
 ## 📊 API Routes
 
 ### Public
-- `GET /api/seating` - Fetch all seats
-- `GET /api/auction/items` - Fetch auction items
-- `GET /api/auction/leaderboard` - Top bidders
+- `GET /api/seating` — Fetch all seats
+- `GET /api/auction/items` — Fetch auction items
+- `GET /api/auction/leaderboard` — Top bidders
+- `GET /api/program` — Fetch event program
+- `GET /api/total-raised` — Fetch total raised
 
 ### Admin
-- `GET /api/admin/seating` - Fetch seats (admin)
-- `PUT /api/admin/seating` - Update seat
-- `GET /api/admin/auction/items` - Fetch items (admin)
-- `POST /api/admin/auction/items` - Create item
-- `PUT /api/admin/auction/items/[id]` - Update item
-- `DELETE /api/admin/auction/items/[id]` - Delete item
-- `POST /api/admin/auction/bid` - Create bid
-- `POST /api/admin/login` - Admin login
-- `POST /api/admin/logout` - Admin logout
-- `POST /api/admin/sheets/sync` - Sync Google Sheets
+- `GET /api/admin/seating` — Fetch seats (admin)
+- `PUT /api/admin/seating` — Update seat
+- `GET /api/admin/auction/items` — Fetch items (admin)
+- `POST /api/admin/auction/items` — Create item
+- `PUT /api/admin/auction/items/[id]` — Update item
+- `DELETE /api/admin/auction/items/[id]` — Delete item
+- `POST /api/admin/auction/bid` — Create bid
+- `GET /api/admin/images` — List images
+- `POST /api/admin/images` — Add image
+- `PUT /api/admin/images/[id]` — Update image
+- `DELETE /api/admin/images/[id]` — Delete image
+- `GET /api/admin/program` — List program items
+- `POST /api/admin/program` — Add program item
+- `PUT /api/admin/program/[id]` — Update program item
+- `DELETE /api/admin/program/[id]` — Delete program item
+- `POST /api/admin/login` — Admin login
+- `POST /api/admin/logout` — Admin logout
+- `POST /api/admin/sheets/sync` — Sync Google Sheets
 
 ## 🚀 Deployment Ready
 
@@ -136,7 +185,7 @@ tfn-sog-gala/
 ## 📝 Next Steps
 
 1. **Set up database**: Follow [SETUP.md](./SETUP.md)
-2. **Add images**: Place in `/public/images/`
+2. **Add images**: Upload via admin portal (Google Drive) or place in `/public/images/` for static assets
 3. **Configure RSVP**: Update Google Form link in homepage
 4. **Update event date**: Change `GALA_DATE` in `app/page.tsx`
 5. **Deploy**: Follow [DEPLOYMENT.md](./DEPLOYMENT.md)
