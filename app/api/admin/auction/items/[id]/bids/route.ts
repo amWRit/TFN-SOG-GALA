@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma";
 // GET /api/admin/auction/items/[id]/bids
 export async function GET(
   request: NextRequest,
-  context: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   const isAuthenticated = await getSession();
   if (!isAuthenticated) {
@@ -13,7 +13,6 @@ export async function GET(
   }
 
   try {
-    // Next.js 14+ dynamic API routes: context.params may be a Promise
     const params = await context.params;
     const { id } = params;
     const bids = await prisma.bid.findMany({
@@ -42,3 +41,4 @@ export async function GET(
     );
   }
 }
+
