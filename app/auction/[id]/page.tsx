@@ -34,11 +34,50 @@ function formatTimeRemaining(endTime: Date | null): string {
   return `${minutes}m ${seconds}s`;
 }
 
+/**
+ * CollapsibleDescription component for showing/hiding long descriptions.
+ */
+function CollapsibleDescription({ description }: { description: string | null }) {
+  const [open, setOpen] = useState(false);
+  if (!description) return null;
+  const isLong = description.length > 180;
+  return (
+    <div className="mb-6 w-full">
+      <div className="text-base text-[#f5f5f5]/90 whitespace-pre-line text-left">
+        {isLong && !open
+          ? description.slice(0, 180) + "..."
+          : description}
+      </div>
+      {isLong && (
+        <button
+          className="mt-2 text-pink-400 hover:underline font-semibold"
+          onClick={() => setOpen((v) => !v)}
+        >
+          {open ? "Show less" : "Read more"}
+        </button>
+      )}
+    </div>
+  );
+}
+
 export default function AuctionItemPage() {
   const { id } = useParams();
   const [item, setItem] = useState<AuctionItem | null>(null);
   const [timeRemaining, setTimeRemaining] = useState<string>("");
   const [prevBid, setPrevBid] = useState<number | null>(null);
+  const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
+  const router = require('next/navigation').useRouter();
+
+  // Admin check: Only allow access if adminauth is present
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const admin = !!localStorage.getItem("adminauth");
+      setIsAdmin(admin);
+      if (!admin) {
+        router.replace("/auction");
+      }
+    }
+  }, [router]);
 
   // Fetch item details and update bid/time regularly
   useEffect(() => {
@@ -67,6 +106,10 @@ export default function AuctionItemPage() {
     return () => clearInterval(interval);
   }, [item?.endTime]);
 
+
+  if (isAdmin === false) {
+    return null;
+  }
   if (!item) {
     return (
       <div className="min-h-screen flex items-center justify-center text-[#f5f5f5]/60">
@@ -107,19 +150,21 @@ export default function AuctionItemPage() {
                 className="object-cover"
                 sizes="100vw"
               />
-              {!isClosed && (
-                <div className="absolute top-4 right-4">
+              <div className="absolute top-4 right-4">
+                {isClosed ? (
+                  <span className="px-4 py-2 rounded-full bg-gray-700 text-white text-lg font-bold uppercase shadow-lg">
+                    Closed
+                  </span>
+                ) : (
                   <span className="px-4 py-2 rounded-full bg-[#ec4899] text-white text-lg font-bold uppercase shadow-lg">
                     Live
                   </span>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           )}
-          {/* Description below image, left-aligned */}
-          <p className="text-base md:text-lg text-[#f5f5f5]/80 max-w-2xl mb-4 md:text-left text-center">
-            {item.description}
-          </p>
+          {/* Collapsible Description below image, left-aligned */}
+          <CollapsibleDescription description={item.description} />
           {item.endTime && (
             <div className="flex items-center gap-2 text-base text-[#f5f5f5]/80 mb-2">
               <Clock size={20} />
@@ -148,8 +193,11 @@ export default function AuctionItemPage() {
                 repeatType: "reverse",
                 duration: 1.5
               }}
-              className="font-playfair text-7xl md:text-8xl font-extrabold text-[#D4AF37] mb-4 bg-black rounded-2xl px-16 py-10 focus:outline-none"
-              style={{ boxShadow: "0 0 40px #D4AF37BB" }}
+              className="font-playfair text-7xl md:text-8xl font-extrabold text-[#D4AF37] mb-4 rounded-2xl px-16 py-10 focus:outline-none"
+              style={{
+                boxShadow: "0 0 40px #D4AF37BB",
+                // background: "#23272F"
+              }}
             >
               {item.currentBid.toLocaleString()}
             </motion.div>

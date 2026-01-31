@@ -35,7 +35,7 @@ export function AdminDashboard() {
     { id: "seating" as Tab, label: "Seating", icon: Users },
     { id: "auction" as Tab, label: "Auction", icon: Gavel },
     { id: "program" as Tab, label: "Program", icon: ListIcon },
-    { id: "event" as Tab, label: "Event", icon: Calendar },
+    // { id: "event" as Tab, label: "Event", icon: Calendar },
     { id: "sheets" as Tab, label: "Sheets Sync", icon: RefreshCw },
   ];
 

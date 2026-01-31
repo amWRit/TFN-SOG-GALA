@@ -110,6 +110,7 @@ const RegisterForm = () => {
           value={form.phone || ''}
           onChange={handleChange}
         />
+        <label style={{display: 'block', fontWeight: 400, color: '#a5a5a5', marginBottom: 4, fontSize: '1rem', textAlign: 'left'}}>Seating Preference (optional)</label>
         <div style={{display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 16}}>
           <select
             className={styles.input}
@@ -117,7 +118,7 @@ const RegisterForm = () => {
             value={form.table || ''}
             onChange={handleChange}
             required
-            style={{flex: 1, minWidth: 0}}
+            style={{flex: 1, minWidth: 0, color: '#a5a5a5'}}
           >
             <option value="">Table #</option>
             {tableOptions.map(t => (
@@ -131,7 +132,7 @@ const RegisterForm = () => {
             onChange={handleChange}
             required
             disabled={!form.table}
-            style={{flex: 1, minWidth: 0}}
+            style={{flex: 1, minWidth: 0, color: '#a5a5a5'}}
           >
             <option value="">Seat #</option>
             {seatOptions.map(s => (
