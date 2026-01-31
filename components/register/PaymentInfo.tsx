@@ -1,17 +1,33 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import styles from '../../styles/register.module.css';
-// Simple magnifier SVG icon
-const ZoomIcon = () => (
-  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#9333ea" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ background: '#fff', borderRadius: '50%', boxShadow: '0 1px 4px #0002' }}>
-    <circle cx="11" cy="11" r="8" />
-    <line x1="21" y1="21" x2="16.65" y2="16.65" />
-  </svg>
-);
-import { PAYMENT_QRS, PAYMENT_LINKS } from './payment-constants';
+import { PAYMENT_LINKS } from '../constants';
+import { ZoomIn } from 'lucide-react';
 
 export default function PaymentInfo() {
   const [zoomed, setZoomed] = useState<null | { img: string; alt: string; label: string }>(null);
+  const [paymentQrs, setPaymentQrs] = useState<any[]>([]);
+  const [noImage, setNoImage] = useState<string | null>(null);
+
+  React.useEffect(() => {
+    fetch('/api/admin/images')
+      .then(res => res.json())
+      .then(data => {
+        const allowedLabels = ['Fonepay', 'eSewa', 'PayPal', 'Zeffy'];
+        const qrs = (data.images || []).filter((img: any) =>
+          (img.type === 'payment_qr' || allowedLabels.includes(img.label))
+        ).map((img: any) => ({
+          label: img.label.replace(/[_-]+/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase()),
+          img: `https://drive.google.com/uc?export=view&id=${img.fileId}`,
+          alt: img.alt || img.label
+        }));
+        setPaymentQrs(qrs);
+        // Find No_Image fallback
+        const noImg = (data.images || []).find((img: any) => img.label.toLowerCase() === 'no_image');
+        setNoImage(noImg ? `https://drive.google.com/uc?export=view&id=${noImg.fileId}` : null);
+      });
+  }, []);
+
   return (
     <div
       className={styles['payment-info-card']}
@@ -25,14 +41,25 @@ export default function PaymentInfo() {
           Support Teach For Nepal
         </h2>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16, justifyContent: 'center', marginBottom: 24, maxWidth: '100%' }}>
-          {PAYMENT_QRS.map(qr => (
+          {paymentQrs.map(qr => (
             <div key={qr.label} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: 140 }}>
               <div style={{ position: 'relative', background: '#fff', borderRadius: 16, padding: 10, marginBottom: 8, boxShadow: '0 2px 8px #0002', cursor: 'pointer' }}
                 onClick={() => setZoomed(qr)}
               >
-                <Image src={qr.img} alt={qr.alt} width={120} height={120} style={{ width: 120, height: 120, objectFit: 'contain', borderRadius: 14 }} />
+                <Image
+                  src={qr.img}
+                  alt={qr.alt}
+                  width={120}
+                  height={120}
+                  style={{ width: 120, height: 120, objectFit: 'contain', borderRadius: 14 }}
+                  onError={(e: any) => {
+                    if (noImage && e.currentTarget.src !== noImage) {
+                      e.currentTarget.src = noImage;
+                    }
+                  }}
+                />
                 <span style={{ position: 'absolute', right: 8, bottom: 8, background: 'rgba(255,255,255,0.85)', borderRadius: '50%', padding: 2, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <ZoomIcon />
+                  <ZoomIn size={28} color="#9333ea" strokeWidth={2.2} style={{ background: '#fff', borderRadius: '50%', boxShadow: '0 1px 4px #0002' }} />
                 </span>
               </div>
               <span style={{ fontSize: 16, fontWeight: 500, color: '#F472B6', textAlign: 'center' }}>{qr.label}</span>

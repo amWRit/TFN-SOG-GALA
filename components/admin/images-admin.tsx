@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Trash2 } from "lucide-react";
+import { Trash2, Pencil } from "lucide-react";
 import { ConfirmModal } from "./index";
 import styles from "../../styles/admin-dashboard.module.css";
 
@@ -17,6 +17,7 @@ export function ImagesAdmin() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [form, setForm] = useState({ label: "", driveLink: "", alt: "", type: "" });
+  const [editId, setEditId] = useState<string | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
   const [formSuccess, setFormSuccess] = useState<string | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
@@ -73,7 +74,7 @@ export function ImagesAdmin() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form.label]);
 
-  async function handleAddImage(e: React.FormEvent) {
+  async function handleAddOrEditImage(e: React.FormEvent) {
     e.preventDefault();
     setFormError(null);
     setFormSuccess(null);
@@ -87,11 +88,11 @@ export function ImagesAdmin() {
       setFormError("Invalid Google Drive link. Please use a shareable link.");
       return;
     }
-    if (images.some(img => img.label === form.label)) {
+    if (!editId && images.some(img => img.label === form.label)) {
       setFormError("An image with this label already exists.");
       return;
     }
-    if (images.some(img => img.fileId === fileId)) {
+    if (!editId && images.some(img => img.fileId === fileId)) {
       setFormError("An image with this Google Drive file already exists.");
       return;
     }
@@ -100,22 +101,33 @@ export function ImagesAdmin() {
     const payload = { ...form, alt: altText };
     setLoading(true);
     try {
-      const res = await fetch("/api/admin/images", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      const data = await res.json();
+      let res, data;
+      if (editId) {
+        res = await fetch(`/api/admin/images/${editId}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        data = await res.json();
+      } else {
+        res = await fetch("/api/admin/images", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        data = await res.json();
+      }
       if (res.ok) {
-        setFormSuccess("Image added successfully.");
+        setFormSuccess(editId ? "Image updated successfully." : "Image added successfully.");
         setForm({ label: "", driveLink: "", alt: "", type: "" });
+        setEditId(null);
         setAltTouched(false);
         fetchImages();
       } else {
-        setFormError(data.error || "Failed to add image");
+        setFormError(data.error || (editId ? "Failed to update image" : "Failed to add image"));
       }
     } catch (e) {
-      setFormError("Failed to add image");
+      setFormError(editId ? "Failed to update image" : "Failed to add image");
     }
     setLoading(false);
   }
@@ -144,10 +156,10 @@ export function ImagesAdmin() {
       <h2 className="text-xl font-bold mb-4 text-[#D4AF37]">Images</h2>
       <div className="flex flex-col md:flex-row gap-6 items-stretch" style={{ minHeight: 340, height: 340 }}>
         {/* Left: Add Image Form */}
-        <div className="flex-1 min-w-[260px] flex flex-col" style={{ height: 600 }}>
+        <div className="flex-1 min-w-[260px] flex flex-col" style={{ height: 610 }}>
           <div className={`${styles.adminCard} h-full flex flex-col`} style={{ height: '100%' }}>
-            <h3 className="font-semibold mb-2 text-[#D4AF37]">Add New Image</h3>
-            <form onSubmit={handleAddImage} className="flex flex-col flex-1">
+            <h3 className="font-semibold mb-2 text-[#D4AF37]">{editId ? "Edit Image" : "Add New Image"}</h3>
+            <form onSubmit={handleAddOrEditImage} className="flex flex-col flex-1">
               <label className={styles.adminFormLabel} htmlFor="image-label">Label</label>
               <input
                 id="image-label"
@@ -197,14 +209,30 @@ export function ImagesAdmin() {
               {formSuccess && <div className="text-green-400 mb-2">{formSuccess}</div>}
               <div className="mt-auto pt-2 flex justify-end">
                 <button className={styles.adminButton} type="submit" disabled={loading}>
-                  {loading ? "Adding..." : "Add Image"}
+                  {loading ? (editId ? "Saving..." : "Adding...") : (editId ? "Save Image" : "Add Image")}
                 </button>
+                {editId && (
+                  <button
+                    type="button"
+                    className={styles.adminButtonRed}
+                    style={{ marginLeft: 8 }}
+                    onClick={() => {
+                      setEditId(null);
+                      setForm({ label: "", driveLink: "", alt: "", type: "" });
+                      setFormError(null);
+                      setFormSuccess(null);
+                      setAltTouched(false);
+                    }}
+                  >
+                    Cancel
+                  </button>
+                )}
               </div>
             </form>
           </div>
         </div>
         {/* Right: Image List */}
-        <div className="flex-1 min-w-[260px] flex flex-col" style={{ height: 600 }}>
+        <div className="flex-1 min-w-[260px] flex flex-col" style={{ height: 610 }}>
           <div className={`${styles.adminCard} h-full flex flex-col`} style={{ height: '100%' }}>
             <h3 className="font-semibold mb-2 text-[#D4AF37]">All Images</h3>
             {loading ? (
@@ -229,7 +257,27 @@ export function ImagesAdmin() {
                           <td className="py-1 pr-4">{img.label}</td>
                           <td className="py-1 pr-4">{img.fileId}</td>
                           <td className="py-1 pr-4 hidden sm:table-cell">{new Date(img.createdAt).toLocaleString()}</td>
-                          <td className="py-1 pr-4">
+                          <td className="py-1 pr-4 flex gap-2 sticky right-0 z-10">
+                            <button
+                              className={styles.adminButtonSmallRed}
+                              title="Edit image"
+                              onClick={() => {
+                                setEditId(img.id);
+                                setForm({
+                                  label: img.label,
+                                  driveLink: `https://drive.google.com/file/d/${img.fileId}/view?usp=sharing`,
+                                  alt: img.alt || "",
+                                  type: img.type || ""
+                                });
+                                setFormError(null);
+                                setFormSuccess(null);
+                                setAltTouched(false);
+                              }}
+                              style={{ padding: 0, width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#fbbf24', border: 'none' }}
+                              disabled={deleteLoading || loading}
+                            >
+                              <Pencil size={18} color="#000000" strokeWidth={2} />
+                            </button>
                             <button
                               className={styles.adminButtonSmallRed}
                               title="Delete image"
