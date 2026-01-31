@@ -38,8 +38,8 @@ Create a `.env.local` file in the root directory:
 
 ```env
 DATABASE_URL="your-neon-connection-string"
-ADMIN_EMAIL="gala@teachfornepal.org"
-ADMIN_PASSWORD_HASH="" # Leave empty for default password "admin123"
+ADMIN_EMAIL=""
+ADMIN_PASSWORD_HASH="" 
 GOOGLE_SHEETS_ID="your-sheet-id" # Optional
 GOOGLE_SERVICE_ACCOUNT_KEY='{"type":"service_account",...}' # Optional
 NEXT_PUBLIC_APP_URL="https://your-domain.com"

@@ -110,3 +110,13 @@ model Program {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 }
+
+model GDriveImageResource {
+  id           String   @id @default(uuid())
+  label        String   @unique
+  fileId       String   // Google Drive file ID
+  alt          String?
+  type         String?   // e.g. 'payment_qr', 'banner', etc.
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}

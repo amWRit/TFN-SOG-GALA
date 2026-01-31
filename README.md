@@ -74,10 +74,6 @@ tfn-sog-gala/
 
 ## 🔐 Admin Access
 
-Default credentials:
-- Email: `gala@teachfornepal.org`
-- Password: `admin123` (⚠️ CHANGE IN PRODUCTION!)
-
 Access admin portal at `/admin/login`
 
 ## 📊 Database Schema
