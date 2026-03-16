@@ -83,7 +83,7 @@ export default function AuctionPage() {
       </div>
 
       {/* ── Content below hero ── */}
-      <div className="pb-24 px-4 w-full pt-16">
+      <div className="pb-24 px-4 w-full pt-10 pb-0">
         <div className="max-w-7xl mx-auto">
 
           {/* ── Leaderboard ── */}

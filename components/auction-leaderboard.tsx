@@ -71,7 +71,7 @@ export function AuctionLeaderboard() {
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      className="mb-20"
+      className=""
     >
       {/* Section header */}
       <div className="flex flex-col items-center mb-12">
@@ -86,7 +86,7 @@ export function AuctionLeaderboard() {
       </div>
 
       {/* Podium */}
-      <div className="flex items-end justify-center gap-4 md:gap-8">
+      <div className="flex flex-col sm:flex-row items-end justify-center gap-4 sm:gap-6 md:gap-8 w-full">
         {PODIUM_ORDER.map((rankIdx) => {
           const entry = topThree[rankIdx];
           if (!entry) return null;
@@ -99,11 +99,11 @@ export function AuctionLeaderboard() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: rankIdx * 0.1, duration: 0.4 }}
-              className={`flex flex-col items-center ${cfg.scale}`}
+              className={`flex flex-col items-center w-full sm:w-44 md:w-64 ${cfg.scale}`}
             >
               {/* Card */}
               <div
-                className="rounded-2xl text-center w-44 md:w-64 shadow-2xl relative overflow-hidden"
+                className="rounded-2xl text-center w-full sm:w-44 md:w-64 shadow-2xl relative overflow-hidden"
                 style={{
                   background: cfg.bg,
                   border: `2px solid ${cfg.borderColor}`,
@@ -111,27 +111,27 @@ export function AuctionLeaderboard() {
               >
                 {/* Rank badge */}
                 <div
-                  className="absolute top-0 right-0 w-10 h-10 flex items-center justify-center rounded-bl-xl text-sm font-extrabold"
+                  className="absolute top-0 right-0 w-10 h-10 flex items-center justify-center rounded-bl-xl text-xs sm:text-sm font-extrabold"
                   style={{ background: cfg.rankBg, color: cfg.rankText }}
                 >
                   {rankIdx + 1}
                 </div>
 
-                <div className="p-6 md:p-8">
-                  <Icon size={56} color={cfg.color} className="mx-auto mb-4" />
+                <div className="p-4 sm:p-6 md:p-8">
+                  <Icon size={40} className="mx-auto mb-3 sm:mb-4" color={cfg.color} />
                   <div
-                    className="font-bold text-base md:text-xl truncate mb-2"
+                    className="font-bold text-sm sm:text-base md:text-xl truncate mb-2"
                     style={{ color: "#084691" }}
                   >
                     {entry.bidderName}
                   </div>
                   <div
-                    className="font-extrabold text-lg md:text-2xl"
+                    className="font-extrabold text-base sm:text-lg md:text-2xl"
                     style={{ color: cfg.color }}
                   >
                     NPR {entry.highestBid.toLocaleString()}
                   </div>
-                  <div className="text-[#225898] text-sm mt-1.5">
+                  <div className="text-[#225898] text-xs sm:text-sm mt-1.5">
                     {entry.itemCount} item{entry.itemCount !== 1 ? "s" : ""}
                   </div>
                 </div>
