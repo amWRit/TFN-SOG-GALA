@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import ProgramCard from "../../components/program-card";
 import ProgramModal from "../../components/program-modal";
+import ProgramSkeleton from "../../components/program-skeleton";
 import { Home } from "lucide-react";
 import styles from '../../styles/homepage.module.css';
 
@@ -16,11 +17,15 @@ async function fetchProgram() {
 
 export default function ProgramPage() {
   const [program, setProgram] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<any | null>(null);
   const [showHint, setShowHint] = useState(true);
 
   useEffect(() => {
-    fetchProgram().then(setProgram).catch(() => setProgram([]));
+    setLoading(true);
+    fetchProgram()
+      .then(data => { setProgram(data); setLoading(false); })
+      .catch(() => { setProgram([]); setLoading(false); });
     const timer = setTimeout(() => setShowHint(false), 4000);
     return () => clearTimeout(timer);
   }, []);
@@ -67,13 +72,17 @@ export default function ProgramPage() {
         {/* Blue gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-br from-[#084691]/88 via-[#225898]/75 to-[#084691]/88" />
         <div className="relative z-10" style={{ padding: 32 }}>
-          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "2rem", width: "100%", margin: "0 auto" }}>
-            {program.map((item: any) => (
-              <div key={item.id} style={{ cursor: "pointer", flex: "1 1 350px", minWidth: 350, maxWidth: 500 }} onClick={() => setSelected(item)}>
-                <ProgramCard item={item} truncate={truncate} />
-              </div>
-            ))}
-          </div>
+          {loading ? (
+            <ProgramSkeleton count={4} />
+          ) : (
+            <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "2rem", width: "100%", margin: "0 auto" }}>
+              {program.map((item: any) => (
+                <div key={item.id} style={{ cursor: "pointer", flex: "1 1 350px", minWidth: 350, maxWidth: 500 }} onClick={() => setSelected(item)}>
+                  <ProgramCard item={item} truncate={truncate} />
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
       <ProgramModal open={!!selected} onClose={() => setSelected(null)} item={selected} />

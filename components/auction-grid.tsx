@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { AuctionItemCard } from "@/components/auction-item-card";
 import useSWR from "swr";
+import AuctionSkeleton from "./auction-skeleton";
 
 interface AuctionItem {
   id: string;
@@ -34,9 +35,8 @@ export function AuctionGrid() {
 
   if (isLoading) {
     return (
-      <div className="text-center py-20">
-        <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#d71a21]"></div>
-        <p className="mt-4 text-white/70">Loading auction items…</p>
+      <div className="relative z-10" style={{ padding: 32 }}>
+        <AuctionSkeleton count={4} />
       </div>
     );
   }

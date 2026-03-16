@@ -150,7 +150,12 @@ function Table({ tableNumber, seats, onSeatClick }: TableProps) {
         {/* Table Circle */}
         <div className="relative w-48 h-48 md:w-64 md:h-64 mx-auto">
           {/* Table center */}
-          <div className="absolute inset-0 rounded-full border-2 border-[#D4AF37]/30 bg-[#D4AF37]/5" />
+          <div className="absolute inset-0 rounded-full border-2 border-[#D4AF37]/30 bg-white flex items-center justify-center">
+            {/* Table number inside circle */}
+            <span className="font-playfair text-3xl font-bold text-white select-none">
+              {tableNumber}
+            </span>
+          </div>
 
           {/* Seats arranged in circle */}
           {seats.map((seat, index) => {
