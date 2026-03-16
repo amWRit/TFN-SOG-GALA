@@ -326,7 +326,7 @@ const SeatingChart = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0a1628] via-[#1f365f]/20 to-[#0a1628]">
+    <div className="min-h-screen bg-gradient-to-br from-[#084691]/88 via-[#225898]/75 to-[#084691]/88">
       {/* Home Button */}
       <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50">
         <a href="/" className="flex items-center gap-2 px-4 py-2 bg-white/90 text-gray-900 rounded-full shadow-lg font-semibold hover:bg-white transition-all border border-gray-200">

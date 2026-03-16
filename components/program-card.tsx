@@ -12,10 +12,12 @@ const defaultTruncate = (str: string, n: number) =>
 const ProgramCard: React.FC<ProgramCardProps> = ({ item, truncate = defaultTruncate }) => (
   <div
     style={{
-      background: "#dadfe1",
-      borderRadius: 32,
-      boxShadow: "0 8px 32px #0005",
-      color: "#111",
+      background: "#eef3fb",
+      borderRadius: 16,
+      boxShadow: "0 4px 20px #22589820, 0 1px 4px #0001",
+      border: "1px solid #c8d9f0",
+      borderTop: "5px solid #d71a21",
+      color: "#084691",
       width: "min(100%, 500px)",
       minHeight: 0,
       padding: "2rem 1.5rem 1.5rem 1.5rem",
@@ -28,10 +30,10 @@ const ProgramCard: React.FC<ProgramCardProps> = ({ item, truncate = defaultTrunc
       cursor: 'pointer',
       touchAction: 'manipulation',
     }}
-    onMouseOver={e => { e.currentTarget.style.boxShadow = '0 12px 36px #0007'; e.currentTarget.style.transform = 'scale(1.025)'; }}
-    onMouseOut={e => { e.currentTarget.style.boxShadow = '0 8px 32px #0005'; e.currentTarget.style.transform = 'scale(1)'; }}
-    onTouchStart={e => { e.currentTarget.style.boxShadow = '0 12px 36px #0007'; e.currentTarget.style.transform = 'scale(1.025)'; }}
-    onTouchEnd={e => { e.currentTarget.style.boxShadow = '0 8px 32px #0005'; e.currentTarget.style.transform = 'scale(1)'; }}
+    onMouseOver={e => { e.currentTarget.style.boxShadow = '0 10px 32px #22589830, 0 2px 8px #0002'; e.currentTarget.style.transform = 'scale(1.018)'; }}
+    onMouseOut={e => { e.currentTarget.style.boxShadow = '0 4px 20px #22589820, 0 1px 4px #0001'; e.currentTarget.style.transform = 'scale(1)'; }}
+    onTouchStart={e => { e.currentTarget.style.boxShadow = '0 10px 32px #22589830, 0 2px 8px #0002'; e.currentTarget.style.transform = 'scale(1.018)'; }}
+    onTouchEnd={e => { e.currentTarget.style.boxShadow = '0 4px 20px #22589820, 0 1px 4px #0001'; e.currentTarget.style.transform = 'scale(1)'; }}
   >
     {/* Sequence Badge */}
     {typeof item.sequence !== 'undefined' && (
@@ -40,7 +42,7 @@ const ProgramCard: React.FC<ProgramCardProps> = ({ item, truncate = defaultTrunc
           position: "absolute",
           top: 18,
           left: 18,
-          background: "#d13239",
+          background: "#d71a21",
           color: "#fff",
           width: 36,
           height: 36,
@@ -72,7 +74,7 @@ const ProgramCard: React.FC<ProgramCardProps> = ({ item, truncate = defaultTrunc
           height: 120,
           borderRadius: 18,
           marginBottom: 16,
-          background: "linear-gradient(135deg, #d13239 0%, #1f365f 100%)",
+          background: "linear-gradient(135deg, #d71a21 0%, #084691 100%)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -97,15 +99,15 @@ const ProgramCard: React.FC<ProgramCardProps> = ({ item, truncate = defaultTrunc
           overflow: "hidden",
           textOverflow: "ellipsis",
           display: "inline-block",
-          color: "#1f365f",
+          color: "#084691",
         }}
       >
         {item.title}
       </span>
       {/* External link removed */}
     </div>
-    <div style={{ color: "#d13239", fontWeight: 600, fontSize: 15 }}>{item.type}</div>
-    <div style={{ fontSize: 14, color: "#1f365f", marginTop: 2 }}>{/* small margin for separation */}
+    <div style={{ color: "#d71a21", fontWeight: 700, fontSize: 13, textTransform: 'uppercase', letterSpacing: 0.5, marginTop: 4 }}>{item.type}</div>
+    <div style={{ fontSize: 13, color: "#225898", marginTop: 4, fontWeight: 500 }}>{/* small margin for separation */}
       <b>Time:</b> {new Date(item.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - {new Date(item.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
     </div>
     {/* Speaker removed */}

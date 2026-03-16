@@ -18,22 +18,22 @@ const PODIUM_CONFIG = [
     icon: Trophy,
     color: "#D4AF37",
     borderColor: "#D4AF37",
-    bg: "#1a1500",
+    bg: "#fffbeb",
     label: "1st",
     podiumH: "h-24",
-    podiumBg: "#2a2000",
+    podiumBg: "#fef3c7",
     scale: "scale-110",
     rankBg: "#D4AF37",
     rankText: "#000",
   },
   {
     icon: Medal,
-    color: "#C0C0C0",
+    color: "#8e8e8e",
     borderColor: "#C0C0C0",
-    bg: "#111418",
+    bg: "#f5f5f5",
     label: "2nd",
     podiumH: "h-16",
-    podiumBg: "#1a1e22",
+    podiumBg: "#ebebeb",
     scale: "",
     rankBg: "#C0C0C0",
     rankText: "#000",
@@ -42,10 +42,10 @@ const PODIUM_CONFIG = [
     icon: Award,
     color: "#CD7F32",
     borderColor: "#CD7F32",
-    bg: "#130d00",
+    bg: "#fff5ee",
     label: "3rd",
     podiumH: "h-10",
-    podiumBg: "#1e1400",
+    podiumBg: "#fde8d8",
     scale: "",
     rankBg: "#CD7F32",
     rankText: "#000",
@@ -77,7 +77,7 @@ export function AuctionLeaderboard() {
       <div className="flex flex-col items-center mb-12">
         <div className="flex items-center justify-center gap-3 mb-3">
           <Flame size={22} color="#D4AF37" />
-          <h2 className="font-playfair text-3xl md:text-4xl font-bold text-white">
+          <h2 className="font-playfair text-3xl md:text-4xl font-bold text-[#084691]">
             Top Bidders
           </h2>
           <Flame size={22} color="#D4AF37" />
@@ -121,7 +121,7 @@ export function AuctionLeaderboard() {
                   <Icon size={56} color={cfg.color} className="mx-auto mb-4" />
                   <div
                     className="font-bold text-base md:text-xl truncate mb-2"
-                    style={{ color: "#ffffff" }}
+                    style={{ color: "#084691" }}
                   >
                     {entry.bidderName}
                   </div>
@@ -131,7 +131,7 @@ export function AuctionLeaderboard() {
                   >
                     NPR {entry.highestBid.toLocaleString()}
                   </div>
-                  <div className="text-gray-400 text-sm mt-1.5">
+                  <div className="text-[#225898] text-sm mt-1.5">
                     {entry.itemCount} item{entry.itemCount !== 1 ? "s" : ""}
                   </div>
                 </div>

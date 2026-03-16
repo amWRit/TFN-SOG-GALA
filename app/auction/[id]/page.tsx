@@ -42,14 +42,14 @@ function CollapsibleDescription({ description }: { description: string | null })
   const isLong = description.length > 180;
   return (
     <div className="mb-6 w-full">
-      <div className="text-base text-[#f5f5f5]/90 whitespace-pre-line text-left">
+      <div className="text-base text-white whitespace-pre-line text-left">
         {isLong && !open
           ? description.slice(0, 180) + "..."
           : description}
       </div>
       {isLong && (
         <button
-          className="mt-2 text-[#d13239] hover:underline font-semibold"
+          className="mt-2 text-[#d71a21] hover:underline font-semibold"
           onClick={() => setOpen((v) => !v)}
         >
           {open ? "Show less" : "Read more"}
@@ -107,11 +107,10 @@ export default function AuctionItemPage() {
     return () => clearInterval(interval);
   }, [item?.endTime]);
 
-
   if (isAdmin === null) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#d13239]" />
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#d71a21]" />
       </div>
     );
   }
@@ -122,7 +121,7 @@ export default function AuctionItemPage() {
   if (!item) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#d13239]" />
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#d71a21]" />
       </div>
     );
   }
@@ -130,7 +129,18 @@ export default function AuctionItemPage() {
   const isClosed = !item.isActive || (item.endTime && new Date(item.endTime).getTime() <= new Date().getTime());
 
   return (
-    <main className={styles.heroContainer + " min-h-screen flex flex-col items-center justify-center p-0 m-0 pb-8"}>
+    <main className="relative min-h-screen flex flex-col items-center justify-center p-0 m-0 pb-8 w-full overflow-hidden">
+      {/* Background image */}
+      <div className="absolute inset-0 bg-gray-900 -z-10">
+        <img
+          src="/images/tfnimage1.jpg"
+          alt="Auction Hero"
+          className="w-full h-full object-cover opacity-30"
+        />
+      </div>
+      {/* Blue gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-[#084691]/88 via-[#225898]/75 to-[#084691]/88 -z-10" />
+
       {/* Title and Home Button in a horizontal bar at the top */}
       <div className="w-full max-w-7xl mx-auto flex items-center justify-between px-4 pt-8 pb-6">
         <motion.div
@@ -138,11 +148,11 @@ export default function AuctionItemPage() {
           animate={{ opacity: 1, y: 0 }}
           className=""
         >
-          <h1 className="font-playfair text-3xl md:text-5xl font-extrabold text-white m-0 p-0 text-left">
+          <h1 className="font-playfair text-3xl md:text-5xl font-extrabold text-white m-0 p-0 text-left drop-shadow-lg">
             {item.title}
           </h1>
         </motion.div>
-        <a href="/auction" className="flex items-center gap-2 px-4 py-2 bg-white/90 text-gray-900 rounded-full shadow-lg font-semibold hover:bg-white transition-all border border-gray-200 shrink-0 ml-4">
+        <a href="/auction" className="flex items-center gap-2 px-4 py-2 bg-[#084691] text-white rounded-full shadow-lg font-semibold hover:bg-[#084691]/90 transition-all border border-[#084691] shrink-0 ml-4">
           <Home className="w-5 h-5" />
           Back
         </a>
@@ -150,7 +160,7 @@ export default function AuctionItemPage() {
       <div className="w-full max-w-7xl mx-auto px-4 flex-1 flex flex-col md:flex-row gap-8 items-stretch justify-center">
         {/* Left column: image, description, time, starting bid */}
         <div className="flex-1 flex flex-col items-center md:items-start justify-center min-h-0">
-          <div className="relative w-full h-[320px] md:h-[380px] rounded-2xl overflow-hidden shadow-2xl border border-[#dadfe1]/30 mb-6">
+          <div className="relative w-full h-[320px] md:h-[380px] rounded-2xl overflow-hidden shadow-2xl border border-[#D4AF37] mb-6">
             <Image
               src={item.imageUrl ?? "/images/auctionitemplaceholder.png"}
               alt={item.title}
@@ -165,14 +175,14 @@ export default function AuctionItemPage() {
                   Closed
                 </span>
               ) : (
-                <span className="px-4 py-2 rounded-full bg-[#d13239] text-white text-sm font-bold uppercase shadow-lg animate-pulse">
+                <span className="px-4 py-2 rounded-full bg-[#d71a21] text-white text-sm font-bold uppercase shadow-lg animate-pulse">
                   Live
                 </span>
               )}
             </div>
             {!isClosed && item.endTime && (
               <div className="absolute bottom-4 left-4 flex items-center gap-2 bg-black/70 backdrop-blur-sm px-4 py-2 rounded-full text-white text-sm font-mono">
-                <Clock className="w-4 h-4 text-[#d13239]" />
+                <Clock className="w-4 h-4 text-[#d71a21]" />
                 {timeRemaining}
               </div>
             )}
@@ -180,9 +190,9 @@ export default function AuctionItemPage() {
           {/* Collapsible Description below image, left-aligned */}
           <CollapsibleDescription description={item.description} />
           {item.endTime && (
-            <div className="flex items-center gap-2 text-sm text-gray-400 mb-2">
-              <Clock size={16} className="text-[#d13239]" />
-              <span className={isClosed ? "text-red-400 font-semibold" : "text-gray-300 font-semibold"}>
+            <div className="flex items-center gap-2 text-sm text-white mb-2">
+              <Clock size={16} className="text-[#d71a21]" />
+              <span className={isClosed ? "text-red-400 font-semibold" : "text-white font-semibold"}>
                 {isClosed ? "Auction Closed" : `Time Left: ${timeRemaining}`}
               </span>
             </div>
@@ -190,9 +200,9 @@ export default function AuctionItemPage() {
         </div>
 
         {/* Right column: big current bid and starting bid */}
-        <div className={`flex-1 flex flex-col justify-center items-center border border-[#D4AF37] rounded-2xl p-6 md:p-10 gap-6 ${isClosed ? "opacity-60" : ""}`}>
+        <div className={`flex-1 flex flex-col justify-center items-center border border-[#D4AF37] rounded-2xl p-6 md:p-10 gap-6 ${isClosed ? "opacity-60" : ""} backdrop-blur-md shadow-xl`}>
           <div className="w-full text-center flex flex-col items-center justify-center min-h-0">
-            <div className="text-l md:text-xl uppercase tracking-widest text-[#d13239] font-bold mb-6">Current Bid (NPR)</div>
+            <div className="text-l md:text-xl uppercase tracking-widest text-[#d71a21] font-bold mb-6">Current Bid (NPR)</div>
 
             {/* Bid amount card with zoom-pulse animation */}
             <motion.div
@@ -216,7 +226,7 @@ export default function AuctionItemPage() {
               <div
                 className="w-full flex flex-col items-center justify-center rounded-2xl py-8 px-6"
                 style={{
-                  background: "linear-gradient(135deg, rgba(212,175,55,0.12) 0%, rgba(209,50,57,0.08) 100%)",
+                  background: "linear-gradient(135deg, rgba(212,175,55,0.12) 0%, rgba(8,70,145,0.08) 100%)",
                   border: "1.5px solid transparent",
                   boxShadow: isClosed
                     ? "none"
@@ -255,17 +265,17 @@ export default function AuctionItemPage() {
             `}</style>
 
             {item.currentBidder && (
-              <div className="flex items-center gap-2 bg-white/10 px-5 py-3 rounded-2xl mt-2">
-                <User className="w-5 h-5 text-[#d13239]" />
+              <div className="flex items-center gap-2 bg-[#084691]/10 px-5 py-3 rounded-2xl mt-2">
+                <User className="w-5 h-5 text-white" />
                 <span className="text-white font-semibold text-lg">{item.currentBidder}</span>
               </div>
             )}
-            <div className="mt-8 pt-6 border-t border-white/10 w-full flex items-center justify-center gap-2 text-gray-400 text-sm">
+            <div className="mt-8 pt-6 border-t border-[#084691]/20 w-full flex items-center justify-center gap-2 text-white text-sm">
               <TrendingUp className="w-4 h-4" />
               Starting bid: NPR {item.startingBid.toLocaleString()}
             </div>
             {isClosed && (
-              <div className="mt-4 px-6 py-3 bg-gray-700/50 rounded-2xl text-gray-400 font-semibold uppercase tracking-wider text-sm">
+              <div className="mt-4 px-6 py-3 bg-gray-100 rounded-2xl text-[#225898] font-semibold uppercase tracking-wider text-sm">
                 Auction Closed
               </div>
             )}

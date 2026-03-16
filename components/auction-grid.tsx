@@ -35,8 +35,8 @@ export function AuctionGrid() {
   if (isLoading) {
     return (
       <div className="text-center py-20">
-        <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#d13239]"></div>
-        <p className="mt-4 text-gray-400">Loading auction items…</p>
+        <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#d71a21]"></div>
+        <p className="mt-4 text-white/70">Loading auction items…</p>
       </div>
     );
   }
@@ -58,7 +58,7 @@ export function AuctionGrid() {
       {activeItems.length > 0 && (
         <div>
           <h2 className="font-playfair text-3xl md:text-4xl font-bold text-white mb-8 flex items-center gap-3">
-            <span className="inline-block w-3 h-3 rounded-full bg-[#d13239] animate-pulse" />
+            <span className="inline-block w-3 h-3 rounded-full bg-[#d71a21] animate-pulse" />
             Bidding Now Open
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -80,7 +80,7 @@ export function AuctionGrid() {
       {/* Inactive/Closed Items */}
       {inactiveItems.length > 0 && (
         <div>
-          <h2 className="font-playfair text-3xl md:text-4xl font-bold text-gray-400 mb-8">
+          <h2 className="font-playfair text-3xl md:text-4xl font-bold text-white/60 mb-8">
             Auction Closed
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -101,7 +101,7 @@ export function AuctionGrid() {
 
       {items?.length === 0 && (
         <div className="text-center py-20">
-          <p className="text-gray-200">No auction items available at this time.</p>
+          <p className="text-white/70">No auction items available at this time.</p>
         </div>
       )}
     </div>

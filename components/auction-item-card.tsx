@@ -50,13 +50,13 @@ function formatTimeRemaining(endTime: Date | null): string {
 function DescriptionPreview({ description, title, onReadMore }: { description: string, title: string, onReadMore: () => void }) {
   const isLong = description.length > 120;
   return (
-    <div className="text-[#1f365f]/80 text-sm mt-1">
+    <div className="text-[#225898] text-sm mt-1">
       <span className="whitespace-pre-line">
         {isLong ? description.slice(0, 120) + "..." : description}
       </span>
       {isLong && (
         <button
-          className="ml-2 text-[#d13239] hover:underline font-semibold focus:outline-none"
+          className="ml-2 text-[#d71a21] hover:underline font-semibold focus:outline-none"
           type="button"
           onClick={e => { e.stopPropagation(); onReadMore(); }}
         >
@@ -99,7 +99,7 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
   if (checkingAdmin) {
     return (
       <div className="h-72 rounded-2xl bg-gray-100 border border-gray-200 animate-pulse flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#d13239]" />
+        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#d71a21]" />
       </div>
     );
   }
@@ -122,9 +122,9 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
         className={`group relative border overflow-hidden transition-all duration-300 rounded-2xl ${
           isClosed
             ? "border-gray-200 opacity-70 cursor-default"
-            : "border-gray-200 cursor-pointer hover:border-[#d13239] hover:shadow-xl hover:shadow-[#d13239]/15 hover:-translate-y-1"
+            : "border-gray-200 cursor-pointer hover:border-[#d71a21] hover:shadow-xl hover:shadow-[#d71a21]/15 hover:-translate-y-1"
         }`}
-        style={{ background: '#dadfe1', backdropFilter: 'none' }}
+        style={{ background: '#eef3fb', borderTop: '5px solid #d71a21' }}
         onClick={() => {
           if (isAdmin) {
             window.open(`/auction/${item.id}`, '_blank');
@@ -154,7 +154,7 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
           </div>
         ) : (
           <div className="absolute top-3 right-3">
-            <span className="px-3 py-1 rounded-full bg-[#d13239] text-white text-xs font-bold uppercase shadow-lg animate-pulse">
+            <span className="px-3 py-1 rounded-full bg-[#d71a21] text-white text-xs font-bold uppercase shadow-lg animate-pulse">
               Live
             </span>
           </div>
@@ -162,7 +162,7 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
       </div>
 
       <CardHeader className="pb-2 pt-4">
-        <CardTitle className="line-clamp-2 text-[#1f365f] text-base font-bold leading-snug">{item.title}</CardTitle>
+        <CardTitle className="line-clamp-2 text-[#084691] text-base font-bold leading-snug">{item.title}</CardTitle>
         {item.description && (
           <DescriptionPreview
             description={item.description ?? "NA"}
@@ -175,7 +175,7 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
       <CardContent className="pt-0">
         {/* Current Bid */}
         <div className="mb-4">
-          <div className="text-xs text-[#1f365f] uppercase tracking-wider mb-1">Current Bid</div>
+          <div className="text-xs text-[#084691] uppercase tracking-wider mb-1">Current Bid</div>
 
           <motion.div
             key={item.currentBid}
@@ -187,28 +187,28 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
           >
             NPR {item.currentBid.toLocaleString()}
           </motion.div>
-          <div className="text-xs text-[#1f365f] mt-1">
+          <div className="text-xs text-[#084691] mt-1">
             {item.currentBidder ? (
-              <span>Leading: <span className="text-[#1f365f] font-semibold">{item.currentBidder}</span></span>
+              <span>Leading: <span className="text-[#084691] font-semibold">{item.currentBidder}</span></span>
             ) : (
-              <span className="text-[#1f365f]/70">No bids yet</span>
+              <span className="text-[#084691]/70">No bids yet</span>
             )}
           </div>
         </div>
 
         {/* Time + Starting Bid */}
-        <div className="flex items-center justify-between gap-2 mt-4 pt-4 border-t border-[#1f365f]/20 text-xs w-full">
+        <div className="flex items-center justify-between gap-2 mt-4 pt-4 border-t border-[#084691]/20 text-xs w-full">
           <div className="flex items-center gap-1.5">
             {item.endTime && (
               <>
-                <Clock size={13} className="shrink-0 text-[#1f365f]" />
-                <span className={isClosed ? "text-red-500 font-semibold" : "text-[#1f365f]"}>
+                <Clock size={13} className="shrink-0 text-[#225898]" />
+                <span className={isClosed ? "text-red-500 font-semibold" : "text-[#225898]"}>
                   {isClosed ? "Closed" : timeRemaining}
                 </span>
               </>
             )}
           </div>
-          <div className="text-[#1f365f]">
+          <div className="text-[#225898]">
             Start: NPR {item.startingBid.toLocaleString()}
           </div>
         </div>
@@ -216,12 +216,12 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
         {/* Action hint */}
         <div className="mt-4 flex justify-center">
           {isAdmin ? (
-            <div className="text-[#d13239] font-medium flex items-center gap-1.5 text-xs">
+            <div className="text-[#d71a21] font-medium flex items-center gap-1.5 text-xs">
               <Eye size={14} /> Click to view details
             </div>
           ) : (
             !isClosed && (
-              <div className="w-full py-2.5 rounded-xl bg-[#d13239] text-white font-bold flex items-center gap-2 justify-center text-sm shadow-lg">
+              <div className="w-full py-2.5 rounded-xl bg-[#d71a21] text-white font-bold flex items-center gap-2 justify-center text-sm shadow-lg">
                 <Gavel size={15} /> Place a Bid
               </div>
             )
