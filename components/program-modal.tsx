@@ -51,10 +51,10 @@ export default function ProgramModal({ open, onClose, item }: ProgramModalProps)
     >
       <div
         style={{
-          background: "rgba(36,24,64,0.99)",
+          background: "#dadfe1",
           borderRadius: 32,
           boxShadow: "0 12px 48px #0008",
-          color: "#fff",
+          color: "#111",
           width: "min(100vw, 540px)",
           maxWidth: 540,
           padding: "2.5rem 2rem 2rem 2rem",
@@ -73,7 +73,7 @@ export default function ProgramModal({ open, onClose, item }: ProgramModalProps)
               position: "absolute",
               top: 18,
               left: 18,
-              background: "#F472B6",
+              background: "#d13239",
               color: "#fff",
               width: 44,
               height: 44,
@@ -101,7 +101,7 @@ export default function ProgramModal({ open, onClose, item }: ProgramModalProps)
             background: "none",
             border: "none",
             cursor: "pointer",
-            color: "#fff",
+            color: "#1f365f",
             zIndex: 2,
           }}
           aria-label="Close"
@@ -129,7 +129,7 @@ export default function ProgramModal({ open, onClose, item }: ProgramModalProps)
               height: 180,
               borderRadius: 24,
               marginBottom: 18,
-              background: "linear-gradient(135deg, #F472B6 0%, #60A5FA 100%)",
+              background: "linear-gradient(135deg, #d13239 0%, #1f365f 100%)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -144,15 +144,15 @@ export default function ProgramModal({ open, onClose, item }: ProgramModalProps)
           </div>
         )}
         {/* Title */}
-        <h2 style={{ fontWeight: 800, fontSize: 28, marginBottom: 8, lineHeight: 1.2, textAlign: 'left' }}>{item.title || 'No Title'}</h2>
+        <h2 style={{ fontWeight: 800, fontSize: 28, marginBottom: 8, lineHeight: 1.2, textAlign: 'left', color: '#1f365f' }}>{item.title || 'No Title'}</h2>
         {/* Type and Sequence */}
         <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 8 }}>
-          <span style={{ color: "#F472B6", fontWeight: 700, fontSize: 16, display: "flex", alignItems: "center", gap: 6 }}>
+          <span style={{ color: "#d13239", fontWeight: 700, fontSize: 16, display: "flex", alignItems: "center", gap: 6 }}>
             <Tag size={18} /> {item.type || 'No Type'}
           </span>
         </div>
         {/* Time */}
-        <div style={{ fontSize: 15, color: "#fff", marginBottom: 8, display: "flex", alignItems: "center", gap: 8 }}>
+        <div style={{ fontSize: 15, color: "#1f365f", marginBottom: 8, display: "flex", alignItems: "center", gap: 8 }}>
           <Calendar size={16} style={{ marginRight: 4, verticalAlign: "middle" }} />
           <span>
             {item.startTime && item.endTime
@@ -161,13 +161,13 @@ export default function ProgramModal({ open, onClose, item }: ProgramModalProps)
           </span>
         </div>
         {/* Speaker */}
-        <div style={{ fontSize: 15, color: "#fff", opacity: 0.8, marginBottom: 8, display: "flex", alignItems: "center", gap: 8 }}>
+        <div style={{ fontSize: 15, color: "#1f365f", opacity: 0.8, marginBottom: 8, display: "flex", alignItems: "center", gap: 8 }}>
           <User size={16} style={{ marginRight: 4, verticalAlign: "middle" }} /> Host/Speaker: {item.speaker ? (
             <button
               style={{
                 background: "none",
                 border: "none",
-                color: "#F472B6",
+                color: "#d13239",
                 textDecoration: "underline",
                 cursor: "pointer",
                 fontWeight: 600,
@@ -201,10 +201,10 @@ export default function ProgramModal({ open, onClose, item }: ProgramModalProps)
           >
             <div
               style={{
-                background: "rgba(36,24,64,0.99)",
+                background: "#dadfe1",
                 borderRadius: 24,
                 boxShadow: "0 8px 32px #0008",
-                color: "#fff",
+                color: "#111",
                 width: "min(95vw, 520px)",
                 maxWidth: 600,
                 padding: "2.2rem 2.2rem 2rem 2.2rem",
@@ -214,6 +214,7 @@ export default function ProgramModal({ open, onClose, item }: ProgramModalProps)
                 position: "relative",
                 maxHeight: "90vh",
                 overflow: "auto",
+                borderTop: "6px solid #d13239",
               }}
             >
               <button
@@ -225,7 +226,7 @@ export default function ProgramModal({ open, onClose, item }: ProgramModalProps)
                   background: "none",
                   border: "none",
                   cursor: "pointer",
-                  color: "#fff",
+                  color: "#1f365f",
                   zIndex: 2,
                 }}
                 aria-label="Close Speaker Detail"
@@ -268,46 +269,46 @@ export default function ProgramModal({ open, onClose, item }: ProgramModalProps)
                     }}
                   />
                 )}
-                <h3 style={{ fontWeight: 700, fontSize: 22, marginBottom: 8, textAlign: "center", width: "100%" }}>{item.speaker}</h3>
+                <h3 style={{ fontWeight: 700, fontSize: 22, marginBottom: 8, textAlign: "center", width: "100%", color: "#1f365f" }}>{item.speaker}</h3>
               </div>
               <div style={{ width: "100%" }}>
                 {item.speakerBio ? (
-                  <div style={{ fontSize: 15, color: "#fff", lineHeight: 1.5, textAlign: "left", wordBreak: "break-word" }}>{item.speakerBio}</div>
+                  <div style={{ fontSize: 15, color: "#1f365f", lineHeight: 1.5, textAlign: "left", wordBreak: "break-word" }}>{item.speakerBio}</div>
                 ) : (
-                  <div style={{ fontSize: 15, color: "#fff", opacity: 0.7, textAlign: "left" }}>No bio available.</div>
+                  <div style={{ fontSize: 15, color: "#1f365f", opacity: 0.7, textAlign: "left" }}>No bio available.</div>
                 )}
               </div>
             </div>
           </div>
         )}
         {/* Location */}
-        <div style={{ fontSize: 15, color: "#fff", opacity: 0.8, marginBottom: 8, display: "flex", alignItems: "center", gap: 8 }}>
+        <div style={{ fontSize: 15, color: "#1f365f", opacity: 0.8, marginBottom: 8, display: "flex", alignItems: "center", gap: 8 }}>
           <MapPin size={16} style={{ marginRight: 4, verticalAlign: "middle" }} /> {item.location ? item.location : '--'}
         </div>
         {/* External Link */}
-        <div style={{ color: "#F472B6", fontWeight: 600, fontSize: 15, marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}>
+        <div style={{ color: "#d13239", fontWeight: 600, fontSize: 15, marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}>
           <ExternalLinkIcon size={18} />
           {item.externalLink ? (
             <a
               href={item.externalLink}
               target="_blank"
               rel="noopener noreferrer"
-              style={{ color: "#F472B6", textDecoration: "underline" }}
+              style={{ color: "#d13239", textDecoration: "underline" }}
             >
               {item.externalLink}
             </a>
           ) : '--'}
         </div>
         {/* Collapsible Description (always show, fallback NA) */}
-        <div style={{ marginTop: 14, background: "rgba(255,255,255,0.07)", borderRadius: 12, padding: 12 }}>
+        <div style={{ marginTop: 14, background: "rgba(0,0,0,0.08)", borderRadius: 12, padding: 12 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
-            <Info size={18} style={{ color: "#F472B6" }} />
+            <Info size={18} style={{ color: "#d13239" }} />
             <button
               onClick={() => setDescOpen((v) => !v)}
               style={{
                 background: "none",
                 border: "none",
-                color: "#F472B6",
+                color: "#d13239",
                 fontWeight: 700,
                 fontSize: 15,
                 cursor: "pointer",
@@ -322,7 +323,7 @@ export default function ProgramModal({ open, onClose, item }: ProgramModalProps)
             </button>
           </div>
           {descOpen && (
-            <div style={{ fontSize: 15, color: "#fff", lineHeight: 1.5, textAlign: "left" }}>{item.description ? item.description : 'NA'}</div>
+            <div style={{ fontSize: 15, color: "#1f365f", lineHeight: 1.5, textAlign: "left" }}>{item.description ? item.description : 'NA'}</div>
           )}
         </div>
       </div>

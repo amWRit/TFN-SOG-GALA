@@ -1,10 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
-import { Clock, Gavel, Home } from "lucide-react";
+import { Clock, Home, TrendingUp, User } from "lucide-react";
 import styles from '../../../styles/homepage.module.css';
 
 interface AuctionItem {
@@ -50,7 +49,7 @@ function CollapsibleDescription({ description }: { description: string | null })
       </div>
       {isLong && (
         <button
-          className="mt-2 text-pink-400 hover:underline font-semibold"
+          className="mt-2 text-[#d13239] hover:underline font-semibold"
           onClick={() => setOpen((v) => !v)}
         >
           {open ? "Show less" : "Read more"}
@@ -62,13 +61,13 @@ function CollapsibleDescription({ description }: { description: string | null })
 
 export default function AuctionItemPage() {
   const { id } = useParams();
+  const router = useRouter();
   const [item, setItem] = useState<AuctionItem | null>(null);
   const [timeRemaining, setTimeRemaining] = useState<string>("");
   const [prevBid, setPrevBid] = useState<number | null>(null);
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
-  const router = require('next/navigation').useRouter();
 
-  // Admin check: Only allow access if server session is present
+  // Admin check
   useEffect(() => {
     async function checkAdmin() {
       const res = await fetch("/api/admin/session");
@@ -94,7 +93,7 @@ export default function AuctionItemPage() {
       }
     }
     fetchItem();
-    interval = setInterval(fetchItem, 1000);
+    interval = setInterval(fetchItem, 3000);
     return () => clearInterval(interval);
     // eslint-disable-next-line
   }, [id]);
@@ -109,13 +108,21 @@ export default function AuctionItemPage() {
   }, [item?.endTime]);
 
 
+  if (isAdmin === null) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#d13239]" />
+      </div>
+    );
+  }
+
   if (isAdmin === false) {
     return null;
   }
   if (!item) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-[#f5f5f5]/60">
-        Loading auction item...
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#d13239]" />
       </div>
     );
   }
@@ -135,83 +142,133 @@ export default function AuctionItemPage() {
             {item.title}
           </h1>
         </motion.div>
-        <a href="/" className="flex items-center gap-2 px-4 py-2 bg-white/90 text-gray-900 rounded-full shadow-lg font-semibold hover:bg-white transition-all border border-gray-200">
+        <a href="/auction" className="flex items-center gap-2 px-4 py-2 bg-white/90 text-gray-900 rounded-full shadow-lg font-semibold hover:bg-white transition-all border border-gray-200 shrink-0 ml-4">
           <Home className="w-5 h-5" />
-          Home
+          Back
         </a>
       </div>
       <div className="w-full max-w-7xl mx-auto px-4 flex-1 flex flex-col md:flex-row gap-8 items-stretch justify-center">
         {/* Left column: image, description, time, starting bid */}
         <div className="flex-1 flex flex-col items-center md:items-start justify-center min-h-0">
-          {item.imageUrl && (
-            <div className="relative w-full h-[320px] md:h-[380px] rounded-2xl overflow-hidden shadow-2xl border-4 border-[#ec4899]/30 mb-6">
-              <Image
-                src={item.imageUrl}
-                alt={item.title}
-                fill
-                className="object-cover"
-                sizes="100vw"
-              />
-              <div className="absolute top-4 right-4">
-                {isClosed ? (
-                  <span className="px-4 py-2 rounded-full bg-gray-700 text-white text-lg font-bold uppercase shadow-lg">
-                    Closed
-                  </span>
-                ) : (
-                  <span className="px-4 py-2 rounded-full bg-[#ec4899] text-white text-lg font-bold uppercase shadow-lg">
-                    Live
-                  </span>
-                )}
-              </div>
+          <div className="relative w-full h-[320px] md:h-[380px] rounded-2xl overflow-hidden shadow-2xl border border-[#dadfe1]/30 mb-6">
+            <Image
+              src={item.imageUrl ?? "/images/auctionitemplaceholder.png"}
+              alt={item.title}
+              fill
+              className="object-cover"
+              sizes="100vw"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+            <div className="absolute top-4 right-4">
+              {isClosed ? (
+                <span className="px-4 py-2 rounded-full bg-gray-700/90 text-white text-sm font-bold uppercase shadow-lg backdrop-blur-sm">
+                  Closed
+                </span>
+              ) : (
+                <span className="px-4 py-2 rounded-full bg-[#d13239] text-white text-sm font-bold uppercase shadow-lg animate-pulse">
+                  Live
+                </span>
+              )}
             </div>
-          )}
+            {!isClosed && item.endTime && (
+              <div className="absolute bottom-4 left-4 flex items-center gap-2 bg-black/70 backdrop-blur-sm px-4 py-2 rounded-full text-white text-sm font-mono">
+                <Clock className="w-4 h-4 text-[#d13239]" />
+                {timeRemaining}
+              </div>
+            )}
+          </div>
           {/* Collapsible Description below image, left-aligned */}
           <CollapsibleDescription description={item.description} />
           {item.endTime && (
-            <div className="flex items-center gap-2 text-base text-[#f5f5f5]/80 mb-2">
-              <Clock size={20} />
-              <span className={isClosed ? "text-red-400 font-bold" : "font-bold"}>
-                {isClosed ? "Closed" : `Time Left: ${timeRemaining}`}
+            <div className="flex items-center gap-2 text-sm text-gray-400 mb-2">
+              <Clock size={16} className="text-[#d13239]" />
+              <span className={isClosed ? "text-red-400 font-semibold" : "text-gray-300 font-semibold"}>
+                {isClosed ? "Auction Closed" : `Time Left: ${timeRemaining}`}
               </span>
             </div>
           )}
         </div>
+
         {/* Right column: big current bid and starting bid */}
-        <div className={`flex-1 flex flex-col justify-center items-center glass-strong rounded-2xl p-6 md:p-10 ${isClosed ? "opacity-60" : ""}`}>
+        <div className={`flex-1 flex flex-col justify-center items-center border border-[#D4AF37] rounded-2xl p-6 md:p-10 gap-6 ${isClosed ? "opacity-60" : ""}`}>
           <div className="w-full text-center flex flex-col items-center justify-center min-h-0">
-            <div className="text-xl md:text-2xl text-[#f5f5f5]/60 mb-4">Current Bid (NPR)</div>
+            <div className="text-l md:text-xl uppercase tracking-widest text-[#d13239] font-bold mb-6">Current Bid (NPR)</div>
+
+            {/* Bid amount card with zoom-pulse animation */}
             <motion.div
               key={item.currentBid}
-              initial={{ scale: 1.2, boxShadow: "0 0 40px #D4AF37BB" }}
-              animate={{ scale: 1, boxShadow: [
-                "0 0 40px #D4AF37BB",
-                "0 0 20px #D4AF37BB"
-              ] }}
-              transition={{
-                type: "spring",
-                stiffness: 300,
-                damping: 20,
-                repeat: Infinity,
-                repeatType: "reverse",
-                duration: 1.5
-              }}
-              className="font-playfair text-7xl md:text-8xl font-extrabold text-[#D4AF37] mb-4 rounded-2xl px-16 py-10 focus:outline-none"
-              style={{
-                boxShadow: "0 0 40px #D4AF37BB",
-                // background: "#23272F"
-              }}
+              initial={{ scale: 1.18, opacity: 0.7 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ type: "spring", stiffness: 300, damping: 18 }}
+              className="relative w-full flex flex-col items-center justify-center mb-6"
             >
-              {item.currentBid.toLocaleString()}
+              {/* Outer glow ring — only when live */}
+              {!isClosed && (
+                <span
+                  className="absolute inset-0 rounded-2xl pointer-events-none"
+                  style={{
+                    animation: "bidRingPulse 2s ease-in-out infinite",
+                    border: "2px solid #D4AF37",
+                    borderRadius: "1rem",
+                  }}
+                />
+              )}
+              <div
+                className="w-full flex flex-col items-center justify-center rounded-2xl py-8 px-6"
+                style={{
+                  background: "linear-gradient(135deg, rgba(212,175,55,0.12) 0%, rgba(209,50,57,0.08) 100%)",
+                  border: "1.5px solid transparent",
+                  boxShadow: isClosed
+                    ? "none"
+                    : "0 0 32px 4px rgba(212,175,55,0.18), 0 2px 24px 0 rgba(0,0,0,0.4)",
+                  backdropFilter: "blur(8px)",
+                }}
+              >
+                <span
+                  className="font-playfair font-extrabold text-[#D4AF37] max-w-full"
+                  style={{
+                    fontSize: "clamp(3rem, 10vw, 5.5rem)",
+                    wordBreak: "break-all",
+                    overflowWrap: "break-word",
+                    lineHeight: 1.1,
+                    animation: isClosed ? "none" : "bidZoomPulse 2.6s ease-in-out infinite",
+                    display: "block",
+                  }}
+                >
+                  {item.currentBid.toLocaleString()}
+                </span>
+              </div>
             </motion.div>
+
+            {/* Keyframe styles */}
+            <style>{`
+              @keyframes bidZoomPulse {
+                0%   { transform: scale(1);     text-shadow: 0 0 0px rgba(212,175,55,0); }
+                45%  { transform: scale(1.12); text-shadow: 0 0 24px rgba(212,175,55,0.55); }
+                100% { transform: scale(1);     text-shadow: 0 0 0px rgba(212,175,55,0); }
+              }
+              @keyframes bidRingPulse {
+                0%   { opacity: 0.25; transform: scale(1); }
+                50%  { opacity: 0.7;  transform: scale(1.025); }
+                100% { opacity: 0.25; transform: scale(1); }
+              }
+            `}</style>
+
             {item.currentBidder && (
-              <div className="text-2xl md:text-3xl text-[#f5f5f5]/80 mt-6 font-semibold">
-                Leading: {item.currentBidder}
+              <div className="flex items-center gap-2 bg-white/10 px-5 py-3 rounded-2xl mt-2">
+                <User className="w-5 h-5 text-[#d13239]" />
+                <span className="text-white font-semibold text-lg">{item.currentBidder}</span>
               </div>
             )}
-            {/* Starting bid moved here */}
-            <div className="mt-10 pt-6 border-t border-[#ec4899]/30 w-full text-lg md:text-xl text-[#f5f5f5]/60 text-center">
+            <div className="mt-8 pt-6 border-t border-white/10 w-full flex items-center justify-center gap-2 text-gray-400 text-sm">
+              <TrendingUp className="w-4 h-4" />
               Starting bid: NPR {item.startingBid.toLocaleString()}
             </div>
+            {isClosed && (
+              <div className="mt-4 px-6 py-3 bg-gray-700/50 rounded-2xl text-gray-400 font-semibold uppercase tracking-wider text-sm">
+                Auction Closed
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -12,10 +12,10 @@ const defaultTruncate = (str: string, n: number) =>
 const ProgramCard: React.FC<ProgramCardProps> = ({ item, truncate = defaultTruncate }) => (
   <div
     style={{
-      background: "rgba(36,24,64,0.93)",
+      background: "#dadfe1",
       borderRadius: 32,
       boxShadow: "0 8px 32px #0005",
-      color: "#fff",
+      color: "#111",
       width: "min(100%, 500px)",
       minHeight: 0,
       padding: "2rem 1.5rem 1.5rem 1.5rem",
@@ -40,7 +40,7 @@ const ProgramCard: React.FC<ProgramCardProps> = ({ item, truncate = defaultTrunc
           position: "absolute",
           top: 18,
           left: 18,
-          background: "#F472B6",
+          background: "#d13239",
           color: "#fff",
           width: 36,
           height: 36,
@@ -72,7 +72,7 @@ const ProgramCard: React.FC<ProgramCardProps> = ({ item, truncate = defaultTrunc
           height: 120,
           borderRadius: 18,
           marginBottom: 16,
-          background: "linear-gradient(135deg, #F472B6 0%, #60A5FA 100%)",
+          background: "linear-gradient(135deg, #d13239 0%, #1f365f 100%)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -96,15 +96,16 @@ const ProgramCard: React.FC<ProgramCardProps> = ({ item, truncate = defaultTrunc
           whiteSpace: "nowrap",
           overflow: "hidden",
           textOverflow: "ellipsis",
-          display: "inline-block"
+          display: "inline-block",
+          color: "#1f365f",
         }}
       >
         {item.title}
       </span>
       {/* External link removed */}
     </div>
-    <div style={{ color: "#F472B6", fontWeight: 600, fontSize: 15 }}>{item.type}</div>
-    <div style={{ fontSize: 14, color: "#fff", marginTop: 2 }}>{/* small margin for separation */}
+    <div style={{ color: "#d13239", fontWeight: 600, fontSize: 15 }}>{item.type}</div>
+    <div style={{ fontSize: 14, color: "#1f365f", marginTop: 2 }}>{/* small margin for separation */}
       <b>Time:</b> {new Date(item.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - {new Date(item.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
     </div>
     {/* Speaker removed */}

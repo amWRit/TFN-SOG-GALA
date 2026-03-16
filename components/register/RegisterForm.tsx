@@ -52,7 +52,7 @@ export default function RegisterForm({
         value={form.phone || ''}
         onChange={handleChange}
       />
-      <label style={{display: 'block', fontWeight: 400, color: '#a5a5a5', marginBottom: 4, fontSize: '1rem', textAlign: 'left'}}>Seating Preference (optional)</label>
+      <label style={{display: 'block', fontWeight: 400, color: '#1f365f', marginBottom: 4, fontSize: '1rem', textAlign: 'left'}}>Seating Preference (optional)</label>
       <div style={{display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 16}}>
         <select
           className={styles.input}
@@ -60,7 +60,7 @@ export default function RegisterForm({
           value={form.table || ''}
           onChange={handleChange}
           required
-          style={{flex: 1, minWidth: 0, color: '#a5a5a5'}}>
+          style={{flex: 1, minWidth: 0, color: '#1f365f'}}>
           <option value="">Table #</option>
           {tableOptions.map(t => (
             <option key={t} value={t}>Table {t}</option>
@@ -73,7 +73,7 @@ export default function RegisterForm({
           onChange={handleChange}
           required
           disabled={!form.table}
-          style={{flex: 1, minWidth: 0, color: '#a5a5a5'}}>
+          style={{flex: 1, minWidth: 0, color: '#1f365f'}}>
           <option value="">Seat #</option>
           {seatOptions.map(s => (
             <option key={s} value={s}>Seat {s}</option>
@@ -98,12 +98,12 @@ export default function RegisterForm({
       {success && (
         <>
           <div className={styles.confetti} aria-hidden>🎊🎈</div>
-          <p style={{ color: '#A78BFA', marginTop: '1rem', fontWeight: 600, fontSize: '1.1rem' }}>
+          <p style={{ color: '#1f365f', marginTop: '1rem', fontWeight: 600, fontSize: '1.1rem' }}>
             Thank you for registering! See you at the Gala!
           </p>
         </>
       )}
-      {error && <p style={{ color: '#F472B6', marginTop: '1rem' }}>{error}</p>}
+      {error && <p style={{ color: '#d13239', marginTop: '1rem' }}>{error}</p>}
       </form>
     </div>
   );

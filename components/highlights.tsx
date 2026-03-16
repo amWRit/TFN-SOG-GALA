@@ -13,7 +13,7 @@ const EventHighlights = () => {
   ];
 
   return (
-    <section id="highlights" className="py-24 w-full bg-gradient-to-br from-purple-900 via-gray-900 to-pink-900">
+    <section id="highlights" className="py-24 w-full bg-gradient-to-br from-[#0a1628] via-[#1f365f] to-[#0a1628]">
       <div className="w-full">
         <div className="text-center mb-16">
           <h2 className="text-5xl font-bold text-white mb-4">Event Highlights</h2>
@@ -42,7 +42,7 @@ const EventHighlights = () => {
         <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center w-full">
           <button
             onClick={() => window.location.href = '/program'}
-            className="group bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-4 rounded-full font-semibold text-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 flex items-center gap-3 w-full sm:w-auto justify-center cursor-pointer"
+            className="group bg-[#d13239] hover:bg-[#b82b31] text-white px-8 py-4 rounded-full font-semibold text-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 flex items-center gap-3 w-full sm:w-auto justify-center cursor-pointer"
           >
             <TableOfContents className="w-5 h-5" />
             View Program Details

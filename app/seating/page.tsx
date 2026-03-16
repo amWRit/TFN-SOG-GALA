@@ -30,18 +30,18 @@ function groupSeatsByTable(seats: Seat[]): TableType[] {
 
 const getBadgeColor = (involvement: string) => {
   const colors = {
-    'Founding Member': 'from-purple-600 to-pink-600',
-    'Major Donor': 'from-amber-500 to-orange-600',
-    'Sponsor': 'from-blue-500 to-cyan-600',
-    'Partner': 'from-green-500 to-emerald-600',
-    'Advisor': 'from-indigo-500 to-purple-600',
-    'Volunteer': 'from-pink-500 to-rose-600',
-    'Alumni': 'from-teal-500 to-cyan-600',
-    'Youth Leader': 'from-yellow-500 to-amber-600',
-    'Educator': 'from-red-500 to-pink-600',
-    'Media': 'from-violet-500 to-purple-600',
-    'VIP': 'from-amber-600 to-yellow-500',
-    'default': 'from-gray-600 to-gray-700'
+    'Founding Member': 'bg-[#d13239]',
+    'Major Donor': 'bg-amber-500',
+    'Sponsor': 'bg-blue-500',
+    'Partner': 'bg-green-500',
+    'Advisor': 'bg-indigo-500',
+    'Volunteer': 'bg-[#d13239]',
+    'Alumni': 'bg-teal-500',
+    'Youth Leader': 'bg-yellow-500',
+    'Educator': 'bg-red-500',
+    'Media': 'bg-violet-500',
+    'VIP': 'bg-amber-600',
+    'default': 'bg-gray-600'
   };
   return (colors as Record<string, string>)[involvement] || colors.default;
 };
@@ -76,7 +76,7 @@ const SeatCard: React.FC<SeatCardProps> = ({ seat, tableId, onClose }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/70 backdrop-blur-sm animate-fadeIn">
       <div
-        className="relative bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 rounded-3xl shadow-2xl w-full max-w-xs sm:max-w-md border border-purple-500/20 overflow-hidden"
+        className="relative bg-gradient-to-br from-[#0a1628] via-[#0d1a30] to-[#0a1628] rounded-3xl shadow-2xl w-full max-w-xs sm:max-w-md border border-[#d13239]/20 overflow-hidden"
         style={{
           maxHeight: '95vh',
           display: 'flex',
@@ -103,7 +103,7 @@ const SeatCard: React.FC<SeatCardProps> = ({ seat, tableId, onClose }) => {
           {/* Profile Image or Placeholder */}
           <div className="flex justify-center mb-4 sm:mb-6">
             <div className="relative w-20 h-20 sm:w-32 sm:h-32 flex items-center justify-center">
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-600 to-pink-600 rounded-full blur-xl opacity-50 z-0" />
+              <div className="absolute inset-0 bg-gradient-to-br from-[#1f365f] to-[#d13239] rounded-full blur-xl opacity-50 z-0" />
               <img
                 src={assigned ? (seat.registration?.imageUrl || "/images/userplaceholder.png") : "/images/seatplaceholder.png"}
                 alt={assigned ? seat.registration?.name : "Vacant Seat"}
@@ -120,12 +120,12 @@ const SeatCard: React.FC<SeatCardProps> = ({ seat, tableId, onClose }) => {
           {/* Badge or Placeholder */}
           <div className="flex justify-center mb-4 sm:mb-6">
             {assigned ? (
-              <span className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold text-white bg-gradient-to-r ${getBadgeColor(seat.registration?.involvement || "")}`}>
+              <span className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold text-white ${getBadgeColor(seat.registration?.involvement || "")}`}>
                 <Award className="w-4 h-4" />
                 {seat.registration?.involvement}
               </span>
             ) : (
-              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold text-white bg-gradient-to-r from-gray-600 to-gray-700">
+              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold text-white bg-gray-600">
                 <Users className="w-4 h-4" />
                 Not assigned yet
               </span>
@@ -142,7 +142,7 @@ const SeatCard: React.FC<SeatCardProps> = ({ seat, tableId, onClose }) => {
                       ? '“' + seat.registration?.quote + '”'
                       : '“' + (seat.registration?.quote ?? '').slice(0, 120) + '...”'}
                     <button
-                      className="ml-2 text-xs text-purple-400 underline focus:outline-none"
+                      className="ml-2 text-xs text-[#d13239] underline focus:outline-none"
                       onClick={() => setQuoteExpanded((v) => !v)}
                       type="button"
                     >
@@ -166,7 +166,7 @@ const SeatCard: React.FC<SeatCardProps> = ({ seat, tableId, onClose }) => {
                       ? seat.registration?.bio
                       : (seat.registration?.bio ?? '').slice(0, 120) + '...'}
                     <button
-                      className="ml-2 text-xs text-purple-400 underline focus:outline-none"
+                      className="ml-2 text-xs text-[#d13239] underline focus:outline-none"
                       onClick={() => setBioExpanded((v) => !v)}
                       type="button"
                     >
@@ -184,7 +184,7 @@ const SeatCard: React.FC<SeatCardProps> = ({ seat, tableId, onClose }) => {
                 </p>
                 <a
                   href="/register"
-                  className="mt-2 px-5 py-2 rounded-full bg-gradient-to-r from-purple-600 to-pink-500 text-white font-semibold shadow hover:from-pink-500 hover:to-purple-600 transition"
+                  className="mt-2 px-5 py-2 rounded-full bg-[#d13239] hover:bg-[#b82b31] text-white font-semibold shadow transition"
                 >
                   Reserve this seat
                 </a>
@@ -233,9 +233,9 @@ const Table: React.FC<TableProps> = ({ table, onSeatClick }) => {
       {/* Table visualization */}
       <div className="relative" style={{ width: '320px', height: '320px' }}>
         {/* Table center */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 rounded-full bg-gradient-to-br from-gray-800 to-gray-900 border-4 border-purple-500/20 shadow-xl flex items-center justify-center">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 rounded-full bg-gradient-to-br from-[#0d1a30] to-[#0a1628] border-4 border-[#d13239]/20 shadow-xl flex items-center justify-center">
           <div className="text-center">
-            <div className="text-4xl font-bold text-transparent bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text">
+              <div className="text-4xl font-bold text-[#d13239]">
               {table.id}
             </div>
             <div className="text-xs text-gray-400 uppercase tracking-wider">Table</div>
@@ -250,19 +250,19 @@ const Table: React.FC<TableProps> = ({ table, onSeatClick }) => {
             <button
               key={seat.id}
               onClick={() => onSeatClick(seat, table.id)}
-              className={`absolute top-1/2 left-1/2 group cursor-pointer focus:outline-none ${assigned ? 'border-2 border-pink-500' : 'border-2 border-gray-400'} rounded-full bg-white/5`}
+              className={`absolute top-1/2 left-1/2 group cursor-pointer focus:outline-none ${assigned ? 'border-2 border-[#d13239]' : 'border-2 border-gray-400'} rounded-full bg-white/5`}
               style={{
                 transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`,
                 width: '64px',
                 height: '64px',
-                boxShadow: assigned ? '0 0 0 2px #ec4899aa' : '0 0 0 2px #a3a3a3aa',
+                boxShadow: assigned ? '0 0 0 2px #d13239aa' : '0 0 0 2px #a3a3a3aa',
               }}
             >
               <div className="relative w-full h-full flex items-center justify-center">
                 {/* Glow effect */}
-                <div className={`absolute inset-0 rounded-full blur-md transition-opacity duration-300 ${assigned ? 'bg-gradient-to-br from-purple-500 to-pink-500 opacity-60' : 'bg-gradient-to-br from-gray-400 to-gray-500 opacity-30'} group-hover:opacity-80`} />
+                <div className={`absolute inset-0 rounded-full blur-md transition-opacity duration-300 ${assigned ? 'bg-gradient-to-br from-[#1f365f] to-[#d13239] opacity-60' : 'bg-gradient-to-br from-gray-400 to-gray-500 opacity-30'} group-hover:opacity-80`} />
                 {/* Seat image */}
-                <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-white/20 group-hover:border-purple-400 transition-all duration-300 group-hover:scale-110 shadow-lg">
+                <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-white/20 group-hover:border-[#d13239] transition-all duration-300 group-hover:scale-110 shadow-lg">
                   <img
                     src={assigned ? (seat.registration?.imageUrl || "/images/userplaceholder.png") : "/images/seatplaceholder.png"}
                     alt={assigned ? seat.registration?.name : "Vacant Seat"}
@@ -270,12 +270,12 @@ const Table: React.FC<TableProps> = ({ table, onSeatClick }) => {
                   />
                 </div>
                 {/* Seat number */}
-                <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-gradient-to-br from-purple-600 to-pink-600 rounded-full flex items-center justify-center text-white text-xs font-bold border-2 border-gray-900 shadow-lg">
+                <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-[#d13239] rounded-full flex items-center justify-center text-white text-xs font-bold border-2 border-gray-900 shadow-lg">
                   {seat.seatNumber}
                 </div>
                 {/* Name tooltip on hover (desktop only) */}
                 <div className="hidden md:block absolute top-full mt-2 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap">
-                  <div className="bg-gray-900 text-white text-xs px-3 py-1.5 rounded-lg shadow-xl border border-purple-500/30">
+                  <div className="bg-[#0d1a30] text-white text-xs px-3 py-1.5 rounded-lg shadow-xl border border-[#d13239]/30">
                     {assigned ? seat.registration?.name : 'Vacant'}
                   </div>
                 </div>
@@ -326,7 +326,7 @@ const SeatingChart = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900/20 to-gray-900">
+    <div className="min-h-screen bg-gradient-to-br from-[#0a1628] via-[#1f365f]/20 to-[#0a1628]">
       {/* Home Button */}
       <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50">
         <a href="/" className="flex items-center gap-2 px-4 py-2 bg-white/90 text-gray-900 rounded-full shadow-lg font-semibold hover:bg-white transition-all border border-gray-200">
@@ -375,7 +375,7 @@ const SeatingChart = () => {
       )}
 
       {/* Legend */}
-      <div className="fixed bottom-0 md:bottom-4 left-0 md:left-1/2 right-0 md:right-auto w-full md:w-auto -translate-x-0 md:-translate-x-1/2 bg-gray-900/90 backdrop-blur-md border border-purple-500/20 rounded-none md:rounded-2xl px-2 md:px-6 py-3 md:py-4 shadow-2xl z-40">
+      <div className="fixed bottom-0 md:bottom-4 left-0 md:left-1/2 right-0 md:right-auto w-full md:w-auto -translate-x-0 md:-translate-x-1/2 bg-[#0d1a30]/90 backdrop-blur-md border border-[#d13239]/20 rounded-none md:rounded-2xl px-2 md:px-6 py-3 md:py-4 shadow-2xl z-40">
         <div className="flex flex-col md:flex-row items-center gap-2 md:gap-6 text-sm text-gray-300 justify-center w-full">
           <div className="flex items-center gap-2 mb-1 md:mb-0">
             <div className="w-8 h-8 rounded-full border-2 border-dashed border-gray-400 flex items-center justify-center bg-gray-800">
@@ -385,7 +385,7 @@ const SeatingChart = () => {
           </div>
           <div className="flex flex-row gap-4 md:gap-6">
             <div className="flex items-center gap-2">
-              <Users className="w-5 h-5 text-purple-400" />
+              <Users className="w-5 h-5 text-[#d13239]" />
               <span>{seats.length} Total Seats</span>
             </div>
             <div className="flex items-center gap-2">

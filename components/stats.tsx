@@ -82,13 +82,13 @@ const StatsSection = () => {
   ];
 
   return (
-    <section id="stats" className="py-24 bg-gradient-to-br from-purple-900 via-gray-900 to-pink-900 w-full">
+    <section id="stats" className="py-24 bg-gradient-to-br from-[#0a1628] via-[#1f365f] to-[#0a1628] w-full">
       <div className="w-full flex flex-col items-center justify-center px-4 sm:px-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12 w-full max-w-4xl mx-auto">
           {stats.map((stat, index) => (
             <div key={index} className="text-center group">
               <div className="inline-flex items-center justify-center w-20 h-20 bg-white/10 backdrop-blur-md border border-white/20 rounded-full mb-6 group-hover:scale-110 transition-transform duration-300">
-                <stat.icon className="w-10 h-10 text-purple-400" />
+                <stat.icon className="w-10 h-10 text-[#d13239]" />
               </div>
               <div className="text-6xl font-bold text-white mb-2">
                 {stat.format ? stat.format(stat.value) : <AnimatedNumber end={stat.value} suffix={stat.suffix} />}

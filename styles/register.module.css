@@ -1,9 +1,5 @@
 .gradientText {
-  background: linear-gradient(90deg, #A78BFA, #F472B6);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  text-fill-color: transparent;
+  color: #dadfe1;
   font-size: 2.2rem;
   line-height: 1.2;
 }
@@ -16,11 +12,11 @@
 }
 .register-hero {
   min-height: 100vh;
-  background: linear-gradient(135deg, #6B21A8 90%, #EC4899 100%);
+  background: linear-gradient(135deg, #1f365f 0%, #0a1628 100%);
   color: #fff;
   display: flex;
   flex-direction: row;
-  align-items: flex-start;
+  align-items: stretch;
   justify-content: center;
   gap: 0px;
   width: 100%;
@@ -43,11 +39,11 @@
 }
 
 .register-form-card, .payment-info-card {
-  background: rgba(31, 41, 55, 0.95);
+  background: #dadfe1;
   border-radius: 1rem;
-  box-shadow: 0 8px 32px 0 rgba(0,0,0,0.37);
+  box-shadow: 0 8px 32px 0 rgba(0,0,0,0.18);
   padding: 2rem;
-  color: #fff;
+  color: #1f365f;
   max-width: 1000px;
   margin: 2rem 1.5rem;
   box-sizing: border-box;
@@ -64,30 +60,30 @@
 }
 
 .gradientText {
-  background: linear-gradient(90deg, #A78BFA, #F472B6);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  text-fill-color: transparent;
+  color: #1f365f;
 }
 
 .input {
   width: 100%;
   padding: 0.75rem 1rem;
   border-radius: 0.5rem;
-  border: none;
+  border: 1px solid #1f365f30;
   margin-bottom: 1.25rem;
-  background: #23272F;
-  color: #fff;
+  background: #ffffff;
+  color: #1f365f;
   font-size: 1rem;
 }
+.input::placeholder {
+  color: #1f365f80;
+}
 .input:focus {
-  border: 2px solid #F472B6;
-  box-shadow: 0 0 0 2px #f472b655;
+  border: 2px solid #d13239;
+  box-shadow: 0 0 0 2px #d1323955;
+  outline: none;
 }
 
 .primaryButton {
-  background: linear-gradient(90deg, #9333ea 0%, #ec4899 100%);
+  background: #d13239;
   color: #fff;
   padding: 0.75rem 2.25rem;
   border-radius: 9999px;
@@ -101,7 +97,7 @@
   display: inline-block;
 }
 .primaryButton:hover, .primaryButton:focus {
-  background: linear-gradient(90deg, #ec4899 0%, #9333ea 100%);
+  background: #b82b31;
   transform: scale(1.05);
 }
 

@@ -18,7 +18,10 @@ interface AuctionItem {
   isActive: boolean;
 }
 
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
+const fetcher = (url: string) =>
+  fetch(url)
+    .then((res) => res.json())
+    .then((data) => (Array.isArray(data) ? data : data.items ?? []));
 
 export function AuctionGrid() {
   const { data: items, error, isLoading } = useSWR<AuctionItem[]>(
@@ -32,8 +35,8 @@ export function AuctionGrid() {
   if (isLoading) {
     return (
       <div className="text-center py-20">
-        <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-pink-400"></div>
-        <p className="mt-4 text-gray-200">Loading auction items...</p>
+        <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#d13239]"></div>
+        <p className="mt-4 text-gray-400">Loading auction items…</p>
       </div>
     );
   }
@@ -41,7 +44,7 @@ export function AuctionGrid() {
   if (error) {
     return (
       <div className="text-center py-20">
-        <p className="text-red-400">Error loading auction items. Please try again later.</p>
+        <p className="text-red-400">Error loading auction items. Please refresh and try again.</p>
       </div>
     );
   }
@@ -54,7 +57,8 @@ export function AuctionGrid() {
       {/* Active Items */}
       {activeItems.length > 0 && (
         <div>
-          <h2 className="font-playfair text-3xl md:text-4xl font-bold text-white mb-8">
+          <h2 className="font-playfair text-3xl md:text-4xl font-bold text-white mb-8 flex items-center gap-3">
+            <span className="inline-block w-3 h-3 rounded-full bg-[#d13239] animate-pulse" />
             Bidding Now Open
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -76,7 +80,7 @@ export function AuctionGrid() {
       {/* Inactive/Closed Items */}
       {inactiveItems.length > 0 && (
         <div>
-          <h2 className="font-playfair text-3xl md:text-4xl font-bold text-pink-300 mb-8">
+          <h2 className="font-playfair text-3xl md:text-4xl font-bold text-gray-400 mb-8">
             Auction Closed
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

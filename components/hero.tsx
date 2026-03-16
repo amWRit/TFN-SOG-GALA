@@ -10,10 +10,11 @@ const VideoHero = () => {
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden flex items-center justify-center" id="home">
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-900/90 via-gray-900/80 to-pink-900/90 z-10" />
+      <div className="absolute inset-0 bg-gradient-to-br from-[#1f365f]/90 via-[#0a1628]/80 to-[#d13239]/80 z-10" />
       <div className="absolute inset-0 bg-gray-900">
         <img 
-          src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1920&h=1080&fit=crop" 
+          // src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1920&h=1080&fit=crop" 
+          src = "/images/tfnimage2.jpg"
           alt="Nepal Education"
           className="w-full h-full object-cover opacity-30"
         />
@@ -22,7 +23,7 @@ const VideoHero = () => {
       <div className="relative z-20 h-full flex flex-col items-center justify-center text-center px-4 sm:px-6 w-full">
         <div className="w-full max-w-4xl mx-auto space-y-8">
           <h1 className="text-6xl md:text-7xl lg:text-8xl font-bold text-white leading-tight">
-            Gala <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">2026</span>
+            Gala <span className="text-[#d13239]">2026</span>
           </h1>
           
           <p className="text-2xl md:text-3xl text-gray-200 font-light">
@@ -38,7 +39,7 @@ const VideoHero = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center w-full">
             <button 
               onClick={() => setShowVideo(true)}
-              className="group bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-4 rounded-full font-semibold text-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 flex items-center gap-3 w-full sm:w-auto justify-center cursor-pointer"
+              className="group bg-[#d13239] hover:bg-[#b82b31] text-white px-8 py-4 rounded-full font-semibold text-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 flex items-center gap-3 w-full sm:w-auto justify-center cursor-pointer"
             >
               <Play className="w-5 h-5" />
               Watch 2025 Highlights
@@ -47,14 +48,14 @@ const VideoHero = () => {
           <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center w-full">
             <button
               onClick={() => window.location.href = '/seating'}
-              className="group bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-4 rounded-full font-semibold text-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 flex items-center gap-3 w-full sm:w-auto justify-center cursor-pointer"
+              className="group bg-[#d13239] hover:bg-[#b82b31] text-white px-8 py-4 rounded-full font-semibold text-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 flex items-center gap-3 w-full sm:w-auto justify-center cursor-pointer"
             >
               <Armchair className="w-5 h-5" />
               View Available Seats
             </button>
             <button
               onClick={() => window.location.href = '/auction'}
-              className="group bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-4 rounded-full font-semibold text-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 flex items-center gap-3 w-full sm:w-auto justify-center cursor-pointer"
+              className="group bg-[#d13239] hover:bg-[#b82b31] text-white px-8 py-4 rounded-full font-semibold text-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 flex items-center gap-3 w-full sm:w-auto justify-center cursor-pointer"
             >
               <Gavel className="w-5 h-5" />
               View Auction Items
