@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { ChevronRight, Play, Armchair, Gavel } from 'lucide-react';
+import { ChevronRight, Play, Armchair, Gavel, CalendarCheck, List } from 'lucide-react';
 import CountdownTimer from './countdown-timer';
 
 const VideoHero = () => {
@@ -59,6 +59,21 @@ const VideoHero = () => {
             >
               <Gavel className="w-5 h-5" />
               View Auction Items
+            </button>
+            {/* Mobile-only buttons */}
+            <button
+              onClick={() => window.location.href = '/program'}
+              className="group bg-white/15 hover:bg-white/25 border border-white/50 text-white px-8 py-4 rounded-full font-semibold text-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 flex items-center gap-3 w-full justify-center cursor-pointer sm:hidden"
+            >
+              <List className="w-5 h-5" />
+              View Program
+            </button>
+            <button
+              onClick={() => window.location.href = '/register'}
+              className="group bg-white/15 hover:bg-white/25 border border-white/50 text-white px-8 py-4 rounded-full font-semibold text-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 flex items-center gap-3 w-full justify-center cursor-pointer sm:hidden"
+            >
+              <CalendarCheck className="w-5 h-5" />
+              RSVP
             </button>
           </div>
         </div>
