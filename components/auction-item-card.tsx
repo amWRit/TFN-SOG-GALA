@@ -7,6 +7,8 @@ import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
 import { Clock, Gavel } from "lucide-react";
+import { BidModal } from "@/components/auction-bid-modal";
+import { AuctionDescModal } from "@/components/auction-desc-modal";
 
 interface AuctionItem {
   id: string;
@@ -71,11 +73,6 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
   const [showDescModal, setShowDescModal] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [checkingAdmin, setCheckingAdmin] = useState(true);
-  const [bidAmount, setBidAmount] = useState("");
-  const [bidderName, setBidderName] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState<string|null>(null);
-  const [success, setSuccess] = useState<string|null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -109,24 +106,17 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
 
   return (
     <>
-      {/* Description Modal (overlay, not inside Card) */}
+      {/* Bid Modal */}
+      {showBidModal && (
+        <BidModal item={item} onClose={() => setShowBidModal(false)} />
+      )}
+      {/* Description Modal */}
       {showDescModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md">
-          <div className="bg-gray-900 rounded-lg p-4 md:p-8 min-w-0 w-full max-w-xs md:min-w-[320px] md:max-w-md text-left relative border-2 border-[#d13239]/60 shadow-xl overflow-y-auto max-h-[90vh]">
-            <button
-              className="fixed md:absolute top-4 right-4 md:top-2 md:right-2 text-[#d13239] hover:text-white text-3xl md:text-2xl z-50"
-              style={{lineHeight: 1, background: 'none', border: 'none'}}
-              onClick={e => { e.stopPropagation(); setShowDescModal(false); }}
-              aria-label="Close"
-            >
-              ×
-            </button>
-            <div className="pt-8 md:pt-2 mb-4 text-xl md:text-2xl font-bold text-[#d13239] break-words text-center">{item.title}</div>
-            <div className="text-gray-200 whitespace-pre-line text-base break-words" style={{wordBreak: 'break-word'}}>
-              {item.description}
-            </div>
-          </div>
-        </div>
+        <AuctionDescModal
+          title={item.title}
+          description={item.description ?? ""}
+          onClose={() => setShowDescModal(false)}
+        />
       )}
       <Card
         className={`group relative border overflow-hidden transition-all duration-300 rounded-2xl ${
@@ -138,7 +128,7 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
         onClick={() => {
           if (isAdmin) {
             window.open(`/auction/${item.id}`, '_blank');
-          } else if (!isClosed && !showDescModal) {
+          } else if (!isClosed && !showDescModal && !showBidModal) {
             setShowBidModal(true);
           }
         }}
@@ -238,104 +228,6 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
           )}
         </div>
 
-        {showBidModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md" onClick={e => { if (e.target === e.currentTarget) setShowBidModal(false); }}>
-            <div className="bg-[#0d1a30] rounded-2xl p-6 w-full max-w-sm border border-[#d13239]/40 shadow-2xl mx-4 relative">
-              <button
-                className="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl leading-none"
-                onClick={e => { e.stopPropagation(); setShowBidModal(false); }}
-                aria-label="Close"
-              >
-                ×
-              </button>
-              <div className="mb-6">
-                <div className="text-xs text-gray-400 uppercase tracking-widest mb-1">Placing bid on</div>
-                <div className="text-lg font-bold text-white line-clamp-1">{item.title}</div>
-                <div className="text-[#D4AF37] font-semibold text-sm mt-0.5">Current: NPR {item.currentBid.toLocaleString()}</div>
-              </div>
-              <form
-                className="flex flex-col gap-4"
-                onSubmit={async (e) => {
-                  e.preventDefault();
-                  if (isClosed || submitting) return;
-                  setError(null);
-                  setSuccess(null);
-                  setSubmitting(true);
-                  try {
-                    const res = await fetch("/api/auction/items/bid", {
-                      method: "POST",
-                      headers: { "Content-Type": "application/json" },
-                      body: JSON.stringify({
-                        auctionItemId: item.id,
-                        amount: Number(bidAmount),
-                        bidderName: bidderName.trim(),
-                      }),
-                    });
-                    if (res.ok) {
-                      setSuccess("Bid placed successfully!");
-                      setBidAmount("");
-                      setBidderName("");
-                      setTimeout(() => setShowBidModal(false), 1200);
-                    } else {
-                      const data = await res.json();
-                      setError(data.error || "Failed to place bid");
-                    }
-                  } catch (err) {
-                    setError("Network error. Please try again.");
-                  } finally {
-                    setSubmitting(false);
-                  }
-                }}
-              >
-                <div className="flex flex-col gap-1">
-                  <label className="text-xs text-gray-300 font-medium uppercase tracking-wider">Your Name</label>
-                  <input
-                    type="text"
-                    className="w-full px-4 py-3 rounded-xl bg-white/5 text-white border border-white/20 focus:outline-none focus:border-[#d13239] transition-colors placeholder:text-gray-500"
-                    placeholder="Enter your name"
-                    value={bidderName}
-                    onChange={e => setBidderName(e.target.value)}
-                    required
-                    minLength={2}
-                    maxLength={32}
-                    disabled={submitting}
-                  />
-                </div>
-                <div className="flex flex-col gap-1">
-                  <label className="text-xs text-gray-300 font-medium uppercase tracking-wider">
-                    Bid Amount
-                    <span className="ml-1 text-gray-500 normal-case">(min NPR {(item.currentBid + 1).toLocaleString()})</span>
-                  </label>
-                  <input
-                    type="number"
-                    className="w-full px-4 py-3 rounded-xl bg-white/5 text-white border border-white/20 focus:outline-none focus:border-[#d13239] transition-colors placeholder:text-gray-500"
-                    placeholder={`NPR ${(item.currentBid + 1).toLocaleString()}`}
-                    value={bidAmount}
-                    onChange={e => setBidAmount(e.target.value)}
-                    min={item.currentBid + 1}
-                    step={1}
-                    required
-                    disabled={submitting}
-                  />
-                </div>
-                {error && (
-                  <div className="text-red-400 text-sm text-center bg-red-400/10 px-3 py-2 rounded-xl">{error}</div>
-                )}
-                {success && (
-                  <div className="text-green-400 text-sm text-center bg-green-400/10 px-3 py-2 rounded-xl">{success}</div>
-                )}
-                <button
-                  type="submit"
-                  className="w-full py-3 mt-1 rounded-xl bg-[#d13239] hover:bg-[#b82b31] text-white font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 flex items-center justify-center gap-2"
-                  disabled={isClosed || submitting}
-                >
-                  <Gavel size={16} />
-                  {submitting ? "Placing Bid…" : "Confirm Bid"}
-                </button>
-              </form>
-            </div>
-          </div>
-        )}
       </CardContent>
     </Card>
     </>

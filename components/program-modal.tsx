@@ -214,6 +214,7 @@ export default function ProgramModal({ open, onClose, item }: ProgramModalProps)
                 position: "relative",
                 maxHeight: "90vh",
                 overflow: "auto",
+                borderTop: "6px solid #d13239",
               }}
             >
               <button
