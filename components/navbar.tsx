@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Award } from 'lucide-react';
+import { Award, Menu } from 'lucide-react';
 
 
 const Navbar = () => {
@@ -104,13 +104,11 @@ const Navbar = () => {
             </div>
           {/* Mobile Menu Toggle */}
           <button
-            className="md:hidden ml-4 text-white focus:outline-none"
+            className="md:hidden ml-4 focus:outline-none"
             aria-label="Open Menu"
             onClick={() => setMenuOpen(!menuOpen)}
           >
-            <svg width="28" height="28" fill="none" viewBox="0 0 24 24">
-              <path stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
+            <Menu size={28} color="#225898" />
           </button>
         </div>
         {/* Mobile Menu */}

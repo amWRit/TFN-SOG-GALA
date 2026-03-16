@@ -9,7 +9,7 @@ const VideoHero = () => {
   const targetDate = process.env.NEXT_PUBLIC_GALA_TARGET_DATE || "2026-12-31T18:00:00";
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden flex items-center justify-center" id="home">
+    <div className="relative min-h-screen w-full overflow-hidden flex items-center justify-center pt-24 sm:pt-28" id="home">
       <div className="absolute inset-0 bg-gradient-to-br from-[#084691]/88 via-[#225898]/75 to-[#084691]/88 z-10" />
       <div className="absolute inset-0 bg-gray-900">
         <img 
@@ -22,7 +22,7 @@ const VideoHero = () => {
 
       <div className="relative z-20 h-full flex flex-col items-center justify-center text-center px-4 sm:px-6 w-full">
         <div className="w-full max-w-4xl mx-auto space-y-8">
-          <h1 className="text-6xl md:text-7xl lg:text-8xl font-bold text-white leading-tight">
+          <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold text-white leading-tight break-words max-w-full overflow-x-hidden">
             Gala <span className="text-[#d71a21]">2026</span>
           </h1>
           
