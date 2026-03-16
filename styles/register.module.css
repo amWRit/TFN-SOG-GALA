@@ -16,7 +16,7 @@
   color: #fff;
   display: flex;
   flex-direction: row;
-  align-items: flex-start;
+  align-items: stretch;
   justify-content: center;
   gap: 0px;
   width: 100%;
@@ -39,11 +39,11 @@
 }
 
 .register-form-card, .payment-info-card {
-  background: rgba(31, 41, 55, 0.95);
+  background: #dadfe1;
   border-radius: 1rem;
-  box-shadow: 0 8px 32px 0 rgba(0,0,0,0.37);
+  box-shadow: 0 8px 32px 0 rgba(0,0,0,0.18);
   padding: 2rem;
-  color: #fff;
+  color: #1f365f;
   max-width: 1000px;
   margin: 2rem 1.5rem;
   box-sizing: border-box;
@@ -60,22 +60,26 @@
 }
 
 .gradientText {
-  color: #dadfe1;
+  color: #1f365f;
 }
 
 .input {
   width: 100%;
   padding: 0.75rem 1rem;
   border-radius: 0.5rem;
-  border: none;
+  border: 1px solid #1f365f30;
   margin-bottom: 1.25rem;
-  background: #23272F;
-  color: #fff;
+  background: #ffffff;
+  color: #1f365f;
   font-size: 1rem;
+}
+.input::placeholder {
+  color: #1f365f80;
 }
 .input:focus {
   border: 2px solid #d13239;
   box-shadow: 0 0 0 2px #d1323955;
+  outline: none;
 }
 
 .primaryButton {

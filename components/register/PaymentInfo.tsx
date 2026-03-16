@@ -8,6 +8,7 @@ export default function PaymentInfo() {
   const [zoomed, setZoomed] = useState<null | { img: string; alt: string; label: string }>(null);
   const [paymentQrs, setPaymentQrs] = useState<any[]>([]);
   const [noImage, setNoImage] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   React.useEffect(() => {
     fetch('/api/admin/images')
@@ -25,13 +26,14 @@ export default function PaymentInfo() {
         // Find No_Image fallback
         const noImg = (data.images || []).find((img: any) => img.label.toLowerCase() === 'no_image');
         setNoImage(noImg ? `https://drive.google.com/uc?export=view&id=${noImg.fileId}` : null);
+        setLoading(false);
       });
   }, []);
 
   return (
     <div
       className={styles['payment-info-card']}
-      style={{ maxWidth: '100vw', height: 608, display: 'flex', flexDirection: 'column' }}
+      style={{ maxWidth: '100vw', display: 'flex', flexDirection: 'column' }}
     >
       <div>
         <h2
@@ -41,7 +43,15 @@ export default function PaymentInfo() {
           Support Teach For Nepal
         </h2>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16, justifyContent: 'center', marginBottom: 24, maxWidth: '100%' }}>
-          {paymentQrs.map(qr => (
+          {loading && Array.from({length: 4}).map((_, i) => (
+            <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: 140 }}>
+              <div style={{ background: '#dadfe1', borderRadius: 16, padding: 10, marginBottom: 8, boxShadow: '0 2px 8px #0002', width: 120, height: 120, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ width: 100, height: 100, borderRadius: 14, background: '#e5e7eb', opacity: 0.7, animation: 'pulse 1.2s infinite' }} />
+              </div>
+              <span style={{ fontSize: 16, fontWeight: 500, color: '#d13239', textAlign: 'center', opacity: 0.5 }}>Loading…</span>
+            </div>
+          ))}
+          {!loading && paymentQrs.map(qr => (
             <div key={qr.label} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: 140 }}>
               <div style={{ position: 'relative', background: '#fff', borderRadius: 16, padding: 10, marginBottom: 8, boxShadow: '0 2px 8px #0002', cursor: 'pointer' }}
                 onClick={() => setZoomed(qr)}
@@ -67,7 +77,6 @@ export default function PaymentInfo() {
           ))}
         </div>
       </div>
-      <div style={{ flex: 1 }} />
       <div>
         <div
           className={styles.gradientText + " mb-4"}
@@ -82,7 +91,7 @@ export default function PaymentInfo() {
                 {link.label}
               </a>
               {link.instructions && (
-                <span style={{ fontSize: 13, color: '#fbbf24', marginTop: 2, textAlign: 'center', maxWidth: 320 }}>
+                <span style={{ fontSize: 13, color: '#d13239', marginTop: 2, textAlign: 'center', maxWidth: 320 }}>
                   {link.instructions}
                 </span>
               )}
@@ -97,7 +106,11 @@ export default function PaymentInfo() {
           display: 'flex', alignItems: 'center', justifyContent: 'center',
         }} onClick={() => setZoomed(null)}>
           <div style={{ background: '#fff', borderRadius: 18, padding: 24, boxShadow: '0 4px 32px #0008', maxWidth: '90vw', maxHeight: '90vh', display: 'flex', flexDirection: 'column', alignItems: 'center' }} onClick={e => e.stopPropagation()}>
-            <Image src={zoomed.img} alt={zoomed.alt} width={320} height={320} style={{ maxWidth: '320', height: 'auto', objectFit: 'contain', borderRadius: 12, marginBottom: 12, display: 'block' }} />
+            {loading ? (
+              <div style={{ width: 320, height: 320, borderRadius: 12, background: '#e5e7eb', opacity: 0.7, animation: 'pulse 1.2s infinite', marginBottom: 12 }} />
+            ) : (
+              <Image src={zoomed.img} alt={zoomed.alt} width={320} height={320} style={{ maxWidth: '320', height: 'auto', objectFit: 'contain', borderRadius: 12, marginBottom: 12, display: 'block' }} />
+            )}
             <div style={{ fontWeight: 600, color: '#d13239', fontSize: 18, marginBottom: 8 }}>{zoomed.label}</div>
             <button onClick={() => setZoomed(null)} style={{ marginTop: 8, background: '#1f365f', color: '#fff', border: 'none', borderRadius: 8, padding: '8px 20px', fontWeight: 600, fontSize: 16, cursor: 'pointer' }}>Close</button>
           </div>
