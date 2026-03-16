@@ -1,6 +1,6 @@
 /* Primary button style for consistent use (matches RSVP button) */
 .primaryButton {
-  background: linear-gradient(90deg, #9333ea 0%, #ec4899 100%);
+  background: #d13239;
   color: #fff;
   padding: 0.75rem 2.25rem;
   border-radius: 9999px;
@@ -15,8 +15,7 @@
   display: inline-block;
 }
 .primaryButton:hover, .primaryButton:focus {
-  /* box-shadow removed */
-  background: linear-gradient(90deg, #ec4899 0%, #9333ea 100%);
+  background: #b82b31;
   transform: scale(1.05);
 }
 .confetti {
@@ -42,14 +41,14 @@
 }
 
 .input:focus {
-  border: 2px solid #F472B6;
-  box-shadow: 0 0 0 2px #f472b655;
+  border: 2px solid #d13239;
+  box-shadow: 0 0 0 2px #d1323955;
 }
 /* Homepage shared styles for custom form and homepage */
 
 .heroContainer {
   min-height: 100vh;
-  background: linear-gradient(135deg, #6B21A8 90%, #EC4899 100%);
+  background: linear-gradient(135deg, #1f365f 0%, #0a1628 100%);
   color: #fff;
   display: flex;
   flex-direction: column;
@@ -59,11 +58,7 @@
 }
 
 .gradientText {
-  background: linear-gradient(90deg, #A78BFA, #F472B6);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  text-fill-color: transparent;
+  color: #dadfe1;
 }
 
 .formCard {
@@ -88,7 +83,7 @@
 }
 
 .button {
-  background: linear-gradient(90deg, #A78BFA, #F472B6);
+  background: #d13239;
   color: #fff;
   padding: 0.75rem 2rem;
   border-radius: 0.5rem;
@@ -100,5 +95,5 @@
 
 .button:hover {
   transform: scale(1.05);
-  box-shadow: 0 4px 16px #A78BFA44;
+  box-shadow: 0 4px 16px #d1323944;
 }

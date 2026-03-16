@@ -29,7 +29,7 @@ export default function ProgramPage() {
     <div className={styles.heroContainer} style={{ minHeight: "100vh", padding: 0, paddingBottom: '3rem' }}>
       {/* Home Button */}
       <div style={{ position: "fixed", top: 24, left: '50%', transform: 'translateX(-50%)', zIndex: 50 }}>
-        <a href="/" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '0.5rem 1.25rem', background: 'rgba(255,255,255,0.92)', color: '#23272F', borderRadius: 9999, fontWeight: 600, boxShadow: '0 2px 12px #0002', border: '1px solid #eee', textDecoration: 'none', fontSize: 18 }}>
+        <a href="/" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '0.5rem 1.25rem', background: 'rgba(255,255,255,0.92)', color: '#1f365f', borderRadius: 9999, fontWeight: 600, boxShadow: '0 2px 12px #0002', border: '1px solid #eee', textDecoration: 'none', fontSize: 18 }}>
           <Home size={20} /> Home
         </a>
       </div>
@@ -52,7 +52,7 @@ export default function ProgramPage() {
             bottom: 16,
             left: '50%',
             transform: 'translateX(-50%)',
-            background: 'rgba(36,24,64,0.97)',
+            background: 'rgba(13,26,50,0.97)',
             color: '#fff',
             padding: '0.65rem 1.2rem',
             borderRadius: 9999,

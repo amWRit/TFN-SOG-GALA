@@ -59,10 +59,10 @@ export default function PaymentInfo() {
                   }}
                 />
                 <span style={{ position: 'absolute', right: 8, bottom: 8, background: 'rgba(255,255,255,0.85)', borderRadius: '50%', padding: 2, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <ZoomIn size={28} color="#9333ea" strokeWidth={2.2} style={{ background: '#fff', borderRadius: '50%', boxShadow: '0 1px 4px #0002' }} />
+                  <ZoomIn size={28} color="#d13239" strokeWidth={2.2} style={{ background: '#fff', borderRadius: '50%', boxShadow: '0 1px 4px #0002' }} />
                 </span>
               </div>
-              <span style={{ fontSize: 16, fontWeight: 500, color: '#F472B6', textAlign: 'center' }}>{qr.label}</span>
+              <span style={{ fontSize: 16, fontWeight: 500, color: '#d13239', textAlign: 'center' }}>{qr.label}</span>
             </div>
           ))}
         </div>
@@ -98,8 +98,8 @@ export default function PaymentInfo() {
         }} onClick={() => setZoomed(null)}>
           <div style={{ background: '#fff', borderRadius: 18, padding: 24, boxShadow: '0 4px 32px #0008', maxWidth: '90vw', maxHeight: '90vh', display: 'flex', flexDirection: 'column', alignItems: 'center' }} onClick={e => e.stopPropagation()}>
             <Image src={zoomed.img} alt={zoomed.alt} width={320} height={320} style={{ maxWidth: '320', height: 'auto', objectFit: 'contain', borderRadius: 12, marginBottom: 12, display: 'block' }} />
-            <div style={{ fontWeight: 600, color: '#9333ea', fontSize: 18, marginBottom: 8 }}>{zoomed.label}</div>
-            <button onClick={() => setZoomed(null)} style={{ marginTop: 8, background: '#9333ea', color: '#fff', border: 'none', borderRadius: 8, padding: '8px 20px', fontWeight: 600, fontSize: 16, cursor: 'pointer' }}>Close</button>
+            <div style={{ fontWeight: 600, color: '#d13239', fontSize: 18, marginBottom: 8 }}>{zoomed.label}</div>
+            <button onClick={() => setZoomed(null)} style={{ marginTop: 8, background: '#1f365f', color: '#fff', border: 'none', borderRadius: 8, padding: '8px 20px', fontWeight: 600, fontSize: 16, cursor: 'pointer' }}>Close</button>
           </div>
         </div>
       )}

@@ -55,7 +55,7 @@ const Navbar = () => {
   return (
     <nav
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-        scrolled ? 'bg-gray-900/95 backdrop-blur-md shadow-2xl' : 'bg-transparent'
+        scrolled ? 'bg-[#0d1a30]/95 backdrop-blur-md shadow-2xl' : 'bg-transparent'
       }`}
       aria-label="Main Navigation"
     >
@@ -96,7 +96,7 @@ const Navbar = () => {
               )}
               <a
                 href="/register"
-                className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-9 py-3 rounded-full font-semibold hover:shadow-2xl hover:scale-105 transition-all duration-300"
+                  className="bg-[#d13239] hover:bg-[#b82b31] text-white px-9 py-3 rounded-full font-semibold hover:shadow-2xl hover:scale-105 transition-all duration-300"
                 aria-label="RSVP Now"
               >
                 RSVP Now
@@ -115,13 +115,13 @@ const Navbar = () => {
         </div>
         {/* Mobile Menu */}
         {menuOpen && (
-          <div className="md:hidden flex flex-col items-center bg-gray-900/95 backdrop-blur-md py-4 rounded-b-xl shadow-xl animate-fade-in">
-            <a href="#home" className="text-white py-2 w-full text-center hover:bg-purple-700 transition" onClick={() => setMenuOpen(false)}>Home</a>
-            <a href="#highlights" className="text-white py-2 w-full text-center hover:bg-purple-700 transition" onClick={() => setMenuOpen(false)}>Highlights</a>
-            <a href="/program" className="text-white py-2 w-full text-center hover:bg-purple-700 transition" onClick={() => setMenuOpen(false)}>Program</a>
+          <div className="md:hidden flex flex-col items-center bg-[#0d1a30]/95 backdrop-blur-md py-4 rounded-b-xl shadow-xl animate-fade-in">
+            <a href="#home" className="text-white py-2 w-full text-center hover:bg-[#d13239] transition" onClick={() => setMenuOpen(false)}>Home</a>
+            <a href="#highlights" className="text-white py-2 w-full text-center hover:bg-[#d13239] transition" onClick={() => setMenuOpen(false)}>Highlights</a>
+            <a href="/program" className="text-white py-2 w-full text-center hover:bg-[#d13239] transition" onClick={() => setMenuOpen(false)}>Program</a>
             <a
               href="/register"
-              className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-2.5 rounded-full font-semibold mt-3 w-full hover:shadow-2xl transition-all duration-300 text-center"
+              className="bg-[#d13239] hover:bg-[#b82b31] text-white px-6 py-2.5 rounded-full font-semibold mt-3 w-full hover:shadow-2xl transition-all duration-300 text-center"
               aria-label="RSVP Now"
               onClick={() => setMenuOpen(false)}
             >

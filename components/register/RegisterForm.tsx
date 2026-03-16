@@ -98,12 +98,12 @@ export default function RegisterForm({
       {success && (
         <>
           <div className={styles.confetti} aria-hidden>🎊🎈</div>
-          <p style={{ color: '#A78BFA', marginTop: '1rem', fontWeight: 600, fontSize: '1.1rem' }}>
+          <p style={{ color: '#dadfe1', marginTop: '1rem', fontWeight: 600, fontSize: '1.1rem' }}>
             Thank you for registering! See you at the Gala!
           </p>
         </>
       )}
-      {error && <p style={{ color: '#F472B6', marginTop: '1rem' }}>{error}</p>}
+      {error && <p style={{ color: '#d13239', marginTop: '1rem' }}>{error}</p>}
       </form>
     </div>
   );

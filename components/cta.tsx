@@ -5,7 +5,7 @@ import { ChevronRight } from 'lucide-react';
 
 const CTASection = () => {
   return (
-    <section className="py-24 bg-gray-900 w-full">
+    <section className="py-24 bg-[#1f365f] w-full">
       <div className="w-full text-center flex flex-col items-center justify-center px-4 sm:px-6">
         <h2 className="text-5xl font-bold text-white mb-6">
           Join Us in Making History
@@ -15,7 +15,7 @@ const CTASection = () => {
         </p>
         <a
           href="/register"
-          className="inline-flex items-center gap-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-10 py-5 rounded-full font-bold text-xl hover:shadow-2xl hover:scale-105 transition-all duration-300"
+          className="inline-flex items-center gap-3 bg-[#d13239] hover:bg-[#b82b31] text-white px-10 py-5 rounded-full font-bold text-xl hover:shadow-2xl hover:scale-105 transition-all duration-300"
         >
           Reserve Your Seat
           <ChevronRight className="w-6 h-6" />
