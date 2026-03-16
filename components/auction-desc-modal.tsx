@@ -16,14 +16,14 @@ export function AuctionDescModal({ title, description, onClose }: AuctionDescMod
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="bg-[#dadfe1] rounded-2xl w-full max-w-lg relative shadow-2xl border border-[#1f365f]/20 overflow-hidden max-h-[90vh] flex flex-col">
+      <div className="bg-[#dadfe1] rounded-2xl w-full max-w-lg relative shadow-2xl border border-[#084691]/20 overflow-hidden max-h-[90vh] flex flex-col">
         {/* Top accent bar */}
-        <div className="h-1.5 w-full bg-[#d13239] shrink-0" />
+        <div className="h-1.5 w-full bg-[#d71a21] shrink-0" />
 
         <div className="p-8 overflow-y-auto">
           {/* Close button */}
           <button
-            className="absolute top-5 right-5 text-[#1f365f]/50 hover:text-[#1f365f] transition-colors"
+            className="absolute top-5 right-5 text-[#084691]/50 hover:text-[#084691] transition-colors"
             onClick={onClose}
             aria-label="Close"
           >
@@ -31,15 +31,15 @@ export function AuctionDescModal({ title, description, onClose }: AuctionDescMod
           </button>
 
           {/* Title */}
-          <div className="text-2xl font-bold text-[#1f365f] mb-5 leading-snug pr-8 text-center">
+          <div className="text-2xl font-bold text-[#084691] mb-5 leading-snug pr-8 text-center">
             {title}
           </div>
 
           {/* Divider */}
-          <div className="w-12 h-1 bg-[#d13239] rounded-full mx-auto mb-5" />
+          <div className="w-12 h-1 bg-[#d71a21] rounded-full mx-auto mb-5" />
 
           {/* Description */}
-          <div className="text-[#1f365f]/80 whitespace-pre-line text-base leading-relaxed break-words">
+          <div className="text-[#225898] whitespace-pre-line text-base leading-relaxed break-words">
             {description}
           </div>
         </div>

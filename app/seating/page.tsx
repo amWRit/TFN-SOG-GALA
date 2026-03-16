@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { Award, Users, X, Home } from 'lucide-react';
+import SeatingSkeleton from '../../components/seating-skeleton';
 
 
 
@@ -74,32 +75,21 @@ const SeatCard: React.FC<SeatCardProps> = ({ seat, tableId, onClose }) => {
   const [bioExpanded, setBioExpanded] = React.useState(false);
   const [quoteExpanded, setQuoteExpanded] = React.useState(false);
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/70 backdrop-blur-sm animate-fadeIn">
-      <div
-        className="relative bg-gradient-to-br from-[#0a1628] via-[#0d1a30] to-[#0a1628] rounded-3xl shadow-2xl w-full max-w-xs sm:max-w-md border border-[#d13239]/20 overflow-hidden"
-        style={{
-          maxHeight: '95vh',
-          display: 'flex',
-          flexDirection: 'column',
-          marginTop: '2.5vh',
-          marginBottom: '2.5vh',
-        }}
-      >
-        {/* Close button */}
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 z-10 text-gray-400 hover:text-white transition-colors"
-        >
-          <X className="w-6 h-6" />
-        </button>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md px-4 animate-fadeIn" onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
+      <div className="bg-[#dadfe1] rounded-2xl w-full max-w-lg relative shadow-2xl border border-[#084691]/20 overflow-hidden max-h-[90vh] flex flex-col">
+        {/* Top accent bar */}
+        <div className="h-1.5 w-full bg-[#d71a21] shrink-0" />
 
-        {/* Decorative gradient moved inside profile image container */}
+        <div className="p-8 overflow-y-auto">
+          {/* Close button */}
+          <button
+            className="absolute top-5 right-5 text-[#084691]/50 hover:text-[#084691] transition-colors"
+            onClick={onClose}
+            aria-label="Close"
+          >
+            <X className="w-6 h-6" />
+          </button>
 
-        {/* Content */}
-        <div
-          className="relative p-4 pt-10 sm:p-8 sm:pt-12 overflow-y-auto"
-          style={{ maxHeight: '80vh' }}
-        >
           {/* Profile Image or Placeholder */}
           <div className="flex justify-center mb-4 sm:mb-6">
             <div className="relative w-20 h-20 sm:w-32 sm:h-32 flex items-center justify-center">
@@ -113,7 +103,7 @@ const SeatCard: React.FC<SeatCardProps> = ({ seat, tableId, onClose }) => {
           </div>
 
           {/* Name or Vacant */}
-          <h3 className="text-2xl sm:text-3xl font-bold text-white text-center mb-2">
+          <h3 className="text-2xl sm:text-3xl font-bold text-[#084691] text-center mb-2">
             {assigned ? seat.registration?.name : "Vacant Seat"}
           </h3>
 
@@ -135,7 +125,7 @@ const SeatCard: React.FC<SeatCardProps> = ({ seat, tableId, onClose }) => {
           {/* Quote (collapsible) */}
           {assigned && seat.registration?.quote ? (
             <blockquote className="mb-4 sm:mb-6 text-center">
-              <p className="text-lg text-gray-300 italic" style={{ fontFamily: 'Playfair Display, serif' }}>
+              <p className="text-lg text-[#225898] italic" style={{ fontFamily: 'Playfair Display, serif' }}>
                 {(seat.registration?.quote ?? '').length > 120 ? (
                   <>
                     {quoteExpanded
@@ -157,9 +147,9 @@ const SeatCard: React.FC<SeatCardProps> = ({ seat, tableId, onClose }) => {
           ) : null}
 
           {/* Bio (collapsible) or Placeholder + Reserve Button */}
-          <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-3 sm:p-5 border border-white/10 min-h-[48px] flex flex-col items-center gap-3">
+          <div className="bg-[#f5f6f7] rounded-2xl p-3 sm:p-5 border border-[#dadfe1] min-h-[48px] flex flex-col items-center gap-3">
             {assigned && seat.registration?.bio ? (
-              <p className="text-gray-300 leading-relaxed text-sm sm:text-base">
+              <p className="text-[#225898] leading-relaxed text-sm sm:text-base">
                 {(seat.registration?.bio ?? '').length > 120 ? (
                   <>
                     {bioExpanded
@@ -179,7 +169,7 @@ const SeatCard: React.FC<SeatCardProps> = ({ seat, tableId, onClose }) => {
               </p>
             ) : (
               <>
-                <p className="text-gray-300 leading-relaxed text-sm sm:text-base">
+                <p className="text-[#225898] leading-relaxed text-sm sm:text-base">
                   Reserve this spot for yourself!
                 </p>
                 <a
@@ -193,7 +183,7 @@ const SeatCard: React.FC<SeatCardProps> = ({ seat, tableId, onClose }) => {
           </div>
 
           {/* Seat Info */}
-          <div className="mt-4 sm:mt-6 flex items-center justify-center gap-2 text-xs sm:text-sm text-gray-400">
+          <div className="mt-4 sm:mt-6 flex items-center justify-center gap-2 text-xs sm:text-sm text-[#084691]">
             <Users className="w-4 h-4" />
             <span>Table {tableId} • Seat {seat.seatNumber}</span>
           </div>
@@ -326,7 +316,7 @@ const SeatingChart = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0a1628] via-[#1f365f]/20 to-[#0a1628]">
+    <div className="min-h-screen bg-gradient-to-br from-[#084691]/88 via-[#225898]/75 to-[#084691]/88">
       {/* Home Button */}
       <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50">
         <a href="/" className="flex items-center gap-2 px-4 py-2 bg-white/90 text-gray-900 rounded-full shadow-lg font-semibold hover:bg-white transition-all border border-gray-200">
@@ -350,7 +340,7 @@ const SeatingChart = () => {
       <div className="px-4 sm:px-6 lg:px-8 pb-40 md:pb-24">
         <div className="max-w-7xl mx-auto">
           {loading ? (
-            <div className="text-center text-gray-400 py-20 text-xl">Loading seating data...</div>
+            <SeatingSkeleton count={4} />
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-12 lg:gap-16">
               {tables.map((table) => (

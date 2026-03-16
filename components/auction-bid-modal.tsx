@@ -35,14 +35,14 @@ export function BidModal({ item, onClose, onSuccess }: BidModalProps) {
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="bg-[#dadfe1] rounded-2xl w-full max-w-lg relative shadow-2xl border border-[#1f365f]/20 overflow-hidden">
+      <div className="bg-[#dadfe1] rounded-2xl w-full max-w-lg relative shadow-2xl border border-[#084691]/20 overflow-hidden">
         {/* Top accent bar */}
-        <div className="h-1.5 w-full bg-[#d13239]" />
+        <div className="h-1.5 w-full bg-[#d71a21]" />
 
         <div className="p-8">
           {/* Close button */}
           <button
-            className="absolute top-5 right-5 text-[#1f365f]/50 hover:text-[#1f365f] transition-colors"
+            className="absolute top-5 right-5 text-[#084691]/50 hover:text-[#084691] transition-colors"
             onClick={onClose}
             aria-label="Close"
           >
@@ -51,21 +51,21 @@ export function BidModal({ item, onClose, onSuccess }: BidModalProps) {
 
           {/* Item info */}
           <div className="mb-7">
-            <div className="text-xs text-[#1f365f]/50 uppercase tracking-widest font-semibold mb-2">
+            <div className="text-xs text-[#084691]/50 uppercase tracking-widest font-semibold mb-2">
               Placing bid on
             </div>
-            <div className="text-2xl font-bold text-[#1f365f] leading-snug mb-3">
+            <div className="text-2xl font-bold text-[#084691] leading-snug mb-3">
               {item.title}
             </div>
             <div className="flex items-center justify-center gap-10 flex-wrap">
               <div className="flex flex-col items-center">
-                <span className="text-xs text-[#1f365f]/50 uppercase tracking-wider mb-0.5">Current Bid</span>
+                <span className="text-xs text-[#084691]/50 uppercase tracking-wider mb-0.5">Current Bid</span>
                 <span className="font-playfair text-3xl font-bold text-[#D4AF37]">
                   NPR {item.currentBid.toLocaleString()}
                 </span>
               </div>
               <div className="flex flex-col items-center">
-                <span className="text-xs text-[#1f365f]/50 uppercase tracking-wider mb-0.5">Minimum Bid</span>
+                <span className="text-xs text-[#084691]/50 uppercase tracking-wider mb-0.5">Minimum Bid</span>
                 <span className="font-playfair text-3xl font-bold text-[#D4AF37]">
                   NPR {(item.currentBid + 1).toLocaleString()}
                 </span>
@@ -112,12 +112,12 @@ export function BidModal({ item, onClose, onSuccess }: BidModalProps) {
             }}
           >
             <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-semibold text-[#1f365f] uppercase tracking-wider">
+              <label className="text-sm font-semibold text-[#084691] uppercase tracking-wider">
                 Your Name
               </label>
               <input
                 type="text"
-                className="w-full px-4 py-3 rounded-xl bg-white text-[#1f365f] border border-[#1f365f]/25 focus:outline-none focus:border-[#d13239] transition-colors placeholder:text-[#1f365f]/35 text-base"
+                className="w-full px-4 py-3 rounded-xl bg-white text-[#084691] border border-[#084691]/25 focus:outline-none focus:border-[#d71a21] transition-colors placeholder:text-[#084691]/35 text-base"
                 placeholder="Enter your full name"
                 value={bidderName}
                 onChange={e => setBidderName(e.target.value)}
@@ -129,12 +129,12 @@ export function BidModal({ item, onClose, onSuccess }: BidModalProps) {
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-semibold text-[#1f365f] uppercase tracking-wider">
-                Bid Amount <span className="normal-case font-normal text-[#1f365f]/50">(NPR)</span>
+              <label className="text-sm font-semibold text-[#084691] uppercase tracking-wider">
+                Bid Amount <span className="normal-case font-normal text-[#084691]/50">(NPR)</span>
               </label>
               <input
                 type="number"
-                className="w-full px-4 py-3 rounded-xl bg-white text-[#1f365f] border border-[#1f365f]/25 focus:outline-none focus:border-[#d13239] transition-colors placeholder:text-[#1f365f]/35 text-base"
+                className="w-full px-4 py-3 rounded-xl bg-white text-[#084691] border border-[#084691]/25 focus:outline-none focus:border-[#d71a21] transition-colors placeholder:text-[#084691]/35 text-base"
                 placeholder={`e.g. ${(item.currentBid + 100).toLocaleString()}`}
                 value={bidAmount}
                 onChange={e => setBidAmount(e.target.value)}
@@ -158,7 +158,7 @@ export function BidModal({ item, onClose, onSuccess }: BidModalProps) {
 
             <button
               type="submit"
-              className="w-full py-3.5 mt-1 rounded-xl bg-[#d13239] hover:bg-[#b82b31] text-white font-bold text-base transition-all disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 flex items-center justify-center gap-2 shadow-lg shadow-[#d13239]/30"
+              className="w-full py-3.5 mt-1 rounded-xl bg-[#d71a21] hover:bg-[#bb151b] text-white font-bold text-base transition-all disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 flex items-center justify-center gap-2 shadow-lg shadow-[#d71a21]/30"
               disabled={!!isClosed || submitting}
             >
               <Gavel size={18} />
