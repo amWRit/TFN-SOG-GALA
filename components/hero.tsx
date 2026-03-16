@@ -13,7 +13,8 @@ const VideoHero = () => {
       <div className="absolute inset-0 bg-gradient-to-br from-[#1f365f]/90 via-[#0a1628]/80 to-[#d13239]/80 z-10" />
       <div className="absolute inset-0 bg-gray-900">
         <img 
-          src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1920&h=1080&fit=crop" 
+          // src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1920&h=1080&fit=crop" 
+          src = "/images/tfnimage2.jpg"
           alt="Nepal Education"
           className="w-full h-full object-cover opacity-30"
         />
