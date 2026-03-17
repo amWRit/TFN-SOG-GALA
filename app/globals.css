@@ -21,17 +21,10 @@
 }
 
 * {
-  margin: 0;
-  padding: 0;
   box-sizing: border-box;
 }
 
-/* Ensure Tailwind utility classes override global reset */
-[class*="p-"], [class*="px-"], [class*="py-"], [class*="pt-"], [class*="pr-"], [class*="pb-"], [class*="pl-"],
-[class*="m-"], [class*="mx-"], [class*="my-"], [class*="mt-"], [class*="mr-"], [class*="mb-"], [class*="ml-"] {
-  padding: revert-layer;
-  margin: revert-layer;
-}
+/* Removed custom reset and revert-layer rules. Tailwind preflight will handle resets. */
 
 body {
   background: var(--background);
