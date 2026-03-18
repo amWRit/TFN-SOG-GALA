@@ -5,6 +5,7 @@ import { Home } from "lucide-react";
 import styles from '../../styles/register.module.css';
 import RegisterForm from '../../components/register/RegisterForm';
 import PaymentInfo from '../../components/register/PaymentInfo';
+import PaymentModal from '../../components/register/PaymentModal';
 
 export default function RegisterPage() {
   const [form, setForm] = useState({
@@ -15,6 +16,9 @@ export default function RegisterPage() {
     seat: '',
     testimonial: ''
   });
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState<"esewa" | "khalti" | null>(null);
+  const amount = 10;
   const [seats, setSeats] = useState<{tableNumber: number, seatNumber: number, name: string | null}[]>([]);
   const [tableOptions, setTableOptions] = useState<number[]>([]);
   const [seatOptions, setSeatOptions] = useState<number[]>([]);
@@ -49,25 +53,7 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitting(true);
-    setError('');
-    setSuccess(false);
-    try {
-      const res = await fetch('/api/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form)
-      });
-      if (res.ok) {
-        setSuccess(true);
-        setForm({ name: '', email: '', phone: '', table: '', seat: '', testimonial: '' });
-      } else {
-        setError('Submission failed. Please try again.');
-      }
-    } catch {
-      setError('Network error.');
-    }
-    setSubmitting(false);
+    setShowPaymentModal(true);
   };
 
   return (
@@ -96,7 +82,73 @@ export default function RegisterPage() {
       <div style={{ flex: 1, boxSizing: 'border-box' }}>
         <PaymentInfo />
       </div>
+      {/* Payment Modal */}
+      <PaymentModal
+        open={showPaymentModal}
+        onClose={() => setShowPaymentModal(false)}
+        onSelect={async (method: "esewa" | "khalti") => {
+          setPaymentMethod(method);
+          setShowPaymentModal(false);
+          const transaction_uuid = `${Date.now()}-${Math.random().toString(36).substring(2,8)}`;
+          if (method === "esewa") {
+            // Call eSewa API route
+            const res = await fetch('/api/pay-esewa', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                amount,
+                transaction_uuid,
+                product_code: 'EPAYTEST',
+                success_url: window.location.origin + '/register?payment=success',
+                failure_url: window.location.origin + '/register?payment=fail',
+                tax_amount: 0,
+                product_service_charge: 0,
+                product_delivery_charge: 0,
+              })
+            });
+            const data = await res.json();
+            // Create and submit form as per eSewa docs
+            const form = document.createElement('form');
+            form.action = data.esewaUrl;
+            form.method = 'POST';
+            form.style.display = 'none';
+            form.innerHTML = `
+              <input type="hidden" name="amount" value="${data.amount}" />
+              <input type="hidden" name="tax_amount" value="${data.tax_amount}" />
+              <input type="hidden" name="total_amount" value="${data.total_amount}" />
+              <input type="hidden" name="transaction_uuid" value="${data.transaction_uuid}" />
+              <input type="hidden" name="product_code" value="${data.product_code}" />
+              <input type="hidden" name="merchant_id" value="${data.merchant_id}" />
+              <input type="hidden" name="product_service_charge" value="${data.product_service_charge}" />
+              <input type="hidden" name="product_delivery_charge" value="${data.product_delivery_charge}" />
+              <input type="hidden" name="success_url" value="${data.success_url}" />
+              <input type="hidden" name="failure_url" value="${data.failure_url}" />
+              <input type="hidden" name="signed_field_names" value="${data.signed_field_names}" />
+              <input type="hidden" name="signature" value="${data.signature}" />
+            `;
+            document.body.appendChild(form);
+            form.submit();
+          } else if (method === "khalti") {
+            // Call Khalti API route
+            const res = await fetch('/api/pay-khalti', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                amount,
+                transaction_uuid,
+                product_identity: 'ticket',
+                product_name: 'Event Ticket',
+                return_url: window.location.origin + '/register?payment=success',
+              })
+            });
+            const data = await res.json();
+            window.location.href = data.payment_url;
+          }
+        }}
+        amount={amount}
+      />
       {/* No inline style overrides needed; all layout is now in register.module.css */}
     </div>
   );
 }
+// ...existing code...
