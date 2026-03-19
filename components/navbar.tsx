@@ -90,7 +90,7 @@ const Navbar = () => {
               className="relative text-[#225898] hover:text-[#d71a21] font-semibold tracking-wide px-2 py-1 transition-colors duration-200 focus:outline-none flex items-center gap-2"
               tabIndex={0}
             >
-              <CalendarDays size={20} className="inline-block mb-0.5" />
+              <List size={20} className="inline-block mb-0.5" />
               <span className="relative z-10">Program</span>
               <span className="absolute left-0 bottom-0 w-full h-0.5 bg-gradient-to-r from-gold to-gold-dark scale-x-0 group-hover:scale-x-100 group-focus:scale-x-100 transition-transform duration-300 origin-left" aria-hidden="true"></span>
             </a>
