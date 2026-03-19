@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
 import useSWR from "swr";
 import styles from '../../styles/admin-dashboard.module.css';
-import { Pencil, Trash2, ChevronDown, ChevronUp } from "lucide-react";
+import { Pencil, Trash2, ChevronDown, ChevronUp, List, Plus, Minimize2, Maximize2, ArrowUpFromLine } from "lucide-react";
 import { OkModal } from "@/components/admin/ok-modal";
 
 interface SeatData {
@@ -292,23 +292,50 @@ export function SeatingAdmin() {
       <div>
         <div className={styles.adminCard}>
             <div className="flex justify-between items-center mb-4">
-              <h2 className="font-playfair text-2xl font-bold text-[#D4AF37]">
-                Seating Chart
-              </h2>
+              <div className="flex items-center gap-3">
+                <h2 className="font-playfair text-2xl font-bold text-[#D4AF37]">
+                  Seating Chart
+                </h2>
+                <button
+                  className="px-3 py-1 rounded-full bg-[#D4AF37]/20 text-[#D4AF37] text-sm font-semibold border border-[#D4AF37]/30 hover:bg-[#D4AF37]/40 transition flex items-center gap-2 md:gap-2"
+                  type="button"
+                  onClick={() => {
+                    const allOpen = Object.values(openTables).every(v => v);
+                    setOpenTables(() => {
+                      const state: { [key: number]: boolean } = {};
+                      for (let i = 1; i <= 12; i++) state[i] = !allOpen;
+                      return state;
+                    });
+                  }}
+                  aria-label={Object.values(openTables).every(v => v) ? "Collapse All" : "Expand All"}
+                >
+                  <span className="md:hidden">
+                    {Object.values(openTables).every(v => v) ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
+                  </span>
+                  <span className="hidden md:inline-flex items-center gap-2">
+                    {Object.values(openTables).every(v => v) ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
+                    {Object.values(openTables).every(v => v) ? "Collapse All" : "Expand All"}
+                  </span>
+                </button>
+              </div>
               <div className="flex gap-2">
                 <button
-                  className={styles.adminButtonSmall}
+                  className={styles.adminButtonSmall + " flex items-center gap-2 md:gap-2"}
                   onClick={exportSeatsToCSV}
                   type="button"
+                  aria-label="Export CSV"
                 >
-                  Export CSV
+                  <span className="md:hidden"><List size={18} /></span>
+                  <span className="hidden md:inline-flex items-center gap-2"><ArrowUpFromLine size={18} /> Export CSV</span>
                 </button>
                 <button
-                  className={styles.adminButtonSmall}
+                  className={styles.adminButtonSmall + " flex items-center gap-2 md:gap-2"}
                   onClick={() => setShowAddTableModal(true)}
                   type="button"
+                  aria-label="Add Table"
                 >
-                  + Add Table
+                  <span className="md:hidden"><Plus size={18} /></span>
+                  <span className="hidden md:inline-flex items-center gap-2"><Plus size={18} />Add Table</span>
                 </button>
               </div>
             </div>
