@@ -1,0 +1,29 @@
+/* Confetti and balloon animation from bottom to top */
+.confetti-modal {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 60;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.confetti-float {
+  animation: confettiFloatUp 1.5s cubic-bezier(0.23, 1, 0.32, 1);
+}
+@keyframes confettiFloatUp {
+  from {
+    opacity: 0;
+    transform: translateY(60px) scale(1.2);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(-20px) scale(1.05);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-120px) scale(1);
+  }
+}
