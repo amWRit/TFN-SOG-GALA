@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Award, Menu, Home, Sparkles, CalendarDays, UserPlus, Shield, CalendarCheck } from 'lucide-react';
+import { Award, Menu, Home, Sparkles, CalendarDays, UserPlus, Shield, CalendarCheck, List } from 'lucide-react';
 
 
 const Navbar = () => {
@@ -134,7 +134,7 @@ const Navbar = () => {
                 <Sparkles size={18} className="inline-block mb-0.5" /> Highlights
               </a>
               <a href="/program" className="text-[#225898] py-2 w-full text-center hover:text-[#d71a21] font-medium transition flex items-center gap-2 justify-center" onClick={() => setMenuOpen(false)}>
-                <CalendarDays size={18} className="inline-block mb-0.5" /> Program
+                <List size={18} className="inline-block mb-0.5" /> Program
               </a>
               <a
                 href="/register"
