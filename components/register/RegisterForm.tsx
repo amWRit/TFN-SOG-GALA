@@ -97,9 +97,13 @@ export default function RegisterForm({
       </button>
       {success && (
         <>
-          <div className={styles.confetti} aria-hidden>🎊🎈</div>
-          <p style={{ color: '#1f365f', marginTop: '1rem', fontWeight: 600, fontSize: '1.1rem' }}>
-            Thank you for registering! See you at the Gala!
+          <div className={styles.confetti} aria-hidden style={{ textAlign: 'center', fontSize: '2rem', marginTop: '0.5rem' }}>🎊🎈</div>
+          <p style={{ color: '#1f365f', marginTop: '1rem', fontWeight: 600, fontSize: '1.1rem', textAlign: 'center' }}>
+            Thank you for registering! See you at the Gala!<br />
+            <span style={{ fontWeight: 400, fontSize: '1rem', color: '#225898', display: 'block', marginTop: '0.5rem' }}>
+              Our team will contact you soon for further processes.<br />
+              Or you can reach out via email: <a href="mailto:contact@teachfornepal.org" style={{ color: '#d71a21', textDecoration: 'underline' }}>contact@teachfornepal.org</a>
+            </span>
           </p>
         </>
       )}

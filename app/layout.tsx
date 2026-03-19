@@ -55,6 +55,17 @@ export default function RootLayout({
               }
             } catch (e) {}
           `}} />
+          {/* Open Graph & Twitter meta tags for social sharing */}
+          <meta property="og:title" content="Gala 2026: Empowering Nepal's Future | Teach For Nepal" />
+          <meta property="og:description" content="Join us for an elegant evening supporting education in Nepal. Live auction, interactive seating, and unforgettable moments." />
+          <meta property="og:image" content="/images/logos/tfnlogo.png" />
+          <meta property="og:url" content="https://tfngala.vercel.app/" />
+          <meta property="og:type" content="website" />
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta name="twitter:title" content="Gala 2026: Empowering Nepal's Future | Teach For Nepal" />
+          <meta name="twitter:description" content="Join us for an elegant evening supporting education in Nepal. Live auction, interactive seating, and unforgettable moments." />
+          <meta name="twitter:image" content="/images/logos/tfnlogo.png" />
+          <meta name="twitter:url" content="https://tfngala.vercel.app/" />
         </head>
         <body
           className={`${inter.variable} ${playfair.variable} antialiased bg-[#1a1a1a] text-[#f5f5f5]`}
