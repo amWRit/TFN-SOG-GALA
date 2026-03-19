@@ -58,28 +58,30 @@ export function AuctionItemAdminCard({
               <MoreVertical size={20} className="text-[#D4AF37]" />
             </button>
           </DropdownMenu.Trigger>
-          <DropdownMenu.Content className="z-50 min-w-[100px] rounded-md bg-[#232323] p-2 shadow-lg border border-[#D4AF37]/30">
-            <DropdownMenu.Item onSelect={() => onAddBid(item)} className="flex items-center gap-2 px-2 py-2 rounded hover:bg-[#D4AF37]/10 cursor-pointer text-[#f5f5f5]/80">
-                <Gavel size={16} className="text-[#D4AF37]" />
-                <span>Bid</span>
-            </DropdownMenu.Item>
-            <DropdownMenu.Item onSelect={() => onShowHistory(item)} className="flex items-center gap-2 px-2 py-2 rounded hover:bg-[#D4AF37]/10 cursor-pointer text-[#f5f5f5]/80">
-              <Activity size={16} className="text-[#D4AF37]" />
-              <span>History</span>
-            </DropdownMenu.Item>
-            <DropdownMenu.Item onSelect={() => onEdit(item)} className="flex items-center gap-2 px-2 py-2 rounded hover:bg-[#D4AF37]/10 cursor-pointer text-[#f5f5f5]/80">
-              <Pencil size={16} className="text-[#D4AF37]" />
-              <span>Edit</span>
-            </DropdownMenu.Item>
-            <DropdownMenu.Item onSelect={() => onToggleActive(item)} className="flex items-center gap-2 px-2 py-2 rounded hover:bg-[#D4AF37]/10 cursor-pointer text-[#f5f5f5]/80">
-              {item.isActive ? <Pause size={16} className="text-[#D4AF37]" /> : <Play size={16} className="text-[#D4AF37]" />}
-              <span>{item.isActive ? 'Pause' : 'Resume'}</span>
-            </DropdownMenu.Item>
-            <DropdownMenu.Item onSelect={() => onDelete(item.id)} className="flex items-center gap-2 px-2 py-2 rounded hover:bg-red-400/10 cursor-pointer">
-              <Trash2 size={16} className="text-red-400" />
-              <span className="text-red-400">Delete</span>
-            </DropdownMenu.Item>
-          </DropdownMenu.Content>
+          <DropdownMenu.Portal>
+            <DropdownMenu.Content className="z-[1000] min-w-[100px] rounded-md bg-[#232323] p-2 shadow-lg border border-[#D4AF37]/30">
+              <DropdownMenu.Item onSelect={() => onAddBid(item)} className="flex items-center gap-2 px-2 py-2 rounded hover:bg-[#D4AF37]/10 cursor-pointer text-[#f5f5f5]/80">
+                  <Gavel size={16} className="text-[#D4AF37]" />
+                  <span>Bid</span>
+              </DropdownMenu.Item>
+              <DropdownMenu.Item onSelect={() => onShowHistory(item)} className="flex items-center gap-2 px-2 py-2 rounded hover:bg-[#D4AF37]/10 cursor-pointer text-[#f5f5f5]/80">
+                <Activity size={16} className="text-[#D4AF37]" />
+                <span>History</span>
+              </DropdownMenu.Item>
+              <DropdownMenu.Item onSelect={() => onEdit(item)} className="flex items-center gap-2 px-2 py-2 rounded hover:bg-[#D4AF37]/10 cursor-pointer text-[#f5f5f5]/80">
+                <Pencil size={16} className="text-[#D4AF37]" />
+                <span>Edit</span>
+              </DropdownMenu.Item>
+              <DropdownMenu.Item onSelect={() => onToggleActive(item)} className="flex items-center gap-2 px-2 py-2 rounded hover:bg-[#D4AF37]/10 cursor-pointer text-[#f5f5f5]/80">
+                {item.isActive ? <Pause size={16} className="text-[#D4AF37]" /> : <Play size={16} className="text-[#D4AF37]" />}
+                <span>{item.isActive ? 'Pause' : 'Resume'}</span>
+              </DropdownMenu.Item>
+              <DropdownMenu.Item onSelect={() => onDelete(item.id)} className="flex items-center gap-2 px-2 py-2 rounded hover:bg-red-400/10 cursor-pointer">
+                <Trash2 size={16} className="text-red-400" />
+                <span className="text-red-400">Delete</span>
+              </DropdownMenu.Item>
+            </DropdownMenu.Content>
+          </DropdownMenu.Portal>
         </DropdownMenu.Root>
         <OkModal
           open={!!deleteId}

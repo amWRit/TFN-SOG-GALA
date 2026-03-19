@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Pencil, Trash2, ChevronDown, ChevronUp } from "lucide-react";
+import { Pencil, Trash2, ChevronDown, ChevronUp, ArrowUpFromLine, Minimize2, Maximize2 } from "lucide-react";
 import useSWR from "swr";
 import styles from '../../styles/admin-dashboard.module.css';
 
@@ -118,16 +118,48 @@ export function RegistrationList() {
     URL.revokeObjectURL(url);
   }
 
+  // Expand/collapse all tables
+  const allOpen = Object.values(openTables).length > 0 && Object.values(openTables).every(v => v);
+  const handleExpandCollapseAll = () => {
+    setOpenTables(prev => {
+      const updated = { ...prev };
+      Object.keys(grouped).forEach(table => {
+        updated[Number(table)] = !allOpen;
+      });
+      return updated;
+    });
+  };
+
   return (
     <div className={styles.adminCard}>
       <div className="flex justify-between items-center mb-4">
-        <h2 className="font-playfair text-2xl font-bold text-[#D4AF37]">Registrations</h2>
+        <div className="flex items-center gap-3">
+          <h2 className="font-playfair text-2xl font-bold text-[#D4AF37]">Registrations</h2>
+          <button
+            type="button"
+            onClick={handleExpandCollapseAll}
+            aria-label={allOpen ? "Collapse All" : "Expand All"}
+            className="px-3 py-1 rounded-full bg-[#D4AF37]/20 text-[#D4AF37] text-sm font-semibold border border-[#D4AF37]/30 hover:bg-[#D4AF37]/40 transition flex items-center gap-2"
+          >
+            {/* Icon only on sm/md, icon+text on lg+ */}
+            <span className="inline-block md:inline-block lg:hidden">
+              {allOpen ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
+            </span>
+            <span className="hidden lg:inline-flex items-center gap-2">
+              {allOpen ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
+              {allOpen ? "Collapse All" : "Expand All"}
+            </span>
+          </button>
+        </div>
         <button
-          className={styles.adminButtonSmall}
+          className={styles.adminButtonSmall + " flex items-center gap-2"}
           onClick={exportRegistrationsToCSV}
           type="button"
+          aria-label="Export CSV"
         >
-          Export CSV
+          {/* Icon only on small/md, icon+text on lg+ */}
+          <span className="inline-block"><ArrowUpFromLine size={18} /></span>
+          <span className="hidden lg:inline-flex items-center gap-2"><ArrowUpFromLine size={18} /> Export CSV</span>
         </button>
       </div>
       {isLoading && <div>Loading...</div>}
@@ -143,7 +175,8 @@ export function RegistrationList() {
               type="button"
             >
               <span>
-                Preference: {table === '0' ? <span className="text-gray-400">(No Pref)</span> : `Table ${table}`}
+                Preference: {table === '0' ? <span className="text-gray-400">(No Pref)</span> : `Table ${table} `}
+                <span className="ml-1 text-xs text-[#D4AF37] font-semibold">({grouped[Number(table)]?.length || 0})</span>
               </span>
               <span className="ml-2 text-base cursor-pointer">
                 {openTables[Number(table)] ? <ChevronUp size={20} /> : <ChevronDown size={20} />}

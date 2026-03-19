@@ -7,29 +7,49 @@ export default function SeatingSkeleton({ count = 4 }) {
         <div
           key={idx}
           style={{
-            background: "#eef3fb",
             borderRadius: 24,
             boxShadow: "0 4px 20px #22589820, 0 1px 4px #0001",
-            border: "1px solid #c8d9f0",
-            borderTop: "5px solid #d71a21",
             color: "#084691",
-            padding: "2.5rem 1.5rem 2rem 1.5rem",
             minHeight: 320,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
+            justifyContent: "center",
             position: "relative",
             overflow: "hidden",
             opacity: 0.85,
             animation: "pulse 1.6s infinite ease-in-out",
           }}
         >
-          {/* Table badge skeleton */}
-          <div style={{ width: 60, height: 60, borderRadius: "50%", background: "#d71a21", opacity: 0.7, marginBottom: 24 }} />
-          {/* Table name skeleton */}
-          <div style={{ width: "60%", height: 28, background: "#c8d9f0", borderRadius: 8, marginBottom: 16 }} />
-          {/* Seats grid skeleton */}
-          <div style={{ width: "100%", height: 120, background: "#e6ecf7", borderRadius: 16, marginBottom: 16 }} />
+          {/* Skeleton: big circle (table) and small circles (seats) */}
+          <div style={{ position: "relative", width: 256, height: 256, margin: "auto", marginTop: "auto", marginBottom: "auto" }}>
+            {/* Big central circle */}
+            <div style={{ position: "absolute", left: 64, top: 64, width: 128, height: 128, borderRadius: "50%", background: "#d71a21", opacity: 0.15, border: "4px solid #d71a21", boxShadow: "0 2px 12px #d71a2133" }} />
+            {/* Small circles around (seats) */}
+            {Array.from({ length: 12 }).map((_, seatIdx) => {
+              const angle = (seatIdx / 12) * 2 * Math.PI - Math.PI / 2;
+              const radius = 110;
+              const x = (Math.cos(angle) * radius + 128 - 16).toFixed(2) + 'px';
+              const y = (Math.sin(angle) * radius + 128 - 16).toFixed(2) + 'px';
+              return (
+                <div
+                  key={seatIdx}
+                  style={{
+                    position: "absolute",
+                    left: x,
+                    top: y,
+                    width: "32px",
+                    height: "32px",
+                    borderRadius: "50%",
+                    background: "#e6ecf7",
+                    border: "2px solid #c8d9f0",
+                    opacity: "0.6",
+                    boxShadow: "0 1px 4px #0001",
+                  }}
+                />
+              );
+            })}
+          </div>
           {/* Subtitle skeleton */}
           <div style={{ width: "40%", height: 18, background: "#dbe6f7", borderRadius: 6, marginBottom: 12 }} />
           {/* Pulse animation */}

@@ -48,12 +48,12 @@ const ProgramListCard: React.FC<ProgramListCardProps> = ({ item, onView, dragHan
         </div>
         <div className="text-2xl font-bold text-[#D4AF37] w-10 text-center select-none">{item.sequence}</div>
         <div className="flex-1 min-w-0 flex items-center gap-1 overflow-hidden">
-          <span className="font-semibold text-lg text-white truncate block max-w-[180px] sm:max-w-[220px] md:max-w-[320px] mr-4" title={item.title} style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.title}</span>
-          <span className="hidden md:inline text-sm text-gray-400 font-normal whitespace-nowrap max-w-[80px] mr-4">
-            {new Date(item.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - {new Date(item.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+          <span className="font-semibold text-lg text-white truncate block mr-4" title={item.title} style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', width: 320, maxWidth: 320, minWidth: 220, display: 'inline-block' }}>{item.title}</span>
+          <span className="hidden md:inline text-sm text-gray-400 font-normal whitespace-nowrap mr-1" style={{ width: 140, maxWidth: 140, minWidth: 140, display: 'inline-block' }}>
+            {new Date(item.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })} - {new Date(item.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}
           </span>
-          {item.type && (
-            <span className="hidden md:inline px-2 py-0.5 ml-2 rounded-full bg-[#D4AF37]/20 text-[#D4AF37] text-xs font-semibold whitespace-nowrap">
+            {item.type && (
+              <span className="hidden md:inline px-2 py-0.5 ml-2 rounded-full bg-[#D4AF37]/20 text-[#D4AF37] text-xs font-semibold whitespace-nowrap" style={{ display: 'inline-block' }}>
               {item.type}
             </span>
           )}

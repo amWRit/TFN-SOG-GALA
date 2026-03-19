@@ -63,8 +63,8 @@ export function AuctionAddBidModal({ open, item, isSubmitting, onClose, onSubmit
             <input
               type="number"
               name="amount"
-              min={((item.currentBid || 0) + 0.01).toFixed(2)}
-              step="0.01"
+              min={((item.currentBid || 0) + 1).toFixed(2)}
+              step="1"
               required
               className="w-full px-3 py-2 rounded bg-[#1a1a1a] border border-[#D4AF37]/30 text-[#f5f5f5] text-2xl"
               value={amount}
