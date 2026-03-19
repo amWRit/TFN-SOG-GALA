@@ -40,29 +40,41 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    <html lang="en" className="scroll-smooth">
-      <head>
-        <link rel="icon" href="/images/logos/favicon.ico" sizes="any" />
-        <link rel="icon" type="image/png" href="/images/logos/favicon-32x32.png" sizes="32x32" />
-        <link rel="icon" type="image/png" href="/images/logos/favicon-16x16.png" sizes="16x16" />
-        <link rel="apple-touch-icon" href="/images/logos/favicon-32x32.png" />
-      </head>
-      <body
-        className={`${inter.variable} ${playfair.variable} antialiased bg-[#1a1a1a] text-[#f5f5f5]`}
-      >
-        {children}
-        <Toaster
-          position="top-right"
-          toastOptions={{
-            style: {
-              background: "rgba(26, 26, 26, 0.95)",
-              color: "#f5f5f5",
-              border: "1px solid rgba(212, 175, 55, 0.3)",
-            },
-          }}
-        />
-      </body>
-    </html>
-  );
+    return (
+      <html lang="en" className="scroll-smooth">
+        <head>
+          <link rel="icon" href="/images/logos/favicon.ico" sizes="any" />
+          <link rel="icon" type="image/png" href="/images/logos/favicon-32x32.png" sizes="32x32" />
+          <link rel="icon" type="image/png" href="/images/logos/favicon-16x16.png" sizes="16x16" />
+          <link rel="apple-touch-icon" href="/images/logos/favicon-32x32.png" />
+          {/* Defensive script to prevent window.ethereum errors */}
+          <script dangerouslySetInnerHTML={{__html: `
+            try {
+              if (typeof window !== 'undefined' && window.ethereum === undefined) {
+                window.ethereum = null;
+              }
+            } catch (e) {}
+          `}} />
+        </head>
+        <body
+          className={`${inter.variable} ${playfair.variable} antialiased bg-[#1a1a1a] text-[#f5f5f5]`}
+        >
+          {/* Show warning for unsupported devices if wallet code is ever used */}
+          <noscript>
+            <div style={{background:'#d13239',color:'#fff',padding:'12px',textAlign:'center',fontWeight:600}}>Wallet features are not supported on this device/browser.</div>
+          </noscript>
+          {children}
+          <Toaster
+            position="top-right"
+            toastOptions={{
+              style: {
+                background: "rgba(26, 26, 26, 0.95)",
+                color: "#f5f5f5",
+                border: "1px solid rgba(212, 175, 55, 0.3)",
+              },
+            }}
+          />
+        </body>
+      </html>
+    );
 }

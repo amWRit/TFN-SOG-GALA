@@ -32,16 +32,28 @@ const Navbar = () => {
     return () => window.removeEventListener('keydown', handler);
   }, []);
 
-  // Long-press for mobile
+  // Long-press and triple-tap for mobile
   useEffect(() => {
     const logo = logoRef.current;
     if (!logo) return;
+    let tapCount = 0;
+    let tapTimer: NodeJS.Timeout | null = null;
     const handleTouchStart = () => {
       longPressTimer.current = setTimeout(() => setShowAdmin(true), 1200);
     };
     const handleTouchEnd = () => {
       if (longPressTimer.current !== null) {
         clearTimeout(longPressTimer.current);
+      }
+      // Triple-tap logic
+      tapCount++;
+      if (tapCount === 1) {
+        tapTimer = setTimeout(() => { tapCount = 0; }, 2000);
+      }
+      if (tapCount === 3) {
+        setShowAdmin(true);
+        tapCount = 0;
+        if (tapTimer) clearTimeout(tapTimer);
       }
     };
     logo.addEventListener('touchstart', handleTouchStart);

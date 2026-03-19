@@ -83,7 +83,7 @@ const StatsSection = () => {
 
   return (
     <section id="stats" className="py-24 bg-[#f4f7fc] w-full border-t border-b border-[#225898]/10">
-      <div className="w-full flex flex-col items-center justify-center px-4 sm:px-6">
+      <div className="w-full flex flex-col items-center justify-center px-6 sm:px-10 md:px-16 lg:px-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12 w-full max-w-4xl mx-auto">
           {stats.map((stat, index) => (
             <div key={index} className="text-center group">

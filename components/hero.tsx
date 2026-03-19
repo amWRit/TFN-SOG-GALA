@@ -21,12 +21,11 @@ const VideoHero = () => {
       </div>
 
       <div className="relative z-20 h-full flex flex-col items-center justify-center text-center px-4 sm:px-6 w-full">
-        <div className="w-full max-w-4xl mx-auto space-y-8">
-          <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold text-white leading-tight break-words max-w-full overflow-x-hidden">
+        <div className="w-full max-w-4xl mx-auto space-y-4">
+          <h1 className="text-5xl sm:text-5xl md:text-7xl lg:text-8xl font-bold text-white leading-tight break-words max-w-full overflow-x-hidden">
             Gala <span className="text-[#d71a21]">2026</span>
           </h1>
-          
-          <p className="text-2xl md:text-3xl text-gray-200 font-light">
+          <p className="text-xl sm:text-2xl md:text-3xl text-gray-200 font-light">
             Empowering Nepal's Future
           </p>
 
@@ -64,6 +63,7 @@ const VideoHero = () => {
             <button
               onClick={() => window.location.href = '/program'}
               className="group bg-white/15 hover:bg-white/25 border border-white/50 text-white px-8 py-4 rounded-full font-semibold text-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 flex items-center gap-3 w-full justify-center cursor-pointer sm:hidden"
+              style={{ marginBottom: '0.5rem' }}
             >
               <List className="w-5 h-5" />
               View Program
@@ -71,6 +71,7 @@ const VideoHero = () => {
             <button
               onClick={() => window.location.href = '/register'}
               className="group bg-white/15 hover:bg-white/25 border border-white/50 text-white px-8 py-4 rounded-full font-semibold text-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 flex items-center gap-3 w-full justify-center cursor-pointer sm:hidden"
+              style={{ marginBottom: '2rem' }}
             >
               <CalendarCheck className="w-5 h-5" />
               RSVP
