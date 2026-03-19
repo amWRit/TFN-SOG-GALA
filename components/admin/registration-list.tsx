@@ -175,7 +175,7 @@ export function RegistrationList() {
               type="button"
             >
               <span>
-                Preference: {table === '0' ? <span className="text-gray-400">(No Pref)</span> : `Table ${table}`}
+                Preference: {table === '0' ? <span className="text-gray-400">(No Pref)</span> : `Table ${table} `}
                 <span className="ml-1 text-xs text-[#D4AF37] font-semibold">({grouped[Number(table)]?.length || 0})</span>
               </span>
               <span className="ml-2 text-base cursor-pointer">

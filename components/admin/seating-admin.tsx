@@ -398,7 +398,12 @@ export function SeatingAdmin() {
                     aria-controls={`table-content-${tableNum}`}
                     type="button"
                   >
-                    <span>Table {tableNum}</span>
+                    <span>
+                      Table {tableNum} 
+                      <span className="ml-1 text-xs text-[#D4AF37] font-semibold">
+                         ({tables[tableNum]?.filter(seat => seat.registrationId)?.length || 0})
+                      </span>
+                    </span>
                     <span className="ml-2 text-base cursor-pointer">
                       {openTables[tableNum] ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
                     </span>
