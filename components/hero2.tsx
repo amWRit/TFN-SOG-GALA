@@ -1,6 +1,5 @@
 "use client";
-import React, { useState, useEffect } from 'react';
-import { Play } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
 
 // ── Inline CountdownTimer ──────────────────────────────────────────────────
 interface CountdownTimerProps {
@@ -97,7 +96,45 @@ const GoldSpatter = () => (
 // ── Main Hero ──────────────────────────────────────────────────────────────
 const Hero2 = () => {
   const [showVideo, setShowVideo] = useState(false);
+  const [showAdmin, setShowAdmin] = useState(false);
+  const logoRef = useRef<HTMLImageElement | null>(null);
+  let longPressTimer = useRef<NodeJS.Timeout | null>(null);
   const targetDate = "2026-04-10T18:00:00";
+
+  // Secret key sequence for desktop
+  useEffect(() => {
+    let buffer = '';
+    const handler = (e: KeyboardEvent) => {
+      buffer += e.key.toLowerCase();
+      if (buffer.endsWith('admin')) {
+        setShowAdmin(true);
+        buffer = '';
+      }
+      if (buffer.length > 10) buffer = buffer.slice(-10);
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, []);
+
+  // Long-press for mobile (on logo)
+  useEffect(() => {
+    const logo = logoRef.current;
+    if (!logo) return;
+    const handleTouchStart = () => {
+      longPressTimer.current = setTimeout(() => setShowAdmin(true), 1200);
+    };
+    const handleTouchEnd = () => {
+      if (longPressTimer.current !== null) {
+        clearTimeout(longPressTimer.current);
+      }
+    };
+    logo.addEventListener('touchstart', handleTouchStart);
+    logo.addEventListener('touchend', handleTouchEnd);
+    return () => {
+      logo.removeEventListener('touchstart', handleTouchStart);
+      logo.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, []);
 
   return (
     <>
@@ -233,7 +270,7 @@ const Hero2 = () => {
 
           <div style={{ position: 'relative', zIndex: 2, width: '100%' }}>
             <div className="fade-up-1" style={{ marginBottom: '16px' }}>
-              <img src="/images/logos/tfn_logo_white.png" alt="Teach For Nepal" style={{ height: '64px', margin: '0 auto', display: 'block' }} />
+              <img ref={logoRef} src="/images/logos/tfn_logo_white.png" alt="Teach For Nepal" style={{ height: '64px', margin: '0 auto', display: 'block', cursor: 'pointer' }} />
             </div>
             <p className="hero-script fade-up-2" style={{ fontSize: 'clamp(1rem, 2vw, 1.3rem)', marginBottom: '4px' }}>
               Join us for
@@ -251,6 +288,30 @@ const Hero2 = () => {
             <div className="fade-up-5">
               <CountdownTimer targetDate={targetDate} />
             </div>
+            {showAdmin && (
+              <div style={{ marginTop: 24 }}>
+                <a
+                  href="/admin/dashboard"
+                  style={{
+                    background: 'linear-gradient(90deg, #FFD700 0%, #D4AF37 100%)',
+                    color: '#23272F',
+                    padding: '12px 32px',
+                    borderRadius: 999,
+                    fontWeight: 700,
+                    fontFamily: 'Montserrat, sans-serif',
+                    fontSize: '1.1rem',
+                    border: '1px solid #D4AF37',
+                    boxShadow: '0 4px 24px #FFD70033',
+                    textDecoration: 'none',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: 10,
+                  }}
+                >
+                  Admin Dashboard
+                </a>
+              </div>
+            )}
           </div>
         </div>
 
