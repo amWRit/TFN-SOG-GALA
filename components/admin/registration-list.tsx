@@ -539,19 +539,26 @@ function RegistrationModalActions({ registration, onClose, onUpdated }: { regist
                   className="rounded-lg border border-[#D4AF37] bg-[#23272F] text-[#f5f5f5] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#D4AF37] w-full transition"
                   value={form.payment}
                   min={0}
-                  step={0.01}
+                  step={1}
                   onChange={e => setForm(f => ({ ...f, payment: parseFloat(e.target.value) }))}
                 />
               </div>
               <div className="flex flex-col w-full max-w-[120px] sm:items-start items-start mt-2 sm:mt-0">
                 <label className="text-xs text-[#D4AF37] font-semibold mb-1" htmlFor="paid-checkbox">Paid</label>
-                <input
-                  id="paid-checkbox"
-                  type="checkbox"
-                  checked={form.paymentStatus}
-                  onChange={e => setForm(f => ({ ...f, paymentStatus: e.target.checked }))}
-                  className="form-checkbox h-5 w-5 text-[#D4AF37] border-[#D4AF37] focus:ring-[#D4AF37] rounded transition"
-                />
+                  <input
+                    id="paid-checkbox"
+                    type="checkbox"
+                    checked={form.paymentStatus}
+                    onChange={e => {
+                      const checked = e.target.checked;
+                      setForm(f => ({
+                        ...f,
+                        paymentStatus: checked,
+                        payment: checked ? f.payment : 0
+                      }));
+                    }}
+                    className="form-checkbox h-5 w-5 text-[#D4AF37] border-[#D4AF37] focus:ring-[#D4AF37] rounded transition"
+                  />
               </div>
             </div>
             {/* Seat assignment controls in edit mode */}

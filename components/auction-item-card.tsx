@@ -129,8 +129,9 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
           if (isAdmin) {
             window.open(`/auction/${item.id}`, '_blank');
           } else if (!isClosed && !showDescModal && !showBidModal) {
-            setShowBidModal(true);
+            // setShowBidModal(true);
           }
+          // Bid modal is now disabled for normal users
         }}
         tabIndex={isClosed ? -1 : 0}
         role="button"
@@ -220,11 +221,12 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
               <Eye size={14} /> Click to view details
             </div>
           ) : (
-            !isClosed && (
-              <div className="w-full py-2.5 rounded-xl bg-[#d71a21] text-white font-bold flex items-center gap-2 justify-center text-sm shadow-lg">
-                <Gavel size={15} /> Place a Bid
-              </div>
-            )
+            // !isClosed && (
+            //   <div className="w-full py-2.5 rounded-xl bg-[#d71a21] text-white font-bold flex items-center gap-2 justify-center text-sm shadow-lg">
+            //     <Gavel size={15} /> Place a Bid
+            //   </div>
+            // )
+            null
           )}
         </div>
 

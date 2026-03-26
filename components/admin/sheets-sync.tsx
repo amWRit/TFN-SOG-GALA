@@ -1,15 +1,49 @@
 "use client";
 
-import { useState } from "react";
+
+import { useState, useRef } from "react";
 import { OkModal } from "./ok-modal";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
 import { RefreshCw } from "lucide-react";
+import { CsvSample } from "../sheets-sync/CsvSample";
+import { ImportCsvFileInput } from "../sheets-sync/ImportCsvFileInput";
+import { ImportCsvModalHeader } from "../sheets-sync/ImportCsvModalHeader";
+import { ImportCsvModalFooter } from "../sheets-sync/ImportCsvModalFooter";
+import { ImportCsvErrorList } from "../sheets-sync/ImportCsvErrorList";
+import { CSV_HEADERS, CSV_SAMPLE_ROW } from "../sheets-sync/csvConstants";
+import { getHandleDownloadSample } from "../sheets-sync/handleDownloadSample";
+import { RenderImportCsvModal } from "../sheets-sync/RenderImportCsvModal";
 
 export function SheetsSync() {
   const [loading, setLoading] = useState(false);
-  const [modal, setModal] = useState<null | { type: 'registration' | 'seating', open: boolean }>(null);
+  const [modal, setModal] = useState<null | { type: 'registration' | 'seating' | 'import-csv', open: boolean }>(null);
+  const [csvFile, setCsvFile] = useState<File | null>(null);
+  const [clearExisting, setClearExisting] = useState(false);
+  const [importLoading, setImportLoading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  // CSV sample and download logic
+  const csvHeaders = CSV_HEADERS;
+  const csvSampleRow = CSV_SAMPLE_ROW;
+  const handleDownloadSample = getHandleDownloadSample(csvHeaders, csvSampleRow);
+  const [importErrors, setImportErrors] = useState<string[]>([]);
+
+  // CSV import modal UI
+  const renderImportCsvModal = () => (
+    <RenderImportCsvModal
+      fileInputRef={fileInputRef}
+      setCsvFile={setCsvFile}
+      clearExisting={clearExisting}
+      setClearExisting={setClearExisting}
+      importErrors={importErrors}
+      importLoading={importLoading}
+      csvFile={csvFile}
+      setImportLoading={setImportLoading}
+      setImportErrors={setImportErrors}
+      setModal={setModal}
+    />
+  );
 
   const handleSync = async () => {
     setLoading(true);
@@ -75,9 +109,12 @@ export function SheetsSync() {
         </ul>
       </div>
       <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4 gap-4">
-        <Button disabled title="Import is currently disabled">
-          <span className="sm:hidden">Import</span>
-          <span className="hidden sm:inline">Import from Google Sheets (Disabled)</span>
+        <Button onClick={() => setModal({ type: 'import-csv', open: true })} 
+          disabled={loading || importLoading}
+          variant="outline"
+        >
+          <span className="sm:hidden">Import Registrations</span>
+          <span className="hidden sm:inline">Import Registrations from CSV</span>
         </Button>
         <Button
           onClick={() => setModal({ type: 'registration', open: true })}
@@ -96,35 +133,42 @@ export function SheetsSync() {
           <span className="hidden sm:inline">Export Seating to Google Sheets</span>
         </Button>
         {/* Confirmation Modal */}
-        <OkModal
-          open={!!modal}
-          title={modal?.type === 'registration' ? 'Export Registration Data' : 'Export Seating Data'}
-          message={modal?.type === 'registration'
-            ? (<span>
-                You are about to overwrite all data in the {registrationSheetUrl ? (
-                  <a href={registrationSheetUrl} target="_blank" rel="noopener noreferrer" className="underline text-blue-400" style={{ wordBreak: 'break-all' }}> <br></br>
-                    TFN-GALA 2026 Registration Sheet
-                  </a>
-                ) : 'TFN-GALA 2026 Registration Google Sheet'}.
-                <br /><br />
-                This action cannot be undone. Proceed?
-              </span>)
-            : (<span>
-                You are about to overwrite all data in the {seatingSheetUrl ? (
-                  <a href={seatingSheetUrl} target="_blank" rel="noopener noreferrer" className="underline text-blue-400" style={{ wordBreak: 'break-all' }}><br></br>
-                    TFN-GALA 2026 Seating Sheet
-                  </a>
-                ) : 'TFN-GALA 2026 Seating Google Sheet'}.
-                <br /><br />
-                This action cannot be undone. Proceed?
-              </span>)}
-          onOk={() => modal && doExport(modal.type)}
-          onCancel={() => setModal(null)}
-          okText={loading ? 'Exporting...' : 'Export'}
-          cancelText="Cancel"
-          okDisabled={loading}
-          cancelDisabled={loading}
-        />
+        {modal?.type === 'import-csv' && modal.open && renderImportCsvModal()}
+        {(modal?.type === 'registration' || modal?.type === 'seating') && (
+          <OkModal
+            open={modal?.type === 'registration' || modal?.type === 'seating'}
+            title={modal?.type === 'registration' ? 'Export Registration Data' : 'Export Seating Data'}
+            message={modal?.type === 'registration'
+              ? (<span>
+                  You are about to overwrite all data in the {registrationSheetUrl ? (
+                    <a href={registrationSheetUrl} target="_blank" rel="noopener noreferrer" className="underline text-blue-400" style={{ wordBreak: 'break-all' }}> <br></br>
+                      TFN-GALA 2026 Registration Sheet
+                    </a>
+                  ) : 'TFN-GALA 2026 Registration Google Sheet'}.
+                  <br /><br />
+                  This action cannot be undone. Proceed?
+                </span>)
+              : (<span>
+                  You are about to overwrite all data in the {seatingSheetUrl ? (
+                    <a href={seatingSheetUrl} target="_blank" rel="noopener noreferrer" className="underline text-blue-400" style={{ wordBreak: 'break-all' }}><br></br>
+                      TFN-GALA 2026 Seating Sheet
+                    </a>
+                  ) : 'TFN-GALA 2026 Seating Google Sheet'}.
+                  <br /><br />
+                  This action cannot be undone. Proceed?
+                </span>)}
+            onOk={() => {
+              if (modal?.type === 'registration' || modal?.type === 'seating') {
+                doExport(modal.type);
+              }
+            }}
+            onCancel={() => setModal(null)}
+            okText={loading ? 'Exporting...' : 'Export'}
+            cancelText="Cancel"
+            okDisabled={loading}
+            cancelDisabled={loading}
+          />
+        )}
       </div>
     </Card>
   );

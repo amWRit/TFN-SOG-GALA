@@ -5,6 +5,7 @@ export async function GET() {
   // Sum of payment from registration table
   const registrationSum = await prisma.registration.aggregate({
     _sum: { payment: true },
+    where: { paymentStatus: true },
   });
   // Sum of currentBid from auction items that are completed (isActive: false)
   const auctionSum = await prisma.auctionItem.aggregate({

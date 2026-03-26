@@ -59,7 +59,6 @@ export default function RegisterForm({
           name="table"
           value={form.table || ''}
           onChange={handleChange}
-          required
           style={{flex: 1, minWidth: 0, color: '#1f365f'}}>
           <option value="">Table #</option>
           {tableOptions.map(t => (
@@ -71,7 +70,6 @@ export default function RegisterForm({
           name="seat"
           value={form.seat || ''}
           onChange={handleChange}
-          required
           disabled={!form.table}
           style={{flex: 1, minWidth: 0, color: '#1f365f'}}>
           <option value="">Seat #</option>
