@@ -13,7 +13,7 @@ const HeroTop: React.FC<HeroTopProps> = ({ showAdmin, setShowAdmin, logoRef }) =
   const targetDate = "2026-04-10T18:00:00";
 
   return (
-    <div className={styles.heroTop}>
+    <div className={`${styles.heroTop} ${styles.fadeUp3}`}>
       <div aria-hidden style={{
         position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)',
         width: '800px', height: '100%',

@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './hero.module.css';
 
 const VenueBand: React.FC = () => (
-  <div className={styles.venueBand}>
+  <div className={`${styles.venueBand} ${styles.fadeUp3}`}>
     <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
       <span style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 'clamp(1rem, 1.8vw, 1.3rem)', color: 'white', whiteSpace: 'nowrap' }}>
         Hotel Yak &amp; Yeti
