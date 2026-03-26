@@ -47,7 +47,7 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ targetDate }) => {
   );
 
   return (
-    <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
+    <div className="fadeUp6" style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
       <Unit value={timeLeft.days} label="Days" />
       <Unit value={timeLeft.hours} label="Hours" />
       <Unit value={timeLeft.minutes} label="Mins" />

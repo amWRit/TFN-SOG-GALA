@@ -10,6 +10,7 @@ const VideoModal: React.FC<VideoModalProps> = ({ show, onClose }) => {
   return (
     <div
       onClick={onClose}
+      className="fadeUp4"
       style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.95)', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}
     >
       <div style={{ position: 'relative', width: '100%', maxWidth: '900px', aspectRatio: '16/9' }} onClick={e => e.stopPropagation()}>
