@@ -39,7 +39,7 @@ const EventHighlights = () => {
           ))}
         </div>
         {/* Add program details button below highlights grid */}
-        <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center w-full">
+        {/* <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center w-full">
           <button
             onClick={() => window.location.href = '/program'}
             className="group bg-[#084691] hover:bg-[#225898] text-white px-8 py-4 rounded-full font-semibold text-lg hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center gap-3 w-full sm:w-auto justify-center cursor-pointer"
@@ -47,7 +47,7 @@ const EventHighlights = () => {
             <TableOfContents className="w-5 h-5" />
             View Program Details
           </button>
-        </div>
+        </div> */}
       </div>
     </section>
   );
