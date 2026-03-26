@@ -135,10 +135,14 @@ export function BidModal({ item, onClose, onSuccess }: BidModalProps) {
               <input
                 type="number"
                 className="w-full px-4 py-3 rounded-xl bg-white text-[#084691] border border-[#084691]/25 focus:outline-none focus:border-[#d71a21] transition-colors placeholder:text-[#084691]/35 text-base"
-                placeholder={`e.g. ${(item.currentBid + 100).toLocaleString()}`}
+                placeholder={`e.g. ${(
+                  item.currentBid > 0
+                    ? item.currentBid + 100
+                    : (item as any).startingBid + 100
+                ).toLocaleString()}`}
                 value={bidAmount}
                 onChange={e => setBidAmount(e.target.value)}
-                min={item.currentBid + 1}
+                min={item.currentBid > 0 ? item.currentBid + 1 : (item as any).startingBid + 1}
                 step={1}
                 required
                 disabled={submitting}

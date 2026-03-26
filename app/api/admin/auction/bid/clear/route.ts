@@ -17,7 +17,18 @@ export async function DELETE(request: Request) {
     return NextResponse.json({ error: "Missing itemId" }, { status: 400 });
   }
   try {
+    // Delete all bids for this item
     const deleted = await prisma.bid.deleteMany({ where: { auctionItemId: itemId } });
+
+    // Reset auction item's currentBid/currentBidder to 0/null
+    await prisma.auctionItem.update({
+      where: { id: itemId },
+      data: {
+        currentBid: 0,
+        currentBidder: null,
+      },
+    });
+
     return NextResponse.json({ success: true, deleted });
   } catch (error) {
     console.error("Error clearing bids:", error);

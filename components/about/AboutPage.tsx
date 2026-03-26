@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import AboutHeader from './AboutHeader';
 import AboutTabs from './AboutTabs';
@@ -14,6 +14,18 @@ import styles from '../../styles/AboutPage.module.css';
 
 const AboutPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState('background');
+
+  // Persist active tab in localStorage
+  useEffect(() => {
+    const savedTab = typeof window !== 'undefined' && window.localStorage.getItem('aboutActiveTab');
+    if (savedTab) setActiveTab(savedTab);
+  }, []);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem('aboutActiveTab', activeTab);
+    }
+  }, [activeTab]);
 
   const tabs = [
     {

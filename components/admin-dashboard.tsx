@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
@@ -21,6 +21,18 @@ type Tab = "seating" | "auction" | "program" | "event" | "sheets" | "settings";
 export function AdminDashboard() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<Tab>("seating");
+
+  // Persist active tab in localStorage
+  useEffect(() => {
+    const savedTab = typeof window !== 'undefined' && window.localStorage.getItem('adminActiveTab');
+    if (savedTab && tabs.some(t => t.id === savedTab)) setActiveTab(savedTab as Tab);
+  }, []);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem('adminActiveTab', activeTab);
+    }
+  }, [activeTab]);
 
   const handleLogout = async () => {
     try {
