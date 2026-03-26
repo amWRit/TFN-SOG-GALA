@@ -107,11 +107,6 @@ const ProgramCard: React.FC<ProgramCardProps> = ({ item, truncate = defaultTrunc
       {/* External link removed */}
     </div>
     <div style={{ color: "#d71a21", fontWeight: 700, fontSize: 13, textTransform: 'uppercase', letterSpacing: 0.5, marginTop: 4 }}>{item.type}</div>
-    <div style={{ fontSize: 13, color: "#225898", marginTop: 4, fontWeight: 500 }}>{/* small margin for separation */}
-      <b>Time:</b> {new Date(item.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - {new Date(item.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-    </div>
-    {/* Speaker removed */}
-    {/* Location removed */}
   </div>
 );
 

@@ -154,35 +154,29 @@ export default function ProgramModal({ open, onClose, item }: ProgramModalProps)
           </span>
         </div>
         {/* Time */}
-        <div style={{ fontSize: 15, color: "#225898", marginBottom: 8, display: "flex", alignItems: "center", gap: 8 }}>
-          <Calendar size={16} style={{ marginRight: 4, verticalAlign: "middle" }} />
-          <span>
-            {item.startTime && item.endTime
-              ? `${new Date(item.startTime).toLocaleString()} - ${new Date(item.endTime).toLocaleString()}`
-              : "Time not available"}
-          </span>
-        </div>
         {/* Speaker */}
-        <div style={{ fontSize: 15, color: "#225898", opacity: 0.85, marginBottom: 8, display: "flex", alignItems: "center", gap: 8 }}>
-          <User size={16} style={{ marginRight: 4, verticalAlign: "middle" }} /> Host/Speaker: {item.speaker ? (
-            <button
-              style={{
-                background: "none",
-                border: "none",
-                color: "#d71a21",
-                textDecoration: "underline",
-                cursor: "pointer",
-                fontWeight: 600,
-                fontSize: 15,
-                padding: 0,
-              }}
-              onClick={() => setSpeakerModalOpen(true)}
-              aria-label={`Show details for ${item.speaker}`}
-            >
-              {item.speaker}
-            </button>
-          ) : '--'}
-        </div>
+        {item.speaker && (
+          <div style={{ fontSize: 15, color: "#225898", opacity: 0.85, marginBottom: 8, display: "flex", alignItems: "center", gap: 8 }}>
+            <User size={16} style={{ marginRight: 4, verticalAlign: "middle" }} /> Host/Speaker: {item.speaker ? (
+              <button
+                style={{
+                  background: "none",
+                  border: "none",
+                  color: "#d71a21",
+                  textDecoration: "underline",
+                  cursor: "pointer",
+                  fontWeight: 600,
+                  fontSize: 15,
+                  padding: 0,
+                }}
+                onClick={() => setSpeakerModalOpen(true)}
+                aria-label={`Show details for ${item.speaker}`}
+              >
+                {item.speaker}
+              </button>
+            ) : '--'}
+          </div>
+        )}
         {/* Speaker Detail Modal */}
         {speakerModalOpen && item.speaker && (
           <div
@@ -285,13 +279,10 @@ export default function ProgramModal({ open, onClose, item }: ProgramModalProps)
           </div>
         )}
         {/* Location */}
-        <div style={{ fontSize: 15, color: "#225898", opacity: 0.85, marginBottom: 8, display: "flex", alignItems: "center", gap: 8 }}>
-          <MapPin size={16} style={{ marginRight: 4, verticalAlign: "middle" }} /> {item.location ? item.location : '--'}
-        </div>
         {/* External Link */}
-        <div style={{ color: "#d71a21", fontWeight: 600, fontSize: 15, marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}>
-          <ExternalLinkIcon size={18} />
-          {item.externalLink ? (
+        {item.externalLink && (
+          <div style={{ color: "#d71a21", fontWeight: 600, fontSize: 15, marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}>
+            <ExternalLinkIcon size={18} />
             <a
               href={item.externalLink}
               target="_blank"
@@ -300,8 +291,8 @@ export default function ProgramModal({ open, onClose, item }: ProgramModalProps)
             >
               {item.externalLink}
             </a>
-          ) : '--'}
-        </div>
+          </div>
+        )}
         {/* Collapsible Description (always show, fallback NA) */}
         <div style={{ marginTop: 14, background: "rgba(8,70,145,0.07)", borderRadius: 12, padding: 12 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
