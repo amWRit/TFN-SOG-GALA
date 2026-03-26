@@ -105,6 +105,22 @@ const Hero2 = () => {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@400;500;600;700&display=swap');
 
+        @media (max-width: 600px) {
+          .gala-tab-bar {
+            flex-direction: column !important;
+            position: static !important;
+            width: 100% !important;
+            box-sizing: border-box;
+          }
+          .gala-tab-bar > * {
+            border-right: none !important;
+            border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+          }
+          .gala-tab-bar > *:last-child {
+            border-bottom: none !important;
+          }
+        }
+
         .hero-gold-title {
           font-family: 'Playfair Display', Georgia, serif;
           font-weight: 900;
@@ -241,11 +257,11 @@ const Hero2 = () => {
         {/* ── Red band: venue + date only ─────────────────────────── */}
         <div className="venue-band fade-up-6" style={{ width: '100%', padding: '14px 32px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            <span style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: 'clamp(1rem, 1.8vw, 1.3rem)', color: 'white', whiteSpace: 'nowrap' }}>
+            <span style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 'clamp(1rem, 1.8vw, 1.3rem)', color: 'white', whiteSpace: 'nowrap' }}>
               Hotel Yak &amp; Yeti
             </span>
             <span style={{ width: '1px', height: '26px', background: 'rgba(255,255,255,0.4)', display: 'block' }} />
-            <span style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: 'clamp(1rem, 1.8vw, 1.3rem)', color: 'white', whiteSpace: 'nowrap' }}>
+            <span style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 'clamp(1rem, 1.8vw, 1.3rem)', color: 'white', whiteSpace: 'nowrap' }}>
               10 April, 2026
             </span>
           </div>
@@ -254,7 +270,7 @@ const Hero2 = () => {
         {/* ── Children image + buttons overlay ──────────────────────── */}
         <div style={{ position: 'relative', width: '100%', flex: '1 1 50%', minHeight: '300px', overflow: 'hidden' }}>
           {/* Flat tab-style buttons attached to the top of the image */}
-          <div style={{
+          <div className="gala-tab-bar fade-up-1" style={{
             position: 'absolute',
             left: 0,
             right: 0,
@@ -266,7 +282,7 @@ const Hero2 = () => {
             gap: 0,
             borderTop: '4px solid #d71a21',
             background: '#084691',
-            boxShadow: '0 2px 12px 0 rgba(0,0,0,0.08)'
+            boxShadow: '0 2px 12px 0 rgba(0,0,0,0.08)',
           }}>
             <a href="https://forms.gle/your-google-form-link" target="_blank" rel="noopener noreferrer"
               style={{
@@ -292,34 +308,6 @@ const Hero2 = () => {
             >
               Book Tickets
             </a>
-            <button onClick={() => setShowVideo(true)}
-              style={{
-                flex: 1,
-                textAlign: 'center',
-                padding: '14px 0',
-                color: 'rgba(255,255,255,0.92)',
-                fontFamily: 'Montserrat, sans-serif',
-                fontWeight: 600,
-                fontSize: '0.98rem',
-                letterSpacing: '0.04em',
-                textTransform: 'uppercase',
-                border: 'none',
-                background: '#084691',
-                outline: 'none',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '7px',
-                transition: 'background 0.18s, color 0.18s',
-                borderRight: '1px solid rgba(255,255,255,0.08)'
-              }}
-              onMouseOver={e => (e.currentTarget.style.background = '#06376e')}
-              onMouseOut={e => (e.currentTarget.style.background = '#084691')}
-            >
-              <Play style={{ width: 13, height: 13 }} />
-              Watch 2025 Highlights
-            </button>
             <a href="#about-gala"
               style={{
                 flex: 1,
@@ -358,15 +346,44 @@ const Hero2 = () => {
                 outline: 'none',
                 cursor: 'pointer',
                 textDecoration: 'none',
-                transition: 'background 0.18s, color 0.18s'
+                transition: 'background 0.18s, color 0.18s',
+                borderRight: '1px solid rgba(255,255,255,0.08)'
               }}
               onMouseOver={e => (e.currentTarget.style.background = '#06376e')}
               onMouseOut={e => (e.currentTarget.style.background = '#084691')}
             >Program Details</a>
+            <button onClick={() => setShowVideo(true)}
+              style={{
+                flex: 1,
+                textAlign: 'center',
+                padding: '14px 0',
+                color: 'rgba(255,255,255,0.92)',
+                fontFamily: 'Montserrat, sans-serif',
+                fontWeight: 600,
+                fontSize: '0.98rem',
+                letterSpacing: '0.04em',
+                textTransform: 'uppercase',
+                border: 'none',
+                background: '#084691',
+                outline: 'none',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '7px',
+                transition: 'background 0.18s, color 0.18s'
+              }}
+              onMouseOver={e => (e.currentTarget.style.background = '#06376e')}
+              onMouseOut={e => (e.currentTarget.style.background = '#084691')}
+            >
+              <Play style={{ width: 13, height: 13 }} />
+              Watch 2025 Highlights
+            </button>
           </div>
           <img
             src="/images/home_bottom_image_short.png"
             alt="Children studying at school in Nepal"
+            className="fade-up-2"
             style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'bottom', filter: 'grayscale(1)', display: 'block' }}
           />
           {/* Gradient overlay — heavier at bottom so buttons are readable */}
