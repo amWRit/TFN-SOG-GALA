@@ -253,6 +253,117 @@ const Hero2 = () => {
 
         {/* ── Children image + buttons overlay ──────────────────────── */}
         <div style={{ position: 'relative', width: '100%', flex: '1 1 50%', minHeight: '300px', overflow: 'hidden' }}>
+          {/* Flat tab-style buttons attached to the top of the image */}
+          <div style={{
+            position: 'absolute',
+            left: 0,
+            right: 0,
+            top: 0,
+            zIndex: 2,
+            display: 'flex',
+            alignItems: 'stretch',
+            justifyContent: 'center',
+            gap: 0,
+            borderTop: '4px solid #d71a21',
+            background: '#084691',
+            boxShadow: '0 2px 12px 0 rgba(0,0,0,0.08)'
+          }}>
+            <a href="https://forms.gle/your-google-form-link" target="_blank" rel="noopener noreferrer"
+              style={{
+                flex: 1,
+                textAlign: 'center',
+                padding: '14px 0',
+                color: 'rgba(255,255,255,0.92)',
+                fontFamily: 'Montserrat, sans-serif',
+                fontWeight: 600,
+                fontSize: '0.98rem',
+                letterSpacing: '0.04em',
+                textTransform: 'uppercase',
+                border: 'none',
+                background: '#084691',
+                outline: 'none',
+                cursor: 'pointer',
+                textDecoration: 'none',
+                transition: 'background 0.18s, color 0.18s',
+                borderRight: '1px solid rgba(255,255,255,0.08)'
+              }}
+              onMouseOver={e => (e.currentTarget.style.background = '#06376e')}
+              onMouseOut={e => (e.currentTarget.style.background = '#084691')}
+            >
+              Book Tickets
+            </a>
+            <button onClick={() => setShowVideo(true)}
+              style={{
+                flex: 1,
+                textAlign: 'center',
+                padding: '14px 0',
+                color: 'rgba(255,255,255,0.92)',
+                fontFamily: 'Montserrat, sans-serif',
+                fontWeight: 600,
+                fontSize: '0.98rem',
+                letterSpacing: '0.04em',
+                textTransform: 'uppercase',
+                border: 'none',
+                background: '#084691',
+                outline: 'none',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '7px',
+                transition: 'background 0.18s, color 0.18s',
+                borderRight: '1px solid rgba(255,255,255,0.08)'
+              }}
+              onMouseOver={e => (e.currentTarget.style.background = '#06376e')}
+              onMouseOut={e => (e.currentTarget.style.background = '#084691')}
+            >
+              <Play style={{ width: 13, height: 13 }} />
+              Watch 2025 Highlights
+            </button>
+            <a href="#about-gala"
+              style={{
+                flex: 1,
+                textAlign: 'center',
+                padding: '14px 0',
+                color: 'rgba(255,255,255,0.92)',
+                fontFamily: 'Montserrat, sans-serif',
+                fontWeight: 600,
+                fontSize: '0.98rem',
+                letterSpacing: '0.04em',
+                textTransform: 'uppercase',
+                border: 'none',
+                background: '#084691',
+                outline: 'none',
+                cursor: 'pointer',
+                textDecoration: 'none',
+                transition: 'background 0.18s, color 0.18s',
+                borderRight: '1px solid rgba(255,255,255,0.08)'
+              }}
+              onMouseOver={e => (e.currentTarget.style.background = '#06376e')}
+              onMouseOut={e => (e.currentTarget.style.background = '#084691')}
+            >About the Gala</a>
+            <a href="/program"
+              style={{
+                flex: 1,
+                textAlign: 'center',
+                padding: '14px 0',
+                color: 'rgba(255,255,255,0.92)',
+                fontFamily: 'Montserrat, sans-serif',
+                fontWeight: 600,
+                fontSize: '0.98rem',
+                letterSpacing: '0.04em',
+                textTransform: 'uppercase',
+                border: 'none',
+                background: '#084691',
+                outline: 'none',
+                cursor: 'pointer',
+                textDecoration: 'none',
+                transition: 'background 0.18s, color 0.18s'
+              }}
+              onMouseOver={e => (e.currentTarget.style.background = '#06376e')}
+              onMouseOut={e => (e.currentTarget.style.background = '#084691')}
+            >Program Details</a>
+          </div>
           <img
             src="/images/home_bottom_image_short.png"
             alt="Children studying at school in Nepal"
@@ -263,34 +374,6 @@ const Hero2 = () => {
             position: 'absolute', inset: 0,
             background: 'linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.25) 50%, rgba(0,0,0,0.65) 100%)'
           }} />
-          {/* Buttons fixed at the bottom of the viewport */}
-          <div style={{
-            position: 'fixed',
-            left: 0,
-            right: 0,
-            bottom: 0,
-            zIndex: 20,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '12px',
-            flexWrap: 'wrap',
-            padding: '16px 24px',
-            background: 'rgba(10,10,10,0.68)',
-            backdropFilter: 'blur(8px)',
-            WebkitBackdropFilter: 'blur(8px)',
-            boxShadow: '0 -2px 18px 0 rgba(0,0,0,0.12)'
-          }}>
-            <a href="https://forms.gle/your-google-form-link" target="_blank" rel="noopener noreferrer" className="btn-ghost">
-              Book Tickets
-            </a>
-            <button onClick={() => setShowVideo(true)} className="btn-ghost">
-              <Play style={{ width: 13, height: 13 }} />
-              Watch 2025 Highlights
-            </button>
-            <a href="#about-gala" className="btn-ghost">About the Gala</a>
-            <a href="/program" className="btn-ghost">Program Details</a>
-          </div>
         </div>
 
         {/* ── Video Modal ────────────────────────────────────────────── */}
