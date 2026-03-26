@@ -5,11 +5,11 @@ import { Gavel, TableOfContents } from "lucide-react";
 
 const EventHighlights = () => {
   const highlights = [
-    { id: 1, img: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=600&h=800&fit=crop', title: 'Gala Night 2025' },
-    { id: 2, img: 'https://images.unsplash.com/photo-1522543558187-768b6df7c25c?w=600&h=800&fit=crop', title: 'Networking' },
+    { id: 1, img: 'https://images.unsplash.com/photo-1550305080-4e029753abcf?w=600&h=800&fit=crop', title: 'Stories of Truth and Hope' },
+    { id: 2, img: 'https://images.unsplash.com/photo-1672826980330-93ae1ac07b41?w=600&h=800&fit=crop', title: 'Networking' },
     { id: 3, img: 'https://images.unsplash.com/photo-1505236858219-8359eb29e329?w=600&h=800&fit=crop', title: 'Cultural Performance' },
-    { id: 4, img: 'https://images.unsplash.com/photo-1531058020387-3be344556be6?w=600&h=400&fit=crop', title: 'Community Impact' },
-    { id: 5, img: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=600&h=600&fit=crop', title: 'Live Auction' },
+    { id: 4, img: 'https://images.unsplash.com/photo-1527529482837-4698179dc6ce?w=600&h=400&fit=crop', title: 'Dinner' },
+    { id: 5, img: 'https://images.unsplash.com/photo-1649598551790-18fd6c02f2f6?w=600&h=600&fit=crop', title: 'Live Auction' },
   ];
 
   return (
