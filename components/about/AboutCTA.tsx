@@ -14,7 +14,7 @@ const AboutCTA: React.FC = () => (
     <Link href="/" className={styles['btn-gold']}>
       Back to Home
     </Link>
-    <Link href="/samples/conceptnotes/ConceptNote.pdf" target="_blank" className={styles['btn-ghost-dark']}>
+    <Link href="https://drive.google.com/file/d/1ytLC2oOHdNrdvrH7Q8janL1QwsPhKOeJ/view?usp=sharing" target="_blank" className={styles['btn-ghost-dark']}>
       Full Concept Note (PDF)
     </Link>
   </div>
