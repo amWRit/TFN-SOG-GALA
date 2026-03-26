@@ -284,7 +284,7 @@ const Hero2 = () => {
             background: '#084691',
             boxShadow: '0 2px 12px 0 rgba(0,0,0,0.08)',
           }}>
-            <a href="https://forms.gle/your-google-form-link" target="_blank" rel="noopener noreferrer"
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLScnVe7ycPfu3luLRgyRz2MST5ii69LnWm6LM3MsbyLp-wdKZw/viewform" target="_blank" rel="noopener noreferrer"
               style={{
                 flex: 1,
                 textAlign: 'center',
@@ -308,7 +308,7 @@ const Hero2 = () => {
             >
               Book Tickets
             </a>
-            <a href="#about-gala"
+            <a href="/about"
               style={{
                 flex: 1,
                 textAlign: 'center',
@@ -376,7 +376,6 @@ const Hero2 = () => {
               onMouseOver={e => (e.currentTarget.style.background = '#06376e')}
               onMouseOut={e => (e.currentTarget.style.background = '#084691')}
             >
-              <Play style={{ width: 13, height: 13 }} />
               Watch 2025 Highlights
             </button>
           </div>
