@@ -1,40 +1,12 @@
 "use client";
-import React, { useState } from 'react';
-import Link from 'next/link';
-import { Play } from 'lucide-react';
 
-// ── Gold bokeh / spatter dots (pure CSS, no canvas) ───────────────────────
-const GoldSpatter = () => (
-  <div aria-hidden style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none', zIndex: 1 }}>
-    {[
-      { top: '6%',  left: '12%', size: 18, opacity: 0.55 },
-      { top: '3%',  left: '28%', size: 10, opacity: 0.4  },
-      { top: '14%', left: '55%', size: 22, opacity: 0.5  },
-      { top: '8%',  left: '70%', size: 14, opacity: 0.45 },
-      { top: '20%', left: '82%', size: 8,  opacity: 0.35 },
-      { top: '18%', left: '6%',  size: 12, opacity: 0.4  },
-      { top: '30%', left: '90%', size: 16, opacity: 0.3  },
-      { top: '2%',  left: '44%', size: 6,  opacity: 0.3  },
-      { top: '25%', left: '38%', size: 9,  opacity: 0.25 },
-      { top: '10%', left: '92%', size: 11, opacity: 0.4  },
-    ].map((dot, i) => (
-      <div
-        key={i}
-        style={{
-          position: 'absolute',
-          top: dot.top,
-          left: dot.left,
-          width: dot.size,
-          height: dot.size,
-          borderRadius: '50%',
-          background: `radial-gradient(circle, #FFD700 0%, #B8860B 60%, transparent 100%)`,
-          opacity: dot.opacity,
-          filter: 'blur(1px)',
-        }}
-      />
-    ))}
-  </div>
-);
+import React, { useState } from 'react';
+import GoldSpatter from './GoldSpatter';
+import AboutHeader from './AboutHeader';
+import AboutTabs from './AboutTabs';
+import AboutTabContent from './AboutTabContent';
+import AboutCTA from './AboutCTA';
+import styles from '../../styles/AboutPage.module.css';
 
 const AboutPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState('background');
@@ -115,263 +87,26 @@ The evening will conclude with a shared dinner, offering guests the opportunity 
   ];
 
   return (
-    <>
-      {/* Google Fonts + Styles */}
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@400;500;600;700&display=swap');
-
-        .hero-gold-title {
-          font-family: 'Playfair Display', Georgia, serif;
-          font-weight: 900;
-          background: linear-gradient(135deg, #FFE066 0%, #FFD700 30%, #C8A400 55%, #FFD700 75%, #FFF3A0 100%);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-          line-height: 1.05;
-          letter-spacing: -0.01em;
-          filter: drop-shadow(0 2px 12px rgba(212,175,55,0.35));
-        }
-
-        .hero-script {
-          font-family: 'Cormorant Garamond', Georgia, serif;
-          font-style: italic;
-          font-weight: 400;
-          color: rgba(255,255,255,0.75);
-          letter-spacing: 0.01em;
-        }
-
-        .hero-body {
-          font-family: 'Montserrat', sans-serif;
-        }
-
-        .btn-gold {
-          background: linear-gradient(135deg, #FFD700 0%, #C8A400 100%);
-          color: #1a1a1a;
-          font-family: 'Montserrat', sans-serif;
-          font-weight: 700;
-          letter-spacing: 0.06em;
-          text-transform: uppercase;
-          padding: 16px 40px;
-          border-radius: 999px;
-          border: none;
-          cursor: pointer;
-          font-size: 0.95rem;
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-          box-shadow: 0 8px 32px rgba(212,175,55,0.4);
-          text-decoration: none;
-          display: inline-flex;
-          align-items: center;
-          gap: 10px;
-        }
-        .btn-gold:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 12px 40px rgba(212,175,55,0.6);
-          background: linear-gradient(135deg, #FFE066 0%, #FFD700 100%);
-        }
-
-        .btn-ghost-dark {
-          background: rgba(255,255,255,0.08);
-          color: rgba(255,255,255,0.9);
-          font-family: 'Montserrat', sans-serif;
-          font-weight: 600;
-          letter-spacing: 0.05em;
-          text-transform: uppercase;
-          padding: 15px 32px;
-          border-radius: 999px;
-          border: 1px solid rgba(255,255,255,0.2);
-          cursor: pointer;
-          font-size: 0.9rem;
-          transition: all 0.3s;
-          text-decoration: none;
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          backdrop-filter: blur(12px);
-        }
-        .btn-ghost-dark:hover {
-          background: rgba(255,255,255,0.15);
-          color: white;
-          transform: translateY(-1px);
-          box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-        }
-
-        .tab-bar {
-          border-bottom: 1px solid rgba(255,255,255,0.12);
-          margin-bottom: 48px;
-          padding-bottom: 2px;
-        }
-
-        .tab-container {
-          display: flex;
-          justify-content: center;
-          flex-wrap: wrap;
-          gap: 2px;
-        }
-
-        .tab-item {
-          position: relative;
-          padding: 16px 28px;
-          color: rgba(255,255,255,0.6);
-          font-family: 'Montserrat', sans-serif;
-          font-size: 0.95rem;
-          font-weight: 600;
-          letter-spacing: 0.04em;
-          text-transform: uppercase;
-          border: none;
-          background: none;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          white-space: nowrap;
-          backdrop-filter: blur(12px);
-          border-radius: 8px 8px 0 0;
-        }
-        .tab-item:hover {
-          color: rgba(255,255,255,0.9);
-          background: rgba(255,255,255,0.04);
-        }
-        .tab-item.active {
-          color: #FFD700;
-          background: rgba(255,215,0,0.08);
-        }
-        .tab-item.active::after {
-          content: '';
-          position: absolute;
-          bottom: -1px;
-          left: 0;
-          right: 0;
-          height: 3px;
-          background: linear-gradient(90deg, transparent, #FFD700, #FFD700, transparent);
-          border-radius: 2px 2px 0 0;
-        }
-
-        .divider-gold {
-          width: 80px;
-          height: 3px;
-          background: linear-gradient(90deg, transparent, #FFD700, transparent);
-          margin: 24px auto;
-        }
-
-        @keyframes fadeUp {
-          from { opacity: 0; transform: translateY(30px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-        .fade-up-1 { animation: fadeUp 0.8s ease both; }
-        .fade-up-2 { animation: fadeUp 0.8s 0.2s ease both; }
-        .fade-up-3 { animation: fadeUp 0.8s 0.4s ease both; }
-
-        @media (max-width: 768px) {
-          .tab-item {
-            padding: 14px 20px;
-            font-size: 0.9rem;
-            flex: 1 1 45%;
-            margin: 2px;
-          }
-          .tab-container {
-            justify-content: center;
-            gap: 4px;
-          }
-        }
-
-        @media (max-width: 480px) {
-          .tab-item {
-            flex: 1 1 100%;
-            margin: 1px 0;
-          }
-        }
-      `}</style>
-
-      <section style={{ 
-        position: 'relative', 
-        width: '100%', 
-        minHeight: '100vh', 
-        background: '#0a0a0a', 
-        overflow: 'hidden',
-        padding: '40px 24px 60px'
-      }}>
-        <GoldSpatter />
-
-        {/* Header */}
-        <div className="fade-up-1" style={{ 
-          textAlign: 'center', 
-          marginBottom: '60px',
-          position: 'relative', 
-          zIndex: 2 
-        }}>
-          <img 
-            src="/images/logos/tfn_logo_white.png" 
-            alt="Teach For Nepal" 
-            style={{ height: '72px', margin: '0 auto 20px', display: 'block' }} 
-          />
-          <p className="hero-script" style={{ 
-            fontSize: 'clamp(1.1rem, 2.5vw, 1.4rem)', 
-            marginBottom: '12px' 
-          }}>
-            About the Gala
-          </p>
-          <h1 className="hero-gold-title" style={{ 
-            fontSize: 'clamp(2.2rem, 5vw, 4.8rem)', 
-            marginBottom: '16px' 
-          }}>
-            Truth & Hope
-          </h1>
-          <div className="divider-gold" />
-        </div>
-
-        <div style={{ position: 'relative', zIndex: 2, maxWidth: '1100px', margin: '0 auto' }}>
-          {/* Centered Horizontal Tab Bar - Wraps on Mobile */}
-          <div className="fade-up-2 tab-bar">
-            <div className="tab-container">
-              {tabs.map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`tab-item ${activeTab === tab.id ? 'active' : ''}`}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Active Tab Content */}
-          <div className="fade-up-3" style={{
-            background: 'rgba(255,255,255,0.06)',
-            backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(255,255,255,0.1)',
-            borderRadius: '24px',
-            padding: '48px',
-            boxShadow: '0 25px 60px rgba(0,0,0,0.4)'
-          }}>
-            <div style={{
-              fontFamily: "'Cormorant Garamond', serif",
-              fontSize: '1.2rem',
-              lineHeight: 1.75,
-              color: 'rgba(255,255,255,0.92)',
-              whiteSpace: 'pre-line'
-            }}>
-              <div dangerouslySetInnerHTML={{ __html: tabs.find(t => t.id === activeTab)?.content || '' }} />
-            </div>
-          </div>
-
-          {/* CTA Buttons */}
-          <div style={{
-            textAlign: 'center',
-            marginTop: '60px',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: '24px'
-          }}>
-            <Link href="/" className="btn-gold">
-              Back to Home
-            </Link>
-            <Link href="/samples/conceptnotes/ConceptNote.pdf" target="_blank" className="btn-ghost-dark">
-              Full Concept Note (PDF)
-            </Link>
-          </div>
-        </div>
-      </section>
-    </>
+    <section style={{
+      position: 'relative',
+      width: '100%',
+      minHeight: '100vh',
+      background: '#ffffff',
+      overflow: 'hidden',
+      padding: '40px 24px 60px'
+    }}>
+      {/* <GoldSpatter /> */}
+      <AboutHeader />
+      <div style={{ position: 'relative', zIndex: 2, maxWidth: '1100px', margin: '0 auto' }}>
+        <AboutTabs
+          tabs={tabs.map(({ id, label }) => ({ id, label }))}
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+        />
+        <AboutTabContent content={tabs.find(t => t.id === activeTab)?.content || ''} />
+        <AboutCTA />
+      </div>
+    </section>
   );
 };
 
