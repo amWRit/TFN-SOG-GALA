@@ -1,11 +1,15 @@
 "use client";
 
 import React, { useState } from 'react';
-import GoldSpatter from './GoldSpatter';
+
 import AboutHeader from './AboutHeader';
 import AboutTabs from './AboutTabs';
 import AboutTabContent from './AboutTabContent';
 import AboutCTA from './AboutCTA';
+import HighlightsSection from './HighlightsSection';
+import BackgroundSection from './BackgroundSection';
+import ObjectivesSection from './ObjectivesSection';
+import WhySection from './WhySection';
 import styles from '../../styles/AboutPage.module.css';
 
 const AboutPage: React.FC = () => {
@@ -103,7 +107,13 @@ The evening will conclude with a shared dinner, offering guests the opportunity 
           activeTab={activeTab}
           setActiveTab={setActiveTab}
         />
-        <AboutTabContent content={tabs.find(t => t.id === activeTab)?.content || ''} />
+        {activeTab === 'background' && <BackgroundSection />}
+        {activeTab === 'why' && <WhySection />}
+        {activeTab === 'objectives' && <ObjectivesSection />}
+        {activeTab === 'highlights' && <HighlightsSection />}
+        {!(activeTab === 'background' || activeTab === 'why' || activeTab === 'objectives' || activeTab === 'highlights') && (
+          <AboutTabContent content={tabs.find(t => t.id === activeTab)?.content || ''} />
+        )}
         <AboutCTA />
       </div>
     </section>
