@@ -1,7 +1,7 @@
 import React from 'react';
 
 const GoldSpatter = () => (
-  <div aria-hidden style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none', zIndex: 1 }}>
+  <div aria-hidden className="fadeUp5" style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none', zIndex: 1 }}>
     {[
       { top: '6%',  left: '12%', size: 18, opacity: 0.55 },
       { top: '3%',  left: '28%', size: 10, opacity: 0.4  },

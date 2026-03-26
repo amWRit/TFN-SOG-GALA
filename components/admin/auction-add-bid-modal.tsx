@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
 
@@ -7,6 +7,7 @@ interface AuctionItem {
   id: string;
   title: string;
   currentBid: number;
+  startingBid: number;
 }
 
 interface AuctionAddBidModalProps {
@@ -17,9 +18,18 @@ interface AuctionAddBidModalProps {
   onSubmit: (itemId: string, amount: number, bidder: string) => Promise<void>;
 }
 
+
 export function AuctionAddBidModal({ open, item, isSubmitting, onClose, onSubmit }: AuctionAddBidModalProps) {
-  const [amount, setAmount] = useState("");
+  const minBid = item ? (item.currentBid > 0 ? item.currentBid + 100 : item.startingBid + 100) : 100;
+  const [amount, setAmount] = useState(open && item ? String(minBid) : "");
   const [bidder, setBidder] = useState("");
+
+  // Reset amount to minBid whenever modal opens or item changes
+  React.useEffect(() => {
+    if (open && item) {
+      setAmount(String(item.currentBid > 0 ? item.currentBid + 100 : item.startingBid + 100));
+    }
+  }, [open, item]);
 
   if (!open || !item) return null;
 
@@ -47,8 +57,9 @@ export function AuctionAddBidModal({ open, item, isSubmitting, onClose, onSubmit
               toast.error('Please enter a valid bid amount.');
               return;
             }
-            if (amountNum <= (item.currentBid || 0)) {
-              toast.error(`Bid must be greater than current bid (NPR ${item.currentBid.toLocaleString()})`);
+            const minBid = item.currentBid > 0 ? item.currentBid + 1 : item.startingBid + 1;
+            if (amountNum < minBid) {
+              toast.error(`Bid must be at least NPR ${minBid.toLocaleString()}`);
               return;
             }
             if (!bidderName) bidderName = 'NA';
@@ -59,12 +70,17 @@ export function AuctionAddBidModal({ open, item, isSubmitting, onClose, onSubmit
           className="flex flex-col gap-6"
         >
           <div>
-            <label className="block text-sm font-medium text-[#f5f5f5]/80 mb-1">Bid Amount * <span className="text-xs text-[#D4AF37]">(Current: NPR {item.currentBid.toLocaleString()})</span></label>
+            <label className="block text-sm font-medium text-[#f5f5f5]/80 mb-1">
+              Bid Amount *
+              <span className="text-xs text-[#D4AF37]">
+                (Min: NPR {(item.currentBid > 0 ? item.currentBid + 100 : item.startingBid + 100).toLocaleString()})
+              </span>
+            </label>
             <input
               type="number"
               name="amount"
-              min={((item.currentBid || 0) + 1).toFixed(2)}
-              step="1"
+              min={item.currentBid > 0 ? item.currentBid + 100 : item.startingBid + 100}
+              step="100"
               required
               className="w-full px-3 py-2 rounded bg-[#1a1a1a] border border-[#D4AF37]/30 text-[#f5f5f5] text-2xl"
               value={amount}

@@ -2,6 +2,8 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import styles from '../../styles/admin-dashboard.module.css';
+import { Trash2 } from "lucide-react";
+import { OkModal } from "@/components/admin/ok-modal";
 
 interface Bid {
   id: string;
@@ -19,6 +21,33 @@ interface AuctionBidHistoryModalProps {
 export function AuctionBidHistoryModal({ open, itemId, onClose }: AuctionBidHistoryModalProps) {
   const [bids, setBids] = useState<Bid[]>([]);
   const [loading, setLoading] = useState(false);
+  const [deleteBidId, setDeleteBidId] = useState<string | null>(null);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [clearConfirmOpen, setClearConfirmOpen] = useState(false);
+
+  const handleDelete = async (bidId: string) => {
+    setDeleteBidId(bidId);
+    setConfirmOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteBidId) return;
+    await fetch(`/api/admin/auction/bid/${deleteBidId}`, { method: 'DELETE' });
+    setBids(bids => bids.filter(b => b.id !== deleteBidId));
+    setDeleteBidId(null);
+    setConfirmOpen(false);
+  };
+
+  const handleClearAll = () => {
+    setClearConfirmOpen(true);
+  };
+
+  const confirmClearAll = async () => {
+    if (!itemId) return;
+    await fetch(`/api/admin/auction/bid/clear?itemId=${itemId}`, { method: 'DELETE' });
+    setBids([]);
+    setClearConfirmOpen(false);
+  };
 
   useEffect(() => {
     if (!open || !itemId) return;
@@ -57,6 +86,7 @@ export function AuctionBidHistoryModal({ open, itemId, onClose }: AuctionBidHist
                   <th className={"px-3 py-2 " + styles.tableHeaderCell}>Bidder</th>
                   <th className={"px-3 py-2 " + styles.tableHeaderCell}>Amount</th>
                   <th className={"px-3 py-2 " + styles.tableHeaderCell}>Time</th>
+                  <th className={"px-3 py-2 " + styles.tableHeaderCell}></th>
                 </tr>
               </thead>
               <tbody>
@@ -65,15 +95,39 @@ export function AuctionBidHistoryModal({ open, itemId, onClose }: AuctionBidHist
                     <td className={"px-3 py-2 " + styles.tableCell}>{bid.bidderName}</td>
                     <td className={"px-3 py-2 " + styles.tableCell}>NPR {bid.amount.toLocaleString()}</td>
                     <td className={"px-3 py-2 " + styles.tableCell}>{new Date(bid.createdAt).toLocaleString()}</td>
+                    <td className={"px-3 py-2 text-right " + styles.tableCell}>
+                      <button onClick={() => handleDelete(bid.id)} title="Delete Bid" className="text-red-500 hover:text-white transition">
+                        <Trash2 size={18} />
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
         )}
-        <div className={"flex justify-end mt-4 " + styles.modalActions}>
+        <div className={"flex justify-end mt-4 gap-2 " + styles.modalActions}>
           <Button onClick={onClose} className={styles.adminButtonSmallRed }>Close</Button>
+          <Button onClick={handleClearAll} className={styles.adminButtonSmallRed }>Clear All</Button>
         </div>
+        <OkModal
+          open={confirmOpen}
+          title="Delete Bid?"
+          message="Are you sure you want to delete this bid? This action cannot be undone."
+          onOk={confirmDelete}
+          onCancel={() => setConfirmOpen(false)}
+          okText="Delete"
+          cancelText="Cancel"
+        />
+        <OkModal
+          open={clearConfirmOpen}
+          title="Clear All Bids?"
+          message="Are you sure you want to delete all bids for this item? This action cannot be undone."
+          onOk={confirmClearAll}
+          onCancel={() => setClearConfirmOpen(false)}
+          okText="Clear All"
+          cancelText="Cancel"
+        />
       </div>
     </div>
   );

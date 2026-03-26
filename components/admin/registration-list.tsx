@@ -158,8 +158,8 @@ export function RegistrationList() {
           aria-label="Export CSV"
         >
           {/* Icon only on small/md, icon+text on lg+ */}
-          <span className="inline-block"><ArrowUpFromLine size={18} /></span>
-          <span className="hidden lg:inline-flex items-center gap-2"><ArrowUpFromLine size={18} /> Export CSV</span>
+          <span className="md:hidden"><ArrowUpFromLine size={18} /></span>
+          <span className="hidden md:inline-flex items-center gap-2"><ArrowUpFromLine size={18} /> Export CSV</span>
         </button>
       </div>
       {isLoading && <div>Loading...</div>}
