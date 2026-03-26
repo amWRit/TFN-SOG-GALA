@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import styles from './hero.module.css';
 import GoldSpatter from './GoldSpatter';
 import CountdownTimer from './CountdownTimer';
+import HeroAdminNavbar from './HeroAdminNavbar';
 
 interface HeroTopProps {
   showAdmin: boolean;
@@ -22,6 +23,7 @@ const HeroTop: React.FC<HeroTopProps> = ({ showAdmin, setShowAdmin, logoRef }) =
       }} />
       <GoldSpatter />
       <div style={{ position: 'relative', zIndex: 2, width: '100%' }}>
+        <HeroAdminNavbar showAdmin={showAdmin} />
         <div style={{ marginBottom: '16px' }}>
           <img ref={logoRef} src="/images/logos/tfn_logo_white.png" alt="Teach For Nepal" className={styles.heroLogo} />
         </div>
@@ -39,30 +41,6 @@ const HeroTop: React.FC<HeroTopProps> = ({ showAdmin, setShowAdmin, logoRef }) =
           Because Nepal's public schools are more than institutions of learning. They are spaces where the future of the nation quietly takes shape each day.
         </p>
         <CountdownTimer targetDate={targetDate} />
-        {showAdmin && (
-          <div style={{ marginTop: 24 }}>
-            <a
-              href="/admin/dashboard"
-              style={{
-                background: 'linear-gradient(90deg, #FFD700 0%, #D4AF37 100%)',
-                color: '#23272F',
-                padding: '12px 32px',
-                borderRadius: 999,
-                fontWeight: 700,
-                fontFamily: 'Montserrat, sans-serif',
-                fontSize: '1.1rem',
-                border: '1px solid #D4AF37',
-                boxShadow: '0 4px 24px #FFD70033',
-                textDecoration: 'none',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: 10,
-              }}
-            >
-              Admin Dashboard
-            </a>
-          </div>
-        )}
       </div>
     </div>
   );
