@@ -158,57 +158,102 @@
 }
 
 .heroTabBar {
-  padding-bottom: 0 !important;
-  padding-bottom: 0 !important;
-  margin-bottom: 0 !important;
   width: 100vw;
   left: 0;
   bottom: 0;
   position: fixed;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: stretch;
   gap: 0;
-  min-height: 48px;
+  min-height: 52px;
   background: #084691;
-  box-shadow: 0 -2px 12px 0 rgba(0,0,0,0.08);
+  box-shadow: 0 -2px 16px 0 rgba(0, 0, 0, 0.2);
   z-index: 100;
+  /* iOS home indicator */
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 .tabButton {
   flex: 1;
   text-align: center;
-  padding: 14px 0;
-  color: rgba(255,255,255,0.92);
+  padding: 12px 4px;
+  color: rgba(255, 255, 255, 0.75);
   font-family: 'Montserrat', sans-serif;
   font-weight: 600;
-  font-size: 0.98rem;
-  letter-spacing: 0.04em;
+  font-size: clamp(0.65rem, 1.1vw, 0.82rem);
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   border: none;
-  background: #084691;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  background: transparent;
   outline: none;
   cursor: pointer;
   text-decoration: none;
-  transition: background 0.18s, color 0.18s;
-  border-right: 1px solid rgba(255,255,255,0.08);
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 7px;
+  gap: 6px;
+  transition: background 0.15s, color 0.15s;
+  /* top border accent on active */
+  border-top: 3px solid transparent;
 }
+
+.tabButton:last-child {
+  border-right: none;
+}
+
 .tabButton:hover,
-.tabButton:focus {
-  background: #06376e;
+.tabButton:focus-visible {
+  background: rgba(255, 255, 255, 0.07);
   color: #fff;
+}
+
+.tabButton:active {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* Active page indicator */
+.tabButton.active {
+  color: #fff;
+  border-top-color: #FFD700;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* Book Tickets — primary CTA stands out */
+.tabButtonPrimary {
+  background: #d71a21;
+  color: #fff;
+  border-top-color: transparent;
+}
+
+.tabButtonPrimary:hover,
+.tabButtonPrimary:focus-visible {
+  background: #b81519;
+  color: #fff;
+}
+
+.tabButtonPrimary:active {
+  background: #a01016;
 }
 
 @media (max-width: 600px) {
   .heroTabBar {
-    flex-direction: column !important;
-    position: static !important;
-    width: 100% !important;
+    flex-direction: row !important;
+    left: 0;
+    bottom: 0;
+    width: 100vw !important;
+    position: fixed !important;
     box-sizing: border-box;
+    z-index: 100;
+  }
+
+  .venueBand {
+    left: 0;
+    bottom: 48px;
+    width: 100vw !important;
+    position: fixed !important;
+    box-sizing: border-box;
+    z-index: 101;
   }
 
   .heroTabBar > *:last-child {
