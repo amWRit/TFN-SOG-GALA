@@ -50,14 +50,12 @@ const Hero2 = () => {
 
   return (
     <section className={styles.heroSection}>
-      <div style={{ width: '100%', overflow: 'hidden', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start' }}>
+      <div className={styles.heroTopContainer}>
         <HeroTop showAdmin={showAdmin} setShowAdmin={setShowAdmin} logoRef={logoRef} />
-        <VenueBand />
-        <HeroTabBar onShowVideo={() => setShowVideo(true)} />
       </div>
-      <div style={{ width: '100%' }}>
-        <HeroImageSection onShowVideo={() => setShowVideo(true)} />
-      </div>
+      <HeroImageSection onShowVideo={() => setShowVideo(true)} />
+      <VenueBand />
+      <HeroTabBar onShowVideo={() => setShowVideo(true)} />
       <VideoModal show={showVideo} onClose={() => setShowVideo(false)} />
     </section>
   );

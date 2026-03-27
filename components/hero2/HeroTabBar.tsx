@@ -6,7 +6,7 @@ interface HeroTabBarProps {
 }
 
 const HeroTabBar: React.FC<HeroTabBarProps> = ({ onShowVideo }) => (
-  <div className={`${styles.heroTabBar} ${styles.fadeUp3}`}>
+  <div className={`${styles.heroTabBar} ${styles.slideUp}`}>
     <a
       href="https://docs.google.com/forms/d/e/1FAIpQLScnVe7ycPfu3luLRgyRz2MST5ii69LnWm6LM3MsbyLp-wdKZw/viewform"
       target="_blank"
