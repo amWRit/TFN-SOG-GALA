@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import HeroTop from './hero2/HeroTop';
 import VenueBand from './hero2/VenueBand';
 import HeroImageSection from './hero2/HeroImageSection';
+import HeroTabBar from './hero2/HeroTabBar';
 import VideoModal from './hero2/VideoModal';
 import styles from './hero2/hero.module.css';
 
@@ -49,9 +50,12 @@ const Hero2 = () => {
 
   return (
     <section className={styles.heroSection}>
-      <HeroTop showAdmin={showAdmin} setShowAdmin={setShowAdmin} logoRef={logoRef} />
-      <VenueBand />
+      <div className={styles.heroTopContainer}>
+        <HeroTop showAdmin={showAdmin} setShowAdmin={setShowAdmin} logoRef={logoRef} />
+      </div>
       <HeroImageSection onShowVideo={() => setShowVideo(true)} />
+      <VenueBand />
+      <HeroTabBar onShowVideo={() => setShowVideo(true)} />
       <VideoModal show={showVideo} onClose={() => setShowVideo(false)} />
     </section>
   );
