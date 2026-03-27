@@ -347,6 +347,8 @@ function RegistrationModalActions({ registration, onClose, onUpdated }: { regist
   const { data: seats, mutate: mutateSeats } = useSWR<Seat[]>(showSeatPicker ? "/api/admin/seating" : "/api/admin/seating", fetcher);
   const [selectedTable, setSelectedTable] = useState<number | null>(null);
   const [selectedSeat, setSelectedSeat] = useState<number | null>(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   // Always recalculate assignedSeat on every render
   const assignedSeat = React.useMemo(() => {
@@ -375,6 +377,25 @@ function RegistrationModalActions({ registration, onClose, onUpdated }: { regist
       setError("Network error.");
     }
     setSaving(false);
+  };
+
+  const handleDelete = async () => {
+    setDeleting(true);
+    setError("");
+    try {
+      const res = await fetch(`/api/admin/registration/${registration.id}`, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        onClose(); // Close modal after delete
+      } else {
+        setError("Failed to delete registration.");
+      }
+    } catch {
+      setError("Network error.");
+    }
+    setDeleting(false);
+    setShowDeleteConfirm(false);
   };
 
   // Assign seat (for unassigned)
@@ -669,12 +690,33 @@ function RegistrationModalActions({ registration, onClose, onUpdated }: { regist
           </>
         ) : (
           <>
-            <button className={styles.adminButtonRed + " flex-1"} onClick={onClose}>
-              Close
-            </button>
-            <button className={styles.adminButton + " flex-1"} onClick={() => setEdit(true)}>
-              Edit
-            </button>
+            <div className="flex gap-2">
+              <button className={styles.adminButtonRed + " flex-1"} onClick={onClose}>
+                Close
+              </button>
+              <button className={styles.adminButton + " flex-1"} onClick={() => setEdit(true)}>
+                Edit
+              </button>
+              <button className={styles.adminButtonSmallRed + " flex-1"} onClick={() => setShowDeleteConfirm(true)}>
+                Delete
+              </button>
+            </div>
+            {showDeleteConfirm && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+                <div className="bg-gray-900 rounded-xl shadow-lg p-8 max-w-sm w-full relative animate-fade-in text-white">
+                  <h2 className="text-xl font-bold mb-4 text-center">Confirm Delete</h2>
+                  <p className="mb-6 text-center">Are you sure you want to delete this registration? This action cannot be undone.</p>
+                  <div className="flex gap-4 justify-center">
+                    <button className={styles.adminButtonSmallRed} onClick={handleDelete} disabled={deleting}>
+                      {deleting ? "Deleting..." : "Delete"}
+                    </button>
+                    <button className={styles.adminButtonSmall} onClick={() => setShowDeleteConfirm(false)} disabled={deleting}>
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
           </>
         )}
       </div>
