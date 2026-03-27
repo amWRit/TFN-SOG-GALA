@@ -5,39 +5,50 @@ interface HeroImageSectionProps {
   onShowVideo: () => void;
 }
 
-const HeroImageSection: React.FC<HeroImageSectionProps> = ({ onShowVideo }) => (
-    <div className={styles.heroImageSection}>
-        <div className={`${styles.heroTabBar} ${styles.fadeUp3}`}>
-        <a href="https://docs.google.com/forms/d/e/1FAIpQLScnVe7ycPfu3luLRgyRz2MST5ii69LnWm6LM3MsbyLp-wdKZw/viewform" target="_blank" rel="noopener noreferrer"
-            style={{ flex: 1, textAlign: 'center', padding: '14px 0', color: 'rgba(255,255,255,0.92)', fontFamily: 'Montserrat, sans-serif', fontWeight: 600, fontSize: '0.98rem', letterSpacing: '0.04em', textTransform: 'uppercase', border: 'none', background: '#084691', outline: 'none', cursor: 'pointer', textDecoration: 'none', transition: 'background 0.18s, color 0.18s', borderRight: '1px solid rgba(255,255,255,0.08)' }}
-            onMouseOver={e => (e.currentTarget.style.background = '#06376e')}
-            onMouseOut={e => (e.currentTarget.style.background = '#084691')}
-        >Book Tickets</a>
-        <a href="/about"
-            style={{ flex: 1, textAlign: 'center', padding: '14px 0', color: 'rgba(255,255,255,0.92)', fontFamily: 'Montserrat, sans-serif', fontWeight: 600, fontSize: '0.98rem', letterSpacing: '0.04em', textTransform: 'uppercase', border: 'none', background: '#084691', outline: 'none', cursor: 'pointer', textDecoration: 'none', transition: 'background 0.18s, color 0.18s', borderRight: '1px solid rgba(255,255,255,0.08)' }}
-            onMouseOver={e => (e.currentTarget.style.background = '#06376e')}
-            onMouseOut={e => (e.currentTarget.style.background = '#084691')}
-        >About the Gala</a>
-        <a href="/program"
-            style={{ flex: 1, textAlign: 'center', padding: '14px 0', color: 'rgba(255,255,255,0.92)', fontFamily: 'Montserrat, sans-serif', fontWeight: 600, fontSize: '0.98rem', letterSpacing: '0.04em', textTransform: 'uppercase', border: 'none', background: '#084691', outline: 'none', cursor: 'pointer', textDecoration: 'none', transition: 'background 0.18s, color 0.18s', borderRight: '1px solid rgba(255,255,255,0.08)' }}
-            onMouseOver={e => (e.currentTarget.style.background = '#06376e')}
-            onMouseOut={e => (e.currentTarget.style.background = '#084691')}
-        >Program Details</a>
-        <button onClick={onShowVideo}
-            style={{ flex: 1, textAlign: 'center', padding: '14px 0', color: 'rgba(255,255,255,0.92)', fontFamily: 'Montserrat, sans-serif', fontWeight: 600, fontSize: '0.98rem', letterSpacing: '0.04em', textTransform: 'uppercase', border: 'none', background: '#084691', outline: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '7px', transition: 'background 0.18s, color 0.18s' }}
-            onMouseOver={e => (e.currentTarget.style.background = '#06376e')}
-            onMouseOut={e => (e.currentTarget.style.background = '#084691')}
-        >Watch 2025 Highlights</button>
-        </div>
-        <img
+
+import { useEffect, useRef, useState } from 'react';
+
+const HeroImageSection: React.FC<HeroImageSectionProps> = ({ onShowVideo }) => {
+  const [showText, setShowText] = useState(false);
+  const sectionRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!sectionRef.current) return;
+      const rect = sectionRef.current.getBoundingClientRect();
+      if (rect.top < window.innerHeight * 0.7) {
+        setShowText(true);
+      } else {
+        setShowText(false);
+      }
+    };
+    window.addEventListener('scroll', handleScroll);
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  return (
+    <div className={styles.heroImageSection} ref={sectionRef}>
+      <img
         src="/images/home_bottom_image_short.png"
         alt="Children studying at school in Nepal"
         className={`${styles.bottomImage} ${styles.fadeUp3}`}
-        />
-
-        {/* Overlay — pointer-events: none so it never blocks tab bar clicks */}
-        <div className={styles.imageOverlay} aria-hidden />
+      />
+      <div
+        className={styles.imageOverlay}
+        aria-hidden
+      />
+      <div
+        className={styles.heroImageText}
+        style={{
+          opacity: showText ? 1 : 0,
+          transition: 'opacity 1.2s cubic-bezier(.4,0,.2,1) 0.7s',
+        }}
+      >
+        A New Year. A Moment of Truth. A Reason for Hope.
+      </div>
     </div>
-);
+  );
+};
 
 export default HeroImageSection;

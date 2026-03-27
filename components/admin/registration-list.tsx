@@ -388,6 +388,7 @@ function RegistrationModalActions({ registration, onClose, onUpdated }: { regist
       });
       if (res.ok) {
         onClose(); // Close modal after delete
+        window.location.reload(); // Refresh page after successful delete
       } else {
         setError("Failed to delete registration.");
       }
@@ -697,7 +698,7 @@ function RegistrationModalActions({ registration, onClose, onUpdated }: { regist
               <button className={styles.adminButton + " flex-1"} onClick={() => setEdit(true)}>
                 Edit
               </button>
-              <button className={styles.adminButtonSmallRed + " flex-1"} onClick={() => setShowDeleteConfirm(true)}>
+              <button className={styles.adminButtonRed + " flex-1"} onClick={() => setShowDeleteConfirm(true)}>
                 Delete
               </button>
             </div>
