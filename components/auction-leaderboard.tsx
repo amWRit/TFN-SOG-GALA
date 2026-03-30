@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Trophy, Medal, Award, Flame } from "lucide-react";
+import { Trophy, Medal, Award, Flame, Star} from "lucide-react";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
 
@@ -28,7 +28,7 @@ const PODIUM_CONFIG = [
     rankText: "#000",
   },
   {
-    icon: Medal,
+    icon: Star,
     color: "#8e8e8e",
     borderColor: "#C0C0C0",
     bg: "#f5f5f5",
@@ -40,7 +40,7 @@ const PODIUM_CONFIG = [
     rankText: "#000",
   },
   {
-    icon: Award,
+    icon: Star,
     color: "#CD7F32",
     borderColor: "#CD7F32",
     bg: "#fff5ee",
