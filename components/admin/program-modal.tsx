@@ -71,6 +71,28 @@ export const ProgramModal: React.FC<ProgramModalProps> = ({ open, mode, item, on
     setForm({ ...form, [e.target.name]: e.target.value });
   }
 
+  // Helper to get image URL based on type/title
+  const getProgramImage = (item: any) => {
+    const type = (item.type || '').toLowerCase();
+    const title = (item.title || '').toLowerCase();
+    if (["speech", "welcome", "keynote", "opening remarks"].some(t => type.includes(t) || title.includes(t))) {
+      return "https://images.unsplash.com/photo-1550305080-4e029753abcf?w=600&h=800&fit=crop";
+    }
+    if (["networking"].some(t => type.includes(t) || title.includes(t))) {
+      return "https://images.unsplash.com/photo-1672826980330-93ae1ac07b41?w=600&h=800&fit=crop";
+    }
+    if (["performance", "entertainment"].some(t => type.includes(t) || title.includes(t))) {
+      return "https://images.unsplash.com/photo-1505236858219-8359eb29e329?w=600&h=800&fit=crop";
+    }
+    if (["dinner", "refreshments"].some(t => type.includes(t) || title.includes(t))) {
+      return "https://images.unsplash.com/photo-1527529482837-4698179dc6ce?w=600&h=400&fit=crop";
+    }
+    if (["auction"].some(t => type.includes(t) || title.includes(t))) {
+      return "https://images.unsplash.com/photo-1649598551790-18fd6c02f2f6?w=600&h=600&fit=crop";
+    }
+    return "https://images.unsplash.com/photo-1484156818044-c040038b0719?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
+  };
+
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     // Convert Google Drive share link to direct image link if needed for speakerImgUrl
@@ -82,7 +104,12 @@ export const ProgramModal: React.FC<ProgramModalProps> = ({ open, mode, item, on
       const fileId = driveMatch[1];
       speakerImgUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;
     }
-    onSave({ ...form, speakerImgUrl });
+    // Convert empty string dates to null
+    const startTime = form.startTime ? form.startTime : null;
+    const endTime = form.endTime ? form.endTime : null;
+    // Set imageUrl using helper
+    const imageUrl = getProgramImage({ ...form, speakerImgUrl, startTime, endTime });
+    onSave({ ...form, speakerImgUrl, startTime, endTime, imageUrl });
   }
 
   if (!open) return null;
@@ -223,7 +250,6 @@ export const ProgramModal: React.FC<ProgramModalProps> = ({ open, mode, item, on
                   name="startTime"
                   value={form.startTime ? form.startTime.slice(0, 16) : ""}
                   onChange={handleChange}
-                  required
                 />
               )}
             </div>
@@ -240,7 +266,6 @@ export const ProgramModal: React.FC<ProgramModalProps> = ({ open, mode, item, on
                   name="endTime"
                   value={form.endTime ? form.endTime.slice(0, 16) : ""}
                   onChange={handleChange}
-                  required
                 />
               )}
             </div>

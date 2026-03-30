@@ -93,8 +93,8 @@ model Program {
   id            Int       @id @default(autoincrement())
   title         String
   description   String?
-  startTime     DateTime
-  endTime       DateTime
+  startTime     DateTime?
+  endTime       DateTime?
   location      String?
   sequence      Int?
   speaker       String?
