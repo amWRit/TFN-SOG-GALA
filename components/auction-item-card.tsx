@@ -144,7 +144,7 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
       {/* Image — always shown, fallback if no imageUrl */}
       <div className="relative w-full h-48 overflow-hidden">
         <Image
-          src={item.imageUrl ?? "/images/auctionitemplateholder.jpg"}
+          src={item.imageUrl && item.imageUrl.trim() !== "" ? item.imageUrl : "/images/auctionitemplateholder.jpg"}
           alt={item.title}
           fill
           className="object-cover group-hover:scale-105 transition-transform duration-500"
