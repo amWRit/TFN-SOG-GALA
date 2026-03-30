@@ -21,7 +21,7 @@ html {
 
 /* Ensures HeroTop bottom aligns with VenueBand top on first load */
 .heroTopContainer {
-  min-height: calc(100vh - 44px - 48px + 1px); /* VenueBand: 44px, TabBar: 48px, +1px for rounding */
+  min-height: calc(100vh - var(--tab-bar-height) - 44px + 1px); /* VenueBand: 44px, TabBar: CSS var, +1px for rounding */
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -153,7 +153,6 @@ html {
 .heroImageSection {
   position: relative;
   width: 100%;
-  min-height: 300px;
   max-height: 420px;
   overflow: hidden;
 }
