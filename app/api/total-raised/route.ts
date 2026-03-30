@@ -7,15 +7,30 @@ export async function GET() {
     _sum: { payment: true },
     where: { paymentStatus: true },
   });
-  // Sum of currentBid from auction items that are completed (isActive: false)
-  const auctionSum = await prisma.auctionItem.aggregate({
-    _sum: { currentBid: true },
+
+  // Get all completed auction items
+  const completedItems = await prisma.auctionItem.findMany({
     where: { isActive: false },
+    select: { id: true },
   });
-  const total = (registrationSum._sum.payment || 0) + (auctionSum._sum.currentBid || 0);
+
+  // For each completed item, get the highest bid (if any)
+  let auctionTotal = 0;
+  for (const item of completedItems) {
+    const highestBid = await prisma.bid.findFirst({
+      where: { auctionItemId: item.id },
+      orderBy: { amount: "desc" },
+      select: { amount: true },
+    });
+    if (highestBid) {
+      auctionTotal += highestBid.amount;
+    }
+  }
+
+  const total = (registrationSum._sum.payment || 0) + auctionTotal;
   return NextResponse.json({
     registration: registrationSum._sum.payment || 0,
-    auction: auctionSum._sum.currentBid || 0,
+    auction: auctionTotal,
     total,
   });
 }
