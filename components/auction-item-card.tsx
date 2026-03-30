@@ -9,6 +9,7 @@ import Image from "next/image";
 import { Clock, Gavel } from "lucide-react";
 import { BidModal } from "@/components/auction-bid-modal";
 import { AuctionDescModal } from "@/components/auction-desc-modal";
+import { ContactModal } from "@/components/ContactModal";
 
 interface AuctionItem {
   id: string;
@@ -71,6 +72,7 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
   const [timeRemaining, setTimeRemaining] = useState(formatTimeRemaining(item.endTime));
   const [showBidModal, setShowBidModal] = useState(false);
   const [showDescModal, setShowDescModal] = useState(false);
+  const [showContactModal, setShowContactModal] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [checkingAdmin, setCheckingAdmin] = useState(true);
   const router = useRouter();
@@ -118,6 +120,8 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
           onClose={() => setShowDescModal(false)}
         />
       )}
+      {/* Contact Modal for non-admin users */}
+      <ContactModal open={showContactModal} onClose={() => setShowContactModal(false)} />
       <Card
         className={`group relative border overflow-hidden transition-all duration-300 rounded-2xl ${
           isClosed
@@ -128,10 +132,10 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
         onClick={() => {
           if (isAdmin) {
             window.open(`/auction/${item.id}`, '_blank');
-          } else if (!isClosed && !showDescModal && !showBidModal) {
-            // setShowBidModal(true);
+          } else if (!isClosed && !showDescModal && !showBidModal && !showContactModal) {
+            // setShowBidModal(true); // Bid modal is now disabled for normal users
+            setShowContactModal(true);
           }
-          // Bid modal is now disabled for normal users
         }}
         tabIndex={isClosed ? -1 : 0}
         role="button"
@@ -140,7 +144,7 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
       {/* Image — always shown, fallback if no imageUrl */}
       <div className="relative w-full h-48 overflow-hidden">
         <Image
-          src={item.imageUrl ?? "/images/auctionitemplaceholder.png"}
+          src={item.imageUrl ?? "/images/auctionitemplateholder.jpg"}
           alt={item.title}
           fill
           className="object-cover group-hover:scale-105 transition-transform duration-500"
@@ -221,12 +225,12 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
               <Eye size={14} /> Click to view details
             </div>
           ) : (
-            // !isClosed && (
-            //   <div className="w-full py-2.5 rounded-xl bg-[#d71a21] text-white font-bold flex items-center gap-2 justify-center text-sm shadow-lg">
-            //     <Gavel size={15} /> Place a Bid
-            //   </div>
-            // )
-            null
+            !isClosed && (
+              <div className="w-full py-2.5 rounded-xl bg-[#d71a21] text-white font-bold flex items-center gap-2 justify-center text-sm shadow-lg">
+                <Gavel size={15} /> Place a Bid
+              </div>
+            )
+            // null
           )}
         </div>
 

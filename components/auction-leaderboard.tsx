@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Trophy, Medal, Award, Flame } from "lucide-react";
+import { useEffect, useState } from "react";
 import useSWR from "swr";
 
 interface LeaderboardEntry {
@@ -52,8 +53,9 @@ const PODIUM_CONFIG = [
   },
 ];
 
-// Visual order: 2nd (left), 1st (center), 3rd (right)
-const PODIUM_ORDER = [1, 0, 2];
+// Visual order: 2nd (left), 1st (center), 3rd (right) for sm+, 1st, 2nd, 3rd for mobile
+const PODIUM_ORDER_SM = [1, 0, 2];
+const PODIUM_ORDER_MOBILE = [0, 1, 2];
 
 export function AuctionLeaderboard() {
   const { data: leaderboard, error } = useSWR<LeaderboardEntry[]>(
@@ -62,9 +64,29 @@ export function AuctionLeaderboard() {
     { refreshInterval: 5000 }
   );
 
-  if (error || !leaderboard || leaderboard.length === 0) return null;
+  // ── All hooks must be called unconditionally before any early returns ──
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 640);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
-  const topThree = leaderboard.slice(0, 3);
+  // Derived values — safe to compute before the early return since they
+  // don't call any hooks themselves
+  const topThree = leaderboard?.slice(0, 3) ?? [];
+  const podiumOrder = isMobile ? PODIUM_ORDER_MOBILE : PODIUM_ORDER_SM;
+
+  if (error || !leaderboard || leaderboard.length === 0) {
+    return (
+      <div className="w-full flex items-center justify-center py-2">
+        <span className="text-gray-500 text-base font-semibold text-center">
+          Leaderboard not available yet
+        </span>
+      </div>
+    );
+  }
 
   return (
     <motion.div
@@ -86,8 +108,8 @@ export function AuctionLeaderboard() {
       </div>
 
       {/* Podium */}
-      <div className="flex flex-col sm:flex-row items-end justify-center gap-4 sm:gap-6 md:gap-8 w-full">
-        {PODIUM_ORDER.map((rankIdx) => {
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 md:gap-8 w-full pb-4">
+        {podiumOrder.map((rankIdx, i) => {
           const entry = topThree[rankIdx];
           if (!entry) return null;
           const cfg = PODIUM_CONFIG[rankIdx];
@@ -98,12 +120,12 @@ export function AuctionLeaderboard() {
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: rankIdx * 0.1, duration: 0.4 }}
-              className={`flex flex-col items-center w-full sm:w-44 md:w-64 ${cfg.scale}`}
+              transition={{ delay: i * 0.1, duration: 0.4 }}
+              className={`flex flex-col items-center w-56 md:w-64 ${cfg.scale}`}
             >
               {/* Card */}
               <div
-                className="rounded-2xl text-center w-full sm:w-44 md:w-64 shadow-2xl relative overflow-hidden"
+                className="rounded-2xl text-center w-56 md:w-64 shadow-2xl relative overflow-hidden"
                 style={{
                   background: cfg.bg,
                   border: `2px solid ${cfg.borderColor}`,
@@ -136,7 +158,6 @@ export function AuctionLeaderboard() {
                   </div>
                 </div>
               </div>
-
             </motion.div>
           );
         })}

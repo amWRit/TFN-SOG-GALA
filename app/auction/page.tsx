@@ -1,5 +1,22 @@
 "use client";
-import { Home, Gavel, TrendingUp } from "lucide-react";
+import { Home, List, Gavel, TrendingUp } from "lucide-react";
+import auctionStyles from '../../styles/auction.module.css';
+// Helper to get pathname safely
+function getInitialPathname() {
+  if (typeof window !== 'undefined') {
+    return window.location.pathname;
+  }
+  return '/';
+}
+
+// Helper hook to detect client mount
+function useHasMounted() {
+  const [hasMounted, setHasMounted] = useState(false);
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
+  return hasMounted;
+}
 import { AuctionGrid } from "@/components/auction-grid";
 import { AuctionLeaderboard } from "@/components/auction-leaderboard";
 import { motion } from "framer-motion";
@@ -7,6 +24,9 @@ import { useEffect, useState } from "react";
 
 export default function AuctionPage() {
   const [total, setTotal] = useState<number | null>(null);
+  const [pathname, setPathname] = useState(getInitialPathname());
+  const hasMounted = useHasMounted();
+
   useEffect(() => {
     async function fetchTotal() {
       try {
@@ -24,15 +44,42 @@ export default function AuctionPage() {
 
   return (
     <div className="min-h-screen bg-[#f0f4fa]">
-      {/* Home Button */}
-      <div style={{ position: "fixed", top: 24, left: '50%', transform: 'translateX(-50%)', zIndex: 50 }}>
-        <a href="/" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '0.5rem 1.25rem', background: '#fff', color: '#084691', borderRadius: 9999, fontWeight: 600, boxShadow: '0 2px 12px #08469130', border: 'none', textDecoration: 'none', fontSize: 18 }}>
-          <Home size={20} /> Home
+      {/* Navigation Bar */}
+      <div className={auctionStyles.auctionNavBar}>
+        <a
+          href="/"
+          className={
+            hasMounted && pathname === '/'
+              ? `${auctionStyles.auctionNavLink} ${auctionStyles.auctionNavLinkActive}`
+              : auctionStyles.auctionNavLink
+          }
+        >
+          <Home size={18} style={{marginRight: 6, marginBottom: -2}} /> Home
+        </a>
+        <a
+          href="/program"
+          className={
+            hasMounted && pathname.startsWith('/program')
+              ? `${auctionStyles.auctionNavLink} ${auctionStyles.auctionNavLinkActive}`
+              : auctionStyles.auctionNavLink
+          }
+        >
+          <List size={18} style={{marginRight: 6, marginBottom: -2}} /> Program
+        </a>
+        <a
+          href="/auction"
+          className={
+            hasMounted && pathname.startsWith('/auction')
+              ? `${auctionStyles.auctionNavLink} ${auctionStyles.auctionNavLinkActive}`
+              : auctionStyles.auctionNavLink
+          }
+        >
+          <Gavel size={18} style={{marginRight: 6, marginBottom: -2}} /> Auction
         </a>
       </div>
 
       {/* ── Hero with background image ── */}
-      <div className="relative w-full overflow-hidden flex items-center justify-center min-h-[420px] md:min-h-[500px]">
+      <div className="relative w-full overflow-hidden flex items-center justify-center min-h-[420px] md:min-h-[500px] pt-4 md:pt-24">
         {/* Background image */}
         <div className="absolute inset-0 bg-gray-900">
           <img
@@ -48,7 +95,7 @@ export default function AuctionPage() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="relative z-10 text-center px-4 py-28 w-full max-w-4xl mx-auto"
+          className="relative z-10 text-center px-4 py-4 md:py-8 w-full max-w-4xl mx-auto"
         >
           {/* Icon badge */}
           <div className="flex justify-center mb-5">
@@ -83,7 +130,7 @@ export default function AuctionPage() {
       </div>
 
       {/* ── Content below hero ── */}
-      <div className="pb-24 px-4 w-full pt-10 pb-0">
+      <div className="px-4 w-full pt-4 pb-4">
         <div className="max-w-7xl mx-auto">
 
           {/* ── Leaderboard ── */}

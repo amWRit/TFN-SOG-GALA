@@ -170,7 +170,7 @@ export default function AuctionItemPage() {
             style={{ height: "380px" }}
           >
             <Image
-              src={item.imageUrl ?? "/images/auctionitemplaceholder.png"}
+              src={item.imageUrl ?? "/images/auctionitemplateholder.jpg"}
               alt={item.title}
               fill
               className="object-cover"
