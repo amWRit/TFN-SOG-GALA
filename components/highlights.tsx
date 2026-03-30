@@ -13,7 +13,7 @@ const EventHighlights = () => {
   ];
 
   return (
-    <section id="highlights" className="py-24 w-full bg-white">
+    <section id="highlights" className="py-16 w-full bg-white">
       <div className="w-full">
         <div className="text-center mb-16">
           <h2 className="text-5xl font-bold text-[#084691] mb-4">Event Highlights</h2>

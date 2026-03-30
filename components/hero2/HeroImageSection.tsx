@@ -42,7 +42,7 @@ const HeroImageSection: React.FC<HeroImageSectionProps> = ({ onShowVideo }) => {
         className={styles.heroImageText}
         style={{
           opacity: showText ? 1 : 0,
-          transition: 'opacity 1.2s cubic-bezier(.4,0,.2,1) 0.7s',
+          transition: 'opacity 1.2s cubic-bezier(.4,0,.2,1) 0.5s',
         }}
       >
         A New Year. A Moment of Truth. A Reason for Hope.
