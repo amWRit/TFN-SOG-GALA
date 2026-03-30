@@ -31,6 +31,11 @@
   transition: all 0.18s;
 }
 
+.programNavLink:hover {
+  background: rgba(219, 33, 40, 0.1);
+}
+
+
 .programNavLinkActive {
   background: #d71a21 !important;
   color: #fff !important;
