@@ -3,8 +3,9 @@ import React, { useState, useEffect } from "react";
 import ProgramCard from "../../components/program-card";
 import ProgramModal from "../../components/program-modal";
 import ProgramSkeleton from "../../components/program-skeleton";
-import { Home } from "lucide-react";
 import styles from '../../styles/homepage.module.css';
+import programStyles from '../../styles/program.module.css';
+import { Home, List, Gavel } from "lucide-react";
 
 const truncate = (str: string, n: number) =>
   str && str.length > n ? str.slice(0, n) + "..." : str;
@@ -15,12 +16,31 @@ async function fetchProgram() {
   return res.json();
 }
 
+// Helper to get pathname safely
+function getInitialPathname() {
+  if (typeof window !== 'undefined') {
+    return window.location.pathname;
+  }
+  return '/';
+}
+
+// Helper hook to detect client mount
+function useHasMounted() {
+  const [hasMounted, setHasMounted] = useState(false);
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
+  return hasMounted;
+}
+
 export default function ProgramPage() {
   const [program, setProgram] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<any | null>(null);
   const [showHint, setShowHint] = useState(true);
   const [filter, setFilter] = useState('All');
+  const [pathname, setPathname] = useState<string>(getInitialPathname());
+  const hasMounted = useHasMounted();
 
   // Filtering logic for program items
   const filteredProgram = program.filter((item: any) => {
@@ -37,19 +57,51 @@ export default function ProgramPage() {
       .then(data => { setProgram(data); setLoading(false); })
       .catch(() => { setProgram([]); setLoading(false); });
     const timer = setTimeout(() => setShowHint(false), 4000);
+    // Set pathname on client
+    if (typeof window !== 'undefined') {
+      setPathname(window.location.pathname);
+    }
     return () => clearTimeout(timer);
   }, []);
 
   return (
     <div style={{ minHeight: "100vh", padding: 0, paddingBottom: '3rem', background: '#f0f4fa' }}>
-      {/* Home Button */}
-      <div style={{ position: "fixed", top: 24, left: '50%', transform: 'translateX(-50%)', zIndex: 50 }}>
-        <a href="/" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '0.5rem 1.25rem', background: '#fff', color: '#084691', borderRadius: 9999, fontWeight: 600, boxShadow: '0 2px 12px #08469130', border: 'none', textDecoration: 'none', fontSize: 18 }}>
-          <Home size={20} /> Home
+      {/* Navigation Bar */}
+      <div className={programStyles.programNavBar}>
+        <a
+          href="/"
+          className={
+            hasMounted && pathname === '/'
+              ? `${programStyles.programNavLink} ${programStyles.programNavLinkActive}`
+              : programStyles.programNavLink
+          }
+        >
+          <Home size={18} style={{marginRight: 6, marginBottom: -2}} /> Home
+        </a>
+        <a
+          href="/program"
+          className={
+            hasMounted && pathname.startsWith('/program')
+              ? `${programStyles.programNavLink} ${programStyles.programNavLinkActive}`
+              : programStyles.programNavLink
+          }
+        >
+          <List size={18} style={{marginRight: 6, marginBottom: -2}} /> Program
+        </a>
+        <a
+          href="/auction"
+          className={
+            hasMounted && pathname.startsWith('/auction')
+              ? `${programStyles.programNavLink} ${programStyles.programNavLinkActive}`
+              : programStyles.programNavLink
+          }
+        >
+          <Gavel size={18} style={{marginRight: 6, marginBottom: -2}} /> Auction
         </a>
       </div>
+      {/* styles moved to CSS module */}
       {/* Hero section with image and blue gradient */}
-      <div className="relative w-full overflow-hidden flex items-center justify-center min-h-[180px] md:min-h-[220px] mb-0 pt-24 pb-4" style={{ borderRadius: 0 }}>
+      <div className="relative w-full overflow-hidden flex items-center justify-center min-h-[180px] md:min-h-[220px] mb-0 pt-4 md:pt-24 pb-4" style={{ borderRadius: 0 }}>
         {/* Background image */}
         <div className="absolute inset-0 bg-gray-900">
           <img
@@ -70,53 +122,22 @@ export default function ProgramPage() {
         </div>
       </div>
       {/* Pill Filter - now outside hero section */}
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          flexWrap: 'wrap',
-          gap: 12,
-          marginTop: 0,
-          padding: 12,
-          width: '100%',
-          boxSizing: 'border-box',
-        }}
-        className="pill-filter-bar"
-      >
+      <div className={programStyles.pillFilterBar}>
         {['All', 'Speakers', 'Performances'].map((label) => (
           <button
             key={label}
             onClick={() => setFilter(label)}
-            style={{
-              padding: '0.4rem 1.2rem',
-              borderRadius: 9999,
-              border: 'none',
-              fontWeight: 600,
-              fontSize: 16,
-              background: filter === label ? '#d71a21' : '#fff',
-              color: filter === label ? '#fff' : '#084691',
-              boxShadow: filter === label ? '0 2px 8px #d71a2130' : '0 2px 8px #08469120',
-              cursor: 'pointer',
-              transition: 'all 0.2s',
-              minWidth: 90,
-              flex: '0 0 auto',
-            }}
+            className={
+              filter === label
+                ? `${programStyles.pillButton} ${programStyles.pillButtonActive}`
+                : programStyles.pillButton
+            }
           >
             {label}
           </button>
         ))}
       </div>
-      <style>{`
-        @media (max-width: 600px) {
-          .pill-filter-bar {
-            gap: 8px !important;
-            padding-left: 16px !important;
-            padding-right: 16px !important;
-            width: 100% !important;
-            justify-content: flex-start !important;
-          }
-        }
-      `}</style>
+      {/* styles moved to CSS module */}
       {/* Program cards grid with hero bg */}
       <div className="relative w-full overflow-hidden mb-12">
         {/* Background image */}
