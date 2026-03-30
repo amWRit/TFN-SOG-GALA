@@ -50,7 +50,19 @@ const ProgramListCard: React.FC<ProgramListCardProps> = ({ item, onView, dragHan
         <div className="flex-1 min-w-0 flex items-center gap-1 overflow-hidden">
           <span className="font-semibold text-lg text-white truncate block mr-4" title={item.title} style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', width: 320, maxWidth: 320, minWidth: 220, display: 'inline-block' }}>{item.title}</span>
           <span className="hidden md:inline text-sm text-gray-400 font-normal whitespace-nowrap mr-1" style={{ width: 140, maxWidth: 140, minWidth: 140, display: 'inline-block' }}>
-            {new Date(item.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })} - {new Date(item.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}
+            {(() => {
+              const formatTime = (t: any) => {
+                if (!t) return null;
+                const d = new Date(t);
+                return isNaN(d.getTime()) ? null : d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+              };
+              const start = formatTime(item.startTime);
+              const end = formatTime(item.endTime);
+              if (start && end) return `${start} - ${end}`;
+              if (start) return `${start} - —`;
+              if (end) return `— - ${end}`;
+              return '—';
+            })()}
           </span>
             {item.type && (
               <span className="hidden md:inline px-2 py-0.5 ml-2 rounded-full bg-[#D4AF37]/20 text-[#D4AF37] text-xs font-semibold whitespace-nowrap" style={{ display: 'inline-block' }}>
