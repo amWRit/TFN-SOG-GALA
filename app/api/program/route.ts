@@ -6,11 +6,9 @@ const prisma = new PrismaClient();
 export async function POST(req: Request) {
   try {
     const data = await req.json();
-    // Debug: log incoming data
-    console.log('POST /api/program payload:', data);
-    // Validation for required fields
-    if (!data.title || !data.startTime || !data.endTime) {
-      return NextResponse.json({ error: 'Missing required fields: title, startTime, endTime' }, { status: 400 });
+    // Validation for required fields (only title is required now)
+    if (!data.title) {
+      return NextResponse.json({ error: 'Missing required field: title' }, { status: 400 });
     } else {
       // Remove id if present, let Prisma auto-generate
       if (data.id) delete data.id;
@@ -19,9 +17,11 @@ export async function POST(req: Request) {
         const max = await prisma.program.aggregate({ _max: { sequence: true } });
         data.sequence = (max._max.sequence || 0) + 1;
       }
-      // Convert startTime/endTime to Date if they are strings
-      if (typeof data.startTime === 'string') data.startTime = new Date(data.startTime);
-      if (typeof data.endTime === 'string') data.endTime = new Date(data.endTime);
+      // Convert startTime/endTime to Date if they are strings and not null/empty
+      if (typeof data.startTime === 'string' && data.startTime) data.startTime = new Date(data.startTime);
+      if (typeof data.endTime === 'string' && data.endTime) data.endTime = new Date(data.endTime);
+      if (data.startTime === '') data.startTime = null;
+      if (data.endTime === '') data.endTime = null;
       const created = await prisma.program.create({ data });
       return NextResponse.json(created);
     }

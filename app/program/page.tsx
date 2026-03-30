@@ -20,6 +20,16 @@ export default function ProgramPage() {
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<any | null>(null);
   const [showHint, setShowHint] = useState(true);
+  const [filter, setFilter] = useState('All');
+
+  // Filtering logic for program items
+  const filteredProgram = program.filter((item: any) => {
+    if (filter === 'All') return true;
+    if (filter === 'Speakers') return (item.type?.toLowerCase() === 'speech');
+    if (filter === 'Performances') return (item.type?.toLowerCase() === 'performance');
+    if (filter === 'Others') return !['speech', 'performance'].includes((item.type || '').toLowerCase());
+    return true;
+  });
 
   useEffect(() => {
     setLoading(true);
@@ -39,7 +49,7 @@ export default function ProgramPage() {
         </a>
       </div>
       {/* Hero section with image and blue gradient */}
-      <div className="relative w-full overflow-hidden flex items-center justify-center min-h-[180px] md:min-h-[220px] mb-12 pt-24 pb-4" style={{ borderRadius: 0 }}>
+      <div className="relative w-full overflow-hidden flex items-center justify-center min-h-[180px] md:min-h-[220px] mb-0 pt-24 pb-4" style={{ borderRadius: 0 }}>
         {/* Background image */}
         <div className="absolute inset-0 bg-gray-900">
           <img
@@ -59,6 +69,54 @@ export default function ProgramPage() {
           </p>
         </div>
       </div>
+      {/* Pill Filter - now outside hero section */}
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          flexWrap: 'wrap',
+          gap: 12,
+          marginTop: 0,
+          padding: 12,
+          width: '100%',
+          boxSizing: 'border-box',
+        }}
+        className="pill-filter-bar"
+      >
+        {['All', 'Speakers', 'Performances'].map((label) => (
+          <button
+            key={label}
+            onClick={() => setFilter(label)}
+            style={{
+              padding: '0.4rem 1.2rem',
+              borderRadius: 9999,
+              border: 'none',
+              fontWeight: 600,
+              fontSize: 16,
+              background: filter === label ? '#d71a21' : '#fff',
+              color: filter === label ? '#fff' : '#084691',
+              boxShadow: filter === label ? '0 2px 8px #d71a2130' : '0 2px 8px #08469120',
+              cursor: 'pointer',
+              transition: 'all 0.2s',
+              minWidth: 90,
+              flex: '0 0 auto',
+            }}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+      <style>{`
+        @media (max-width: 600px) {
+          .pill-filter-bar {
+            gap: 8px !important;
+            padding-left: 16px !important;
+            padding-right: 16px !important;
+            width: 100% !important;
+            justify-content: flex-start !important;
+          }
+        }
+      `}</style>
       {/* Program cards grid with hero bg */}
       <div className="relative w-full overflow-hidden mb-12">
         {/* Background image */}
@@ -76,7 +134,7 @@ export default function ProgramPage() {
             <ProgramSkeleton count={4} />
           ) : (
             <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "2rem", width: "100%", margin: "0 auto" }}>
-              {program.map((item: any) => (
+              {filteredProgram.map((item: any) => (
                 <div key={item.id} style={{ cursor: "pointer", flex: "1 1 350px", minWidth: 350, maxWidth: 500 }} onClick={() => setSelected(item)}>
                   <ProgramCard item={item} truncate={truncate} />
                 </div>
