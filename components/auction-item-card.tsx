@@ -6,7 +6,7 @@ import { Eye } from "lucide-react";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
-import { Clock, Gavel } from "lucide-react";
+import { Clock, Gavel, Expand } from "lucide-react";
 import { BidModal } from "@/components/auction-bid-modal";
 import { AuctionDescModal } from "@/components/auction-desc-modal";
 import { ContactModal } from "@/components/ContactModal";
@@ -22,8 +22,8 @@ function ImageZoomModal({ open, imageUrl, title, onClose }: { open: boolean, ima
         onClick={e => e.stopPropagation()}
       >
         <div
-          className="relative w-full"
-          style={{ minHeight: '400px', minWidth: '300px', height: '80vh', maxHeight: '90vh' }}
+          className="relative flex items-center justify-center w-full h-full"
+          style={{ aspectRatio: '4/3', width: '100%', maxWidth: '90vw', maxHeight: '80vh' }}
         >
           <Image
             src={imageUrl}
@@ -31,7 +31,7 @@ function ImageZoomModal({ open, imageUrl, title, onClose }: { open: boolean, ima
             fill
             className="rounded-lg object-contain"
             style={{ objectFit: 'contain' }}
-            sizes="(max-width: 768px) 90vw, (max-width: 1200px) 80vw, 1000px"
+            sizes="90vw"
             priority
           />
         </div>
@@ -188,6 +188,12 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+        {/* Expand icon for zoom, only for non-admin and open items */}
+        {!isAdmin && !isClosed && (
+          <div className="absolute bottom-2 right-2 bg-white/80 rounded-full p-1.5 shadow-md flex items-center justify-center pointer-events-none">
+            <Expand size={22} className="text-[#084691]" />
+          </div>
+        )}
         {isClosed ? (
           <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
             <span className="px-4 py-2 bg-gray-800/90 backdrop-blur-sm text-gray-300 rounded-full text-xs font-bold uppercase tracking-wider">
