@@ -1,7 +1,8 @@
 import React from "react";
 // import styles from "../styles/homepage.module.css";
-import { X, Calendar, MapPin, Info, ExternalLink as ExternalLinkIcon, Hash, Tag, User } from "lucide-react";
+import { X, Calendar, MapPin, Info, ExternalLink as ExternalLinkIcon, Hash, Tag, User, Expand } from "lucide-react";
 import Image from "next/image";
+import ImageZoomModal from "./ImageZoomModal";
 
 type ProgramItem = {
   id: string | number;
@@ -29,45 +30,62 @@ export default function ProgramModal({ open, onClose, item }: ProgramModalProps)
   const [descOpen, setDescOpen] = React.useState(false);
   const [speakerModalOpen, setSpeakerModalOpen] = React.useState(false);
   const [speakerImgError, setSpeakerImgError] = React.useState(false);
+  const [showImageZoom, setShowImageZoom] = React.useState(false);
+
+  // Reset showImageZoom when modal closes
+  React.useEffect(() => {
+    if (!open) setShowImageZoom(false);
+  }, [open]);
   if (!open || !item) return null;
 
+  // Determine image URL (with fallback)
+  const programImageUrl = item.imageUrl && item.imageUrl.trim() !== "" ? item.imageUrl : "/images/programplaceholder.jpg";
+
   return (
-    <div
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        width: "100vw",
-        height: "100vh",
-        background: "rgba(0,0,0,0.45)",
-        backdropFilter: "blur(8px)",
-        WebkitBackdropFilter: "blur(8px)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        zIndex: 1000,
-        padding: 16,
-      }}
-    >
+    <>
+      {/* Image Zoom Modal */}
+      <ImageZoomModal
+        open={showImageZoom}
+        imageUrl={programImageUrl}
+        title={item.title || "Program Image"}
+        onClose={() => setShowImageZoom(false)}
+      />
       <div
         style={{
-          background: "#ffffff",
-          borderRadius: 32,
-          boxShadow: "0 12px 48px #22589820",
-          border: "1px solid #22589825",
-          borderTop: "6px solid #d71a21",
-          color: "#084691",
-          width: "min(100vw, 540px)",
-          maxWidth: 540,
-          padding: "2.5rem 2rem 2rem 2rem",
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100vw",
+          height: "100vh",
+          background: "rgba(0,0,0,0.45)",
+          backdropFilter: "blur(8px)",
+          WebkitBackdropFilter: "blur(8px)",
           display: "flex",
-          flexDirection: "column",
-          alignItems: "stretch",
-          position: "relative",
-          overflow: "auto",
-          maxHeight: "90vh",
+          alignItems: "center",
+          justifyContent: "center",
+          zIndex: 1000,
+          padding: 16,
         }}
       >
+        <div
+          style={{
+            background: "#ffffff",
+            borderRadius: 32,
+            boxShadow: "0 12px 48px #22589820",
+            border: "1px solid #22589825",
+            borderTop: "6px solid #d71a21",
+            color: "#084691",
+            width: "min(100vw, 540px)",
+            maxWidth: 540,
+            padding: "2.5rem 2rem 2rem 2rem",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "stretch",
+            position: "relative",
+            overflow: "auto",
+            maxHeight: "90vh",
+          }}
+        >
         {/* Sequence Badge */}
         {typeof item.sequence !== 'undefined' && (
           <div
@@ -110,41 +128,42 @@ export default function ProgramModal({ open, onClose, item }: ProgramModalProps)
         >
           <X size={32} />
         </button>
-        {/* Image */}
-        {item.imageUrl ? (
-          <img
-            src={item.imageUrl}
+        {/* Image with expand icon */}
+        <div
+          style={{ width: "100%", height: 180, position: "relative", borderRadius: 24, marginBottom: 18, overflow: "hidden", cursor: "pointer" }}
+          onClick={() => setShowImageZoom(true)}
+        >
+          <Image
+            src={programImageUrl}
             alt={item.title}
-            style={{
-              width: "100%",
-              height: 180,
-              objectFit: "cover",
-              borderRadius: 24,
-              marginBottom: 18,
-              boxShadow: "0 4px 24px #0005"
-            }}
+            fill
+            style={{ objectFit: "cover", borderRadius: 24 }}
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            priority={false}
           />
-        ) : (
+          {/* Expand icon at bottom right */}
           <div
             style={{
-              width: "100%",
-              height: 180,
-              borderRadius: 24,
-              marginBottom: 18,
-              background: "linear-gradient(135deg, #d71a21 0%, #084691 100%)",
+              position: "absolute",
+              bottom: 12,
+              right: 12,
+              background: "#fff",
+              borderRadius: "50%",
+              boxShadow: "0 2px 8px #0002",
+              padding: 7,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              color: "#fff",
-              fontWeight: 600,
-              fontSize: 24,
-              letterSpacing: 1
+              zIndex: 2,
+              opacity: 0.92,
+              cursor: "pointer"
             }}
-            aria-label="No image available"
+            onClick={e => { e.stopPropagation(); setShowImageZoom(true); }}
+            title="Expand image"
           >
-            No Image
+            <Expand size={22} color="#084691" />
           </div>
-        )}
+        </div>
         {/* Title */}
         <h2 style={{ fontWeight: 800, fontSize: 28, marginBottom: 8, lineHeight: 1.2, textAlign: 'left', color: '#084691' }}>{item.title || 'No Title'}</h2>
         {/* Type and Sequence */}
@@ -156,8 +175,8 @@ export default function ProgramModal({ open, onClose, item }: ProgramModalProps)
         {/* Time */}
         {/* Speaker */}
         {item.speaker && (
-          <div style={{ fontSize: 15, color: "#225898", opacity: 0.85, marginBottom: 8, display: "flex", alignItems: "center", gap: 8 }}>
-            <User size={16} style={{ marginRight: 4, verticalAlign: "middle" }} /> Host/Speaker: {item.speaker ? (
+          <div style={{ fontSize: 15, color: "#d71a21", fontWeight: 600, marginBottom: 8, display: "flex", alignItems: "center", gap: 8 }}>
+            <User size={16} style={{ marginRight: 4, verticalAlign: "middle" }} /> {item.speaker ? (
               <button
                 style={{
                   background: "none",
@@ -321,6 +340,7 @@ export default function ProgramModal({ open, onClose, item }: ProgramModalProps)
           )}
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 }
