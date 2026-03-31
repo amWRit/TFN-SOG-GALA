@@ -221,84 +221,64 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
 
       <CardHeader className="pb-2 pt-4">
         <CardTitle className="line-clamp-2 text-[#084691] text-base font-extrabold leading-snug">{item.title}</CardTitle>
-        {/* The Patron section */}
-        <div className="mt-2">
-          <div className="text-base text-[#084691] font-bold mb-0.5">The Patron</div>
-          <div className="text-[#225898] text-sm">
-            <span>
-              {item.patron && item.patron.trim() !== "" ? item.patron.slice(0, 120) + (item.patron.length > 120 ? "..." : "") : "No patron information available."}
-            </span>
-            {item.patron && item.patron.length > 120 && (
-              <button
-                className="ml-2 text-[#d71a21] hover:underline font-semibold focus:outline-none text-xs"
-                type="button"
-                onClick={e => { e.stopPropagation(); setShowPatronModal(true); }}
-              >
-                see more
-              </button>
-            )}
-            {(!item.patron || item.patron.length <= 120) && (
-              <button
-                className="ml-2 text-[#d71a21] hover:underline font-semibold focus:outline-none text-xs"
-                type="button"
-                onClick={e => { e.stopPropagation(); setShowPatronModal(true); }}
-              >
-                Read more
-              </button>
-            )}
-          </div>
-        </div>
         {/* The Piece section */}
         {item.description && (
           <div className="mt-2">
             <div className="text-base text-[#084691] font-bold mb-0.5">The Piece</div>
-            <DescriptionPreview
-              description={item.description ?? "NA"}
-              title={item.title}
-              onReadMore={() => setShowDescModal(true)}
-            />
+            <div className="text-[#225898] text-sm font-normal">
+              <DescriptionPreview
+                description={item.description ?? "NA"}
+                title={item.title}
+                onReadMore={() => setShowDescModal(true)}
+              />
+            </div>
           </div>
         )}
-      </CardHeader>
-
-      <CardContent className="pt-0">
-        {/* Current Bid */}
-        <div className="mb-4">
-          <div className="text-xs text-[#084691] uppercase tracking-wider mb-1">Current Bid</div>
-
-          <motion.div
-            key={item.currentBid}
-            initial={{ scale: 1.15, color: "#D4AF37" }}
-            animate={{ scale: 1, color: "#D4AF37" }}
-            transition={{ type: "spring", stiffness: 300, damping: 20 }}
-            className="font-playfair text-3xl font-bold"
-            style={{ color: "#D4AF37" }}
-          >
-            NPR {item.currentBid.toLocaleString()}
-          </motion.div>
-          <div className="text-xs text-[#084691] mt-1">
-            {item.currentBidder ? (
-              <span>Leading: <span className="text-[#084691] font-semibold">{item.currentBidder}</span></span>
-            ) : (
-              <span className="text-[#084691]/70">No bids yet</span>
-            )}
+        {/* The Patron section */}
+        <div className="mt-2">
+          <div className="text-base text-[#084691] font-bold mb-0.5">The Patron</div>
+          <div className="text-[#225898] text-sm font-normal">
+            <DescriptionPreview
+              description={item.patron && item.patron.trim() !== "" ? item.patron : "No patron information available."}
+              title={item.title}
+              onReadMore={() => setShowPatronModal(true)}
+            />
           </div>
         </div>
-
-        {/* Time + Starting Bid */}
-        <div className="flex items-center justify-between gap-2 mt-4 pt-4 border-t border-[#084691]/20 text-xs w-full">
-          <div className="flex items-center gap-1.5">
-            {item.endTime && (
-              <>
-                <Clock size={13} className="shrink-0 text-[#225898]" />
-                <span className={isClosed ? "text-red-500 font-semibold" : "text-[#225898]"}>
-                  {isClosed ? "Closed" : timeRemaining}
-                </span>
-              </>
-            )}
+        {/* Divider above price section */}
+        <div className="border-t border-[#084691]/20 mt-4 mb-2" />
+        {/* Actual Price & Start Bid row */}
+        <div className="flex items-center justify-between gap-2 mt-3">
+          <div className="flex flex-col items-start">
+            <span className="text-xs text-[#084691] uppercase tracking-wider mb-0.5">Actual Price</span>
+            <span className="font-playfair text-lg font-bold" style={{ color: '#D4AF37' }}>NPR {item.actualPrice?.toLocaleString?.() ?? 'NA'}</span>
           </div>
-          <div className="text-[#225898]">
-            Start: NPR {item.startingBid.toLocaleString()}
+          <div className="flex flex-col items-end">
+            <span className="text-xs text-[#084691] uppercase tracking-wider mb-0.5">Start Bid</span>
+            <span className="font-playfair text-lg font-bold" style={{ color: '#D4AF37' }}>NPR {item.startingBid?.toLocaleString?.() ?? 'NA'}</span>
+          </div>
+        </div>
+      </CardHeader>
+
+      {/* Divider */}
+      <div className="border-t border-[#084691]/20 mt-4 mb-2" />
+
+      <CardContent className="pt-0">
+        {/* Current Bid and Leading in a single row, aligned center */}
+        <div className="flex items-center justify-between gap-2 mb-4">
+          <div className="flex flex-col items-start">
+            <span className="text-xs text-[#084691] uppercase tracking-wider mb-0.5">Current Bid</span>
+            <span className="font-playfair text-lg font-bold" style={{ color: '#D4AF37' }}>NPR {item.currentBid.toLocaleString()}</span>
+          </div>
+          <div className="flex flex-col items-end">
+            <span className="text-xs text-[#084691] uppercase tracking-wider mb-0.5">Leading</span>
+            {item.currentBidder ? (
+              <span className="font-playfair text-lg font-bold" style={{ color: '#D4AF37' }}>{item.currentBidder}</span>
+            ) : (
+              <span className="font-playfair text-lg font-bold" style={{ color: '#D4AF37' }}>
+                No bids yet
+              </span>
+            )}
           </div>
         </div>
 
@@ -310,7 +290,6 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
             </div>
           ) : null}
         </div>
-
       </CardContent>
     </Card>
     </>

@@ -41,6 +41,8 @@ model AuctionItem {
   patron      String? // who gave/supported the auction item
   description String?
   imageUrl    String?
+  actualPrice Float   @default(0)
+  soldPrice   Float   @default(0)
   startingBid Float   @default(0)
   currentBid  Float   @default(0)
   currentBidder String?
