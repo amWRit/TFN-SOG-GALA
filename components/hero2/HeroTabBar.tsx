@@ -1,7 +1,7 @@
 
 
 import styles from './hero.module.css';
-import { Ticket, Info, ClipboardList, Play } from 'lucide-react';
+import { Ticket, Info, ClipboardList, Play, Gavel } from 'lucide-react';
 
 interface HeroTabBarProps {
   onShowVideo: () => void;
@@ -42,7 +42,7 @@ const HeroTabBar: React.FC<HeroTabBarProps> = ({ onShowVideo }) => (
         <span className={styles.tabLabelShort}>Program</span>
       </span>
     </a>
-    <button
+    {/* <button
       onClick={onShowVideo}
       className={styles.tabButton}
       type="button"
@@ -52,7 +52,17 @@ const HeroTabBar: React.FC<HeroTabBarProps> = ({ onShowVideo }) => (
         <span className={styles.tabLabelLong}>Watch 2025 Highlights</span>
         <span className={styles.tabLabelShort}>2025</span>
       </span>
-    </button>
+    </button> */}
+    <a
+      href="/auction"
+      className={styles.tabButton}
+    >
+      <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
+        <Gavel size={26} style={{ marginBottom: 2 }} />
+        <span className={styles.tabLabelLong}>Auction Details</span>
+        <span className={styles.tabLabelShort}>Auction</span>
+      </span>
+    </a>
   </div>
 );
 
