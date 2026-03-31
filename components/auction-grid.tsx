@@ -49,8 +49,8 @@ export function AuctionGrid() {
     );
   }
 
-  const activeItems = items?.filter((item) => item.isActive) || [];
-  const inactiveItems = items?.filter((item) => !item.isActive) || [];
+  const activeItems = (items?.filter((item) => item.isActive) || []).sort((a, b) => b.startingBid - a.startingBid);
+  const inactiveItems = (items?.filter((item) => !item.isActive) || []).sort((a, b) => b.startingBid - a.startingBid);
 
   return (
     <div className="space-y-12">
