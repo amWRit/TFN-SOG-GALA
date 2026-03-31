@@ -52,7 +52,8 @@ const defaultProgram = {
   speaker: "",
   speakerBio: "",
   externalLink: "",
-  speakerImgUrl: ""
+  speakerImgUrl: "",
+  imageUrl: ""
 };
 
 export const ProgramModal: React.FC<ProgramModalProps> = ({ open, mode, item, onSave, onClose, onEdit, onDelete, saving }) => {
@@ -71,45 +72,28 @@ export const ProgramModal: React.FC<ProgramModalProps> = ({ open, mode, item, on
     setForm({ ...form, [e.target.name]: e.target.value });
   }
 
-  // Helper to get image URL based on type/title
-  const getProgramImage = (item: any) => {
-    const type = (item.type || '').toLowerCase();
-    const title = (item.title || '').toLowerCase();
-    if (["speech", "welcome", "keynote", "opening remarks"].some(t => type.includes(t) || title.includes(t))) {
-      return "https://images.unsplash.com/photo-1550305080-4e029753abcf?w=600&h=800&fit=crop";
-    }
-    if (["networking"].some(t => type.includes(t) || title.includes(t))) {
-      return "https://images.unsplash.com/photo-1672826980330-93ae1ac07b41?w=600&h=800&fit=crop";
-    }
-    if (["performance", "entertainment"].some(t => type.includes(t) || title.includes(t))) {
-      return "https://images.unsplash.com/photo-1505236858219-8359eb29e329?w=600&h=800&fit=crop";
-    }
-    if (["dinner", "refreshments"].some(t => type.includes(t) || title.includes(t))) {
-      return "https://images.unsplash.com/photo-1527529482837-4698179dc6ce?w=600&h=400&fit=crop";
-    }
-    if (["auction"].some(t => type.includes(t) || title.includes(t))) {
-      return "https://images.unsplash.com/photo-1649598551790-18fd6c02f2f6?w=600&h=600&fit=crop";
-    }
-    return "https://images.unsplash.com/photo-1484156818044-c040038b0719?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
-  };
-
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    // Convert Google Drive share link to direct image link if needed for speakerImgUrl
-    let speakerImgUrl = form.speakerImgUrl?.trim() || "";
-    const driveMatch = speakerImgUrl.match(
+  // Helper to process Google Drive link for imageUrl
+  const processDriveLink = (url: string) => {
+    const trimmed = url?.trim() || "";
+    const driveMatch = trimmed.match(
       /^https?:\/\/drive\.google\.com\/file\/d\/([\w-]+)\//
     );
     if (driveMatch) {
       const fileId = driveMatch[1];
-      speakerImgUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;
+      return `https://drive.google.com/uc?export=view&id=${fileId}`;
     }
+    return trimmed;
+  };
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    // Convert Google Drive share link to direct image link if needed for speakerImgUrl and imageUrl
+    let speakerImgUrl = processDriveLink(form.speakerImgUrl);
+    let imageUrl = processDriveLink(form.imageUrl);
     // Convert empty string dates to null
     const startTime = form.startTime ? form.startTime : null;
     const endTime = form.endTime ? form.endTime : null;
-    // Set imageUrl using helper
-    const imageUrl = getProgramImage({ ...form, speakerImgUrl, startTime, endTime });
-    onSave({ ...form, speakerImgUrl, startTime, endTime, imageUrl });
+    onSave({ ...form, speakerImgUrl, imageUrl, startTime, endTime });
   }
 
   if (!open) return null;
@@ -195,6 +179,30 @@ export const ProgramModal: React.FC<ProgramModalProps> = ({ open, mode, item, on
               </>
             )}
           </div>
+          {/* Program Image URL */}
+          <div className="mt-2">
+            <label className="block text-sm font-semibold mb-1 flex items-center gap-2"><User size={16}/> Image URL</label>
+            {isView ? (
+              <div className="w-full px-4 py-2 rounded-lg text-[#f5f5f5] bg-transparent border border-transparent flex items-center gap-2">
+                <User size={16} className="opacity-70" /> {form.imageUrl}
+              </div>
+            ) : (
+              <>
+                <input
+                  className="w-full px-4 py-2 bg-[#1a1a1a]/50 border border-[#D4AF37]/30 rounded-lg text-[#f5f5f5]"
+                  name="imageUrl"
+                  value={form.imageUrl ?? ""}
+                  onChange={handleChange}
+                  placeholder=""
+                  maxLength={300}
+                />
+                <p className="text-xs text-[#D4AF37] mt-1">
+                  You can use a Google Drive shareable link set to <b>Anyone with the link can view</b>.<br/>
+                  <span className="text-[#D4AF37]">(e.g. <span className="break-all">https://drive.google.com/file/d/FILE_ID/view?usp=sharing</span>).</span><br/>
+                </p>
+              </>
+            )}
+          </div>
           {/* Type & Location */}
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1">
@@ -270,6 +278,33 @@ export const ProgramModal: React.FC<ProgramModalProps> = ({ open, mode, item, on
               )}
             </div>
           </div>
+         {/* External Link */}
+          <div>
+            <label className="block text-sm font-semibold mb-1 flex items-center gap-2"><Link2 size={16}/> External Link</label>
+            {isView ? (
+              <div className="w-full px-4 py-2 rounded-lg text-[#f5f5f5] bg-transparent border border-transparent break-all flex items-center gap-2">
+                <Link2 size={16} className="opacity-70" />
+                {form.externalLink ? (
+                  (() => {
+                    const url = form.externalLink.match(/^https?:\/\//i)
+                      ? form.externalLink
+                      : `https://${form.externalLink}`;
+                    return (
+                      <a href={url} target="_blank" rel="noopener noreferrer" className="underline text-[#D4AF37]">{form.externalLink}</a>
+                    );
+                  })()
+                ) : ""}
+              </div>
+            ) : (
+              <input
+                className="w-full px-4 py-2 bg-[#1a1a1a]/50 border border-[#D4AF37]/30 rounded-lg text-[#f5f5f5]"
+                name="externalLink"
+                value={form.externalLink ?? ""}
+                onChange={handleChange}
+                maxLength={200}
+              />
+            )}
+          </div>
           {/* Speaker & Bio */}
           <div>
             <label className="block text-sm font-semibold mb-1 flex items-center gap-2"><User size={16}/> Speaker</label>
@@ -307,33 +342,7 @@ export const ProgramModal: React.FC<ProgramModalProps> = ({ open, mode, item, on
               </>
             )}
           </div>
-          {/* External Link */}
-          <div>
-            <label className="block text-sm font-semibold mb-1 flex items-center gap-2"><Link2 size={16}/> External Link</label>
-            {isView ? (
-              <div className="w-full px-4 py-2 rounded-lg text-[#f5f5f5] bg-transparent border border-transparent break-all flex items-center gap-2">
-                <Link2 size={16} className="opacity-70" />
-                {form.externalLink ? (
-                  (() => {
-                    const url = form.externalLink.match(/^https?:\/\//i)
-                      ? form.externalLink
-                      : `https://${form.externalLink}`;
-                    return (
-                      <a href={url} target="_blank" rel="noopener noreferrer" className="underline text-[#D4AF37]">{form.externalLink}</a>
-                    );
-                  })()
-                ) : ""}
-              </div>
-            ) : (
-              <input
-                className="w-full px-4 py-2 bg-[#1a1a1a]/50 border border-[#D4AF37]/30 rounded-lg text-[#f5f5f5]"
-                name="externalLink"
-                value={form.externalLink ?? ""}
-                onChange={handleChange}
-                maxLength={200}
-              />
-            )}
-          </div>
+
           {/* Speaker Image URL */}
           <div className="mt-2">
             <label className="block text-sm font-semibold mb-1 flex items-center gap-2"><User size={16}/> Speaker Image URL</label>

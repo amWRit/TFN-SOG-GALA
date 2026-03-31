@@ -1,4 +1,6 @@
+
 import React from "react";
+import Image from "next/image";
 
 
 interface ProgramCardProps {
@@ -61,33 +63,17 @@ const ProgramCard: React.FC<ProgramCardProps> = ({ item, truncate = defaultTrunc
         {item.sequence}
       </div>
     )}
-    {item.imageUrl ? (
-      <img
-        src={item.imageUrl}
+    {/* Program Image */}
+    <div style={{ width: "100%", height: 120, position: "relative", borderRadius: 18, marginBottom: 16, overflow: "hidden" }}>
+      <Image
+        src={item.imageUrl && item.imageUrl.trim() !== "" ? item.imageUrl : "/images/programplaceholder.jpg"}
         alt={item.title}
-        style={{ width: "100%", height: 120, objectFit: "cover", borderRadius: 18, marginBottom: 16 }}
+        fill
+        style={{ objectFit: "cover", borderRadius: 18 }}
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        priority={false}
       />
-    ) : (
-      <div
-        style={{
-          width: "100%",
-          height: 120,
-          borderRadius: 18,
-          marginBottom: 16,
-          background: "linear-gradient(135deg, #d71a21 0%, #084691 100%)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          color: "#fff",
-          fontWeight: 600,
-          fontSize: 20,
-          letterSpacing: 1
-        }}
-        aria-label="No image available"
-      >
-        No Image
-      </div>
-    )}
+    </div>
     <div style={{ display: "flex", alignItems: "center", width: "100%", justifyContent: "space-between" }}>
       <span
         style={{
