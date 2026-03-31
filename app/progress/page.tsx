@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import ProgressSkeleton from "@/components/progress-skeleton";
-import { Home, CheckCircle, Clock, Loader } from "lucide-react";
+import { Home, CheckCircle, Clock, Loader, PartyPopper } from "lucide-react";
 
 interface FundraisingSummary {
   galaYear: number;
@@ -89,15 +89,15 @@ export default function ProgressPage() {
           />
           {/* Auction fill (striped) */}
           <div
-            className="absolute left-0 top-0 h-full"
+            className="absolute top-0 h-full"
             style={{
-              width: `${preAuctionPercent + auctionPercent}%`,
+              left: `${preAuctionPercent}%`,
+              width: `${auctionPercent}%`,
               background:
                 auctionTotal > 0
                   ?
                     `repeating-linear-gradient(135deg, #e3342f 0 10px, #e3342f 0 20px, #b91c1c 0 30px, #b91c1c 0 40px)`
                   : "none",
-              clipPath: `inset(0 ${100 - (preAuctionPercent + auctionPercent)}% 0 0)`
             }}
           />
           {/* Gold goal marker */}
@@ -107,22 +107,38 @@ export default function ProgressPage() {
           />
         </div>
         {/* Bar labels */}
-        <div className="flex justify-between text-white text-sm md:text-base font-medium mb-8">
-          <span className="hidden md:flex items-center gap-2">
-            <span className="w-4 h-4 inline-block rounded bg-blue-600" /> Pre-auction
-            <span className="font-bold ml-2">NPR {preAuctionTotal.toLocaleString()}</span>
-          </span>
-          <span className="flex items-center gap-2">
-            <span className="w-4 h-4 inline-block rounded bg-red-600" /> Auction tonight
-            <span className="font-bold ml-2">NPR {auctionTotal.toLocaleString()}</span>
-          </span>
-          <span className="flex items-center gap-2">
-            <span className="w-4 h-4 inline-block rounded bg-yellow-400" /> Goal
-            <span className="font-bold ml-2">NPR {targetAmount.toLocaleString()}</span>
-          </span>
+        <div className="w-full mb-8">
+          <div className="hidden md:flex justify-between text-white text-sm md:text-base font-medium">
+            <span className="flex items-center gap-2">
+              <span className="w-4 h-4 inline-block rounded bg-blue-600" /> Pre-auction
+              <span className="font-bold ml-2">NPR {preAuctionTotal.toLocaleString()}</span>
+            </span>
+            <span className="flex items-center gap-2">
+              <span className="w-4 h-4 inline-block rounded bg-red-600" /> Auction tonight
+              <span className="font-bold ml-2">NPR {auctionTotal.toLocaleString()}</span>
+            </span>
+            <span className="flex items-center gap-2">
+              <span className="w-4 h-4 inline-block rounded bg-yellow-400" /> Goal
+              <span className="font-bold ml-2">NPR {targetAmount.toLocaleString()}</span>
+            </span>
+          </div>
+          <div className="flex flex-col gap-2 md:hidden text-white text-sm font-medium w-full">
+            <div className="flex justify-between w-full">
+              <span className="flex items-center gap-2">
+                <span className="w-4 h-4 inline-block rounded bg-red-600" /> Auction tonight
+              </span>
+              <span className="font-bold">NPR {auctionTotal.toLocaleString()}</span>
+            </div>
+            <div className="flex justify-between w-full">
+              <span className="flex items-center gap-2">
+                <span className="w-4 h-4 inline-block rounded bg-yellow-400" /> Goal
+              </span>
+              <span className="font-bold">NPR {targetAmount.toLocaleString()}</span>
+            </div>
+          </div>
         </div>
         {/* Stat Row */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center mt-8 bg-[#101b36] rounded-lg py-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center mt-8 bg-[#101b36] rounded-lg py-6 px-2 md:px-6 lg:px-8">
           <div>
             <div className="flex flex-col items-center">
               <CheckCircle className="text-green-400 w-5 h-5 mb-1" />
@@ -147,17 +163,23 @@ export default function ProgressPage() {
           <div>
             <div className={`flex flex-col items-center ${goalReached ? "text-red-400" : "text-yellow-400"}`}> 
               {goalReached ? (
-                <span className="text-2xl md:text-3xl font-bold">Goal reached!</span>
+                <>
+                  <PartyPopper className="text-yellow-400 w-5 h-5 mb-1 animate-bounce" />
+                  <span className="text-3xl md:text-4xl font-bold">Reached</span>
+                  <span className="uppercase text-xs text-gray-400 mt-1">Goal</span>
+                </>
               ) : (
                 <>
-                  <span className="text-lg md:text-xl font-semibold leading-tight">NPR</span>
-                  <span className="text-2xl md:text-3xl font-bold">{(targetAmount - totalRaised).toLocaleString()}</span>
+                  <span className="text-yellow-400 text-lg md:text-xl font-semibold leading-tight">NPR</span>
+                  <span className="text-3xl md:text-4xl font-bold">{(targetAmount - totalRaised).toLocaleString()}</span>
                 </>
               )}
             </div>
-            <div className="uppercase text-xs text-gray-400 mt-1">
-              To reach goal
-            </div>
+            {!goalReached ? (
+              <div className="uppercase text-xs text-gray-400 mt-1">
+                To reach goal
+              </div>
+            ) : null}
           </div>
         </div>
       </div>
