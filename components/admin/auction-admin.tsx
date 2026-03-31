@@ -310,7 +310,7 @@ export function AuctionAdmin() {
             </div>
             <div className="md:col-span-2">
               <label className="block text-sm font-medium text-[#f5f5f5]/80 mb-2">
-                About the Piece
+                About the Product
               </label>
               <textarea
                 value={formData.description}

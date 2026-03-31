@@ -20,6 +20,15 @@ export async function PUT(
     const body = await request.json();
     const { title, description, imageUrl, startingBid, endTime, isActive, patron, actualPrice } = body;
     const { id } = await context.params;
+    let soldPriceUpdate = {};
+    if (isActive === false) {
+      // Find highest bid for this item
+      const topBid = await prisma.bid.findFirst({
+        where: { auctionItemId: id },
+        orderBy: { amount: "desc" },
+      });
+      soldPriceUpdate = { soldPrice: topBid ? topBid.amount : 0 };
+    }
     const item = await prisma.auctionItem.update({
       where: { id },
       data: {
@@ -31,6 +40,7 @@ export async function PUT(
         ...(isActive !== undefined && { isActive }),
         ...(patron !== undefined && { patron }),
         ...(actualPrice !== undefined && { actualPrice }),
+        ...soldPriceUpdate,
       },
     });
     return NextResponse.json(item);

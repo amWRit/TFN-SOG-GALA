@@ -52,6 +52,8 @@ interface AuctionItem {
   endTime: Date | null;
   isActive: boolean;
   patron?: string | null;
+  actualPrice?: number | null;
+  soldPrice?: number | null;
 }
 
 interface AuctionItemCardProps {
@@ -221,9 +223,9 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
 
       <CardHeader className="pb-2 pt-4">
           <CardTitle className="line-clamp-2 text-[#084691] text-xl font-extrabold leading-snug" style={{ textShadow: '0 2px 8px rgba(8,70,145,0.18), 0 1px 0 #fff' }}>{item.title}</CardTitle>
-        {/* The Piece section */}
+        {/* The Product section */}
         <div className="mt-2">
-          <div className="text-base text-[#084691] font-bold mb-0.5">The Piece</div>
+          <div className="text-base text-[#084691] font-bold mb-0.5">The Product</div>
           <div className="text-[#225898] text-sm font-normal">
             <DescriptionPreview
               description={item.description && item.description.trim() !== "" ? item.description : "Information not available."}
@@ -262,23 +264,42 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
       <div className="border-t border-[#084691]/20 mt-4 mb-2" />
 
       <CardContent className="pt-0">
-        {/* Current Bid and Leading in a single row, aligned center */}
-        <div className="flex items-center justify-between gap-2 mb-4">
-          <div className="flex flex-col items-start">
-            <span className="text-xs text-[#084691] uppercase tracking-wider mb-0.5">Current Bid</span>
-            <span className="font-playfair text-lg font-bold" style={{ color: '#D4AF37' }}>NPR {item.currentBid.toLocaleString()}</span>
+        {/* Current Bid/Leading or Sold Price/Sold To depending on item status */}
+        {isClosed ? (
+          <div className="flex items-center justify-between gap-2 mb-4">
+            <div className="flex flex-col items-start">
+              <span className="text-xs text-[#084691] uppercase tracking-wider mb-0.5">Sold Price</span>
+              <span className="font-playfair text-lg font-bold" style={{ color: '#D4AF37' }}>NPR {item.soldPrice?.toLocaleString?.() ?? '0'}</span>
+            </div>
+            <div className="flex flex-col items-end">
+              <span className="text-xs text-[#084691] uppercase tracking-wider mb-0.5">Sold To</span>
+              {item.currentBidder ? (
+                <span className="font-playfair text-lg font-bold" style={{ color: '#D4AF37' }}>{item.currentBidder}</span>
+              ) : (
+                <span className="font-playfair text-lg font-bold" style={{ color: '#D4AF37' }}>
+                  No bids
+                </span>
+              )}
+            </div>
           </div>
-          <div className="flex flex-col items-end">
-            <span className="text-xs text-[#084691] uppercase tracking-wider mb-0.5">Leading</span>
-            {item.currentBidder ? (
-              <span className="font-playfair text-lg font-bold" style={{ color: '#D4AF37' }}>{item.currentBidder}</span>
-            ) : (
-              <span className="font-playfair text-lg font-bold" style={{ color: '#D4AF37' }}>
-                No bids yet
-              </span>
-            )}
+        ) : (
+          <div className="flex items-center justify-between gap-2 mb-4">
+            <div className="flex flex-col items-start">
+              <span className="text-xs text-[#084691] uppercase tracking-wider mb-0.5">Current Bid</span>
+              <span className="font-playfair text-lg font-bold" style={{ color: '#D4AF37' }}>NPR {item.currentBid.toLocaleString()}</span>
+            </div>
+            <div className="flex flex-col items-end">
+              <span className="text-xs text-[#084691] uppercase tracking-wider mb-0.5">Leading</span>
+              {item.currentBidder ? (
+                <span className="font-playfair text-lg font-bold" style={{ color: '#D4AF37' }}>{item.currentBidder}</span>
+              ) : (
+                <span className="font-playfair text-lg font-bold" style={{ color: '#D4AF37' }}>
+                  No bids yet
+                </span>
+              )}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Action hint */}
         <div className="mt-4 flex justify-center">
