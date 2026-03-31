@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { User, Clock, Image as ImageIcon, Landmark } from "lucide-react";
+import { User, Clock, Image as ImageIcon, Landmark, Settings2 } from "lucide-react";
 import { AdminAccounts } from "./admin-accounts";
 import { ImagesAdmin } from "./images-admin";
 import { GalaConfigAdmin } from "./gala-config-admin";
@@ -11,19 +11,19 @@ export function SettingsAdmin() {
   return (
     <div className="">
       <div className="flex gap-4 mb-6">
-                <button
-                  className={`px-4 py-2 rounded font-semibold transition-colors flex items-center gap-2 ${activeSubTab === "gala" ? "bg-[#D4AF37] text-[#1a1a1a]" : "bg-gray-800 text-[#f5f5f5]/80 hover:text-[#D4AF37]"}`}
-                  onClick={() => setActiveSubTab("gala")}
-                >
-                  <Landmark size={18} />
-                  <span className="hidden sm:inline">Gala Config</span>
-                </button>
         <button
           className={`px-4 py-2 rounded font-semibold transition-colors flex items-center gap-2 ${activeSubTab === "account" ? "bg-[#D4AF37] text-[#1a1a1a]" : "bg-gray-800 text-[#f5f5f5]/80 hover:text-[#D4AF37]"}`}
           onClick={() => setActiveSubTab("account")}
         >
           <User size={18} />
           <span className="hidden sm:inline">Account</span>
+        </button>
+        <button
+          className={`px-4 py-2 rounded font-semibold transition-colors flex items-center gap-2 ${activeSubTab === "gala" ? "bg-[#D4AF37] text-[#1a1a1a]" : "bg-gray-800 text-[#f5f5f5]/80 hover:text-[#D4AF37]"}`}
+          onClick={() => setActiveSubTab("gala")}
+        >
+          <Settings2 size={18} />
+          <span className="hidden sm:inline">Gala Config</span>
         </button>
         <button
           className={`px-4 py-2 rounded font-semibold transition-colors flex items-center gap-2 ${activeSubTab === "images" ? "bg-[#D4AF37] text-[#1a1a1a]" : "bg-gray-800 text-[#f5f5f5]/80 hover:text-[#D4AF37]"}`}
