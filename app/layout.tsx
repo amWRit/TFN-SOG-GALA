@@ -18,8 +18,8 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "Gala 2026: Empowering Nepal's Future | Teach For Nepal",
-  description: "Join us for an elegant evening supporting education in Nepal. Live auction, interactive seating, and unforgettable moments.",
+  title: "TRUTH & HOPE GALA 2026 | Strengthening Public Schools in Nepal",
+  "description": "Join us for an elegant evening supporting education in Nepal. Stories, Live Auction, Performances and Dinner.",
   icons: {
     icon: [
       { url: "/images/logos/favicon.ico" },
@@ -56,14 +56,14 @@ export default function RootLayout({
             } catch (e) {}
           `}} />
           {/* Open Graph & Twitter meta tags for social sharing */}
-          <meta property="og:title" content="Gala 2026: Empowering Nepal's Future | Teach For Nepal" />
-          <meta property="og:description" content="Join us for an elegant evening supporting education in Nepal. Live auction, interactive seating, and unforgettable moments." />
+          <meta property="og:title" content="TRUTH & HOPE GALA 2026 | Strengthening Public Schools in Nepal" />
+          <meta property="og:description" content="Join us for an elegant evening supporting education in Nepal. Stories, Live Auction, Performances and Dinner." />
           <meta property="og:image" content="/images/logos/tfnlogo.png" />
           <meta property="og:url" content="https://tfngala.vercel.app/" />
           <meta property="og:type" content="website" />
           <meta name="twitter:card" content="summary_large_image" />
-          <meta name="twitter:title" content="Gala 2026: Empowering Nepal's Future | Teach For Nepal" />
-          <meta name="twitter:description" content="Join us for an elegant evening supporting education in Nepal. Live auction, interactive seating, and unforgettable moments." />
+          <meta name="twitter:title" content="TRUTH & HOPE GALA 2026 | Strengthening Public Schools in Nepal" />
+          <meta name="twitter:description" content="Join us for an elegant evening supporting education in Nepal. Stories, Live Auction, Performances and Dinner." />
           <meta name="twitter:image" content="/images/logos/tfnlogo.png" />
           <meta name="twitter:url" content="https://tfngala.vercel.app/" />
         </head>
