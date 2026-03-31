@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import ProgressSkeleton from "@/components/progress-skeleton";
-import { Home } from "lucide-react";
+import { Home, CheckCircle, Clock, Loader } from "lucide-react";
 
 interface FundraisingSummary {
   galaYear: number;
@@ -124,23 +124,39 @@ export default function ProgressPage() {
         {/* Stat Row */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center mt-8 bg-[#101b36] rounded-lg py-6">
           <div>
-            <div className="text-3xl md:text-4xl font-bold text-white">{itemsSold}</div>
+            <div className="flex flex-col items-center">
+              <CheckCircle className="text-green-400 w-5 h-5 mb-1" />
+              <span className="text-3xl md:text-4xl font-bold text-white">{itemsSold}</span>
+            </div>
             <div className="uppercase text-xs text-gray-400 mt-1">Items Sold</div>
           </div>
           <div>
-            <div className="text-3xl md:text-4xl font-bold text-yellow-400">NPR {highestBid.toLocaleString()}</div>
+            <div className="flex flex-col items-center">
+              <span className="text-yellow-400 text-lg md:text-xl font-semibold leading-tight">NPR</span>
+              <span className="text-3xl md:text-4xl font-bold text-yellow-400">{highestBid.toLocaleString()}</span>
+            </div>
             <div className="uppercase text-xs text-gray-400 mt-1">Highest Bid</div>
           </div>
           <div>
-            <div className="text-3xl md:text-4xl font-bold text-white">{itemsRemaining}</div>
+            <div className="flex flex-col items-center">
+              <Loader className="text-blue-400 w-5 h-5 mb-1" />
+              <span className="text-3xl md:text-4xl font-bold text-white">{itemsRemaining}</span>
+            </div>
             <div className="uppercase text-xs text-gray-400 mt-1">Items Remaining</div>
           </div>
           <div>
-            <div className={`text-2xl md:text-3xl font-bold ${goalReached ? "text-red-400" : "text-yellow-400"}`}>
-              {goalReached ? "Goal reached!" : `NPR ${(targetAmount - totalRaised).toLocaleString()}`}
+            <div className={`flex flex-col items-center ${goalReached ? "text-red-400" : "text-yellow-400"}`}> 
+              {goalReached ? (
+                <span className="text-2xl md:text-3xl font-bold">Goal reached!</span>
+              ) : (
+                <>
+                  <span className="text-lg md:text-xl font-semibold leading-tight">NPR</span>
+                  <span className="text-2xl md:text-3xl font-bold">{(targetAmount - totalRaised).toLocaleString()}</span>
+                </>
+              )}
             </div>
             <div className="uppercase text-xs text-gray-400 mt-1">
-              {goalReached ? "To reach goal" : "To reach goal"}
+              To reach goal
             </div>
           </div>
         </div>
