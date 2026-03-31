@@ -46,8 +46,7 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json();
-    const { title, description, imageUrl, startingBid, endTime, isActive } =
-      body;
+    const { title, description, imageUrl, startingBid, endTime, isActive, patron, actualPrice } = body;
 
     const item = await prisma.auctionItem.create({
       data: {
@@ -58,6 +57,8 @@ export async function POST(request: Request) {
         currentBid: startingBid || 0,
         endTime: endTime ? new Date(endTime) : null,
         isActive: isActive !== undefined ? isActive : true,
+        patron: patron || null,
+        actualPrice: actualPrice !== undefined ? actualPrice : 0,
       },
     });
 

@@ -18,7 +18,7 @@ export async function PUT(
 
   try {
     const body = await request.json();
-    const { title, description, imageUrl, startingBid, endTime, isActive } = body;
+    const { title, description, imageUrl, startingBid, endTime, isActive, patron, actualPrice } = body;
     const { id } = await context.params;
     const item = await prisma.auctionItem.update({
       where: { id },
@@ -29,6 +29,8 @@ export async function PUT(
         ...(startingBid !== undefined && { startingBid }),
         ...(endTime !== undefined && { endTime: endTime ? new Date(endTime) : null }),
         ...(isActive !== undefined && { isActive }),
+        ...(patron !== undefined && { patron }),
+        ...(actualPrice !== undefined && { actualPrice }),
       },
     });
     return NextResponse.json(item);
