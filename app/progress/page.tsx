@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import ProgressSkeleton from "@/components/progress-skeleton";
 import { Home, CheckCircle, Clock, Loader, PartyPopper } from "lucide-react";
+import styles from "../../styles/progress.module.css";
 
 interface FundraisingSummary {
   galaYear: number;
@@ -100,6 +101,8 @@ export default function ProgressPage() {
                   : "none",
             }}
           />
+          {/* Glass swipe effect */}
+          <div className={styles["glass-swipe"]} />
           {/* Gold goal marker */}
           <div
             className="absolute top-0 h-full border-l-4 border-yellow-400"
