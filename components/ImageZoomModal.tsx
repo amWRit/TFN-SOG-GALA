@@ -17,10 +17,7 @@ const ImageZoomModal: React.FC<ImageZoomModalProps> = ({ open, imageUrl, title, 
         style={{ maxHeight: '90vh' }}
         onClick={e => e.stopPropagation()}
       >
-        <div
-          className="relative flex items-center justify-center w-full h-full"
-          style={{ aspectRatio: '4/3', width: '100%', maxWidth: '90vw', maxHeight: '80vh' }}
-        >
+        <div className="relative flex items-center justify-center w-full h-full" style={{ aspectRatio: '4/3', width: '100%', maxWidth: '90vw', maxHeight: '80vh' }}>
           <Image
             src={imageUrl}
             alt={title}
@@ -30,15 +27,15 @@ const ImageZoomModal: React.FC<ImageZoomModalProps> = ({ open, imageUrl, title, 
             sizes="90vw"
             priority
           />
+          <button
+            className="absolute top-2 right-2 text-gray-700 hover:text-red-500 font-bold z-20"
+            style={{ fontSize: "2.5rem", lineHeight: 1, padding: 0, background: 'none', border: 'none' }}
+            onClick={onClose}
+            aria-label="Close"
+          >
+            &times;
+          </button>
         </div>
-        <button
-          className="absolute top-2 right-2 text-gray-700 hover:text-red-500 font-bold"
-          style={{ fontSize: "2.5rem", lineHeight: 1, width: 48, height: 48, display: "flex", alignItems: "center", justifyContent: "center" }}
-          onClick={onClose}
-          aria-label="Close"
-        >
-          &times;
-        </button>
       </div>
     </div>
   );

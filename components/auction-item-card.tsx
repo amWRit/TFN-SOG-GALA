@@ -10,36 +10,7 @@ import { Clock, Gavel, Expand } from "lucide-react";
 import { BidModal } from "@/components/auction-bid-modal";
 import { AuctionDescModal } from "@/components/auction-desc-modal";
 import { ContactModal } from "@/components/ContactModal";
-
-// Simple image zoom modal using Next.js Image
-function ImageZoomModal({ open, imageUrl, title, onClose }: { open: boolean, imageUrl: string, title: string, onClose: () => void }) {
-  if (!open) return null;
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70" onClick={onClose}>
-      <div
-        className="relative bg-white rounded-lg shadow-lg p-2 w-full max-w-2xl md:max-w-4xl lg:max-w-5xl xl:max-w-6xl"
-        style={{ maxHeight: '90vh' }}
-        onClick={e => e.stopPropagation()}
-      >
-        <div
-          className="relative flex items-center justify-center w-full h-full"
-          style={{ aspectRatio: '4/3', width: '100%', maxWidth: '90vw', maxHeight: '80vh' }}
-        >
-          <Image
-            src={imageUrl}
-            alt={title}
-            fill
-            className="rounded-lg object-contain"
-            style={{ objectFit: 'contain' }}
-            sizes="90vw"
-            priority
-          />
-        </div>
-        <button className="absolute top-2 right-2 text-gray-700 hover:text-red-500 text-xl font-bold" onClick={onClose} aria-label="Close">&times;</button>
-      </div>
-    </div>
-  );
-}
+import ImageZoomModal from "@/components/ImageZoomModal";
 
 interface AuctionItem {
   id: string;
