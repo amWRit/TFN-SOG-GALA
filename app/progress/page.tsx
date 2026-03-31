@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import ProgressSkeleton from "@/components/progress-skeleton";
+import { Home } from "lucide-react";
 
 interface FundraisingSummary {
   galaYear: number;
@@ -34,7 +36,7 @@ export default function ProgressPage() {
     return () => clearInterval(interval);
   }, []);
 
-  if (loading && !summary) return <div className="text-center text-white">Loading...</div>;
+  if (loading && !summary) return <ProgressSkeleton />;
   if (!summary) return <div className="text-center text-red-500">No data available</div>;
 
   const {
@@ -56,6 +58,13 @@ export default function ProgressPage() {
 
   return (
     <div className="min-h-screen bg-[#07122b] flex flex-col items-center justify-center px-4 py-8">
+      {/* Home Button */}
+      <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50">
+        <a href="/" className="flex items-center gap-2 px-4 py-2 bg-white/90 text-gray-900 rounded-full shadow-lg font-semibold hover:bg-white transition-all border border-gray-200">
+          <Home size={20} className="w-5 h-5" />
+          Home
+        </a>
+      </div>
       <div className="w-full max-w-3xl">
         <h1 className="text-2xl md:text-4xl font-bold text-white mb-2 text-center">
           Truth & Hope Gala {galaYear}
@@ -99,7 +108,7 @@ export default function ProgressPage() {
         </div>
         {/* Bar labels */}
         <div className="flex justify-between text-white text-sm md:text-base font-medium mb-8">
-          <span className="flex items-center gap-2">
+          <span className="hidden md:flex items-center gap-2">
             <span className="w-4 h-4 inline-block rounded bg-blue-600" /> Pre-auction
             <span className="font-bold ml-2">NPR {preAuctionTotal.toLocaleString()}</span>
           </span>
