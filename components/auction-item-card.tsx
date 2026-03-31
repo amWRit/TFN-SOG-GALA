@@ -51,6 +51,7 @@ interface AuctionItem {
   currentBidder: string | null;
   endTime: Date | null;
   isActive: boolean;
+  patron?: string | null;
 }
 
 interface AuctionItemCardProps {
@@ -102,6 +103,7 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
   const [timeRemaining, setTimeRemaining] = useState(formatTimeRemaining(item.endTime));
   const [showBidModal, setShowBidModal] = useState(false);
   const [showDescModal, setShowDescModal] = useState(false);
+  const [showPatronModal, setShowPatronModal] = useState(false);
   const [showContactModal, setShowContactModal] = useState(false);
   const [showImageZoom, setShowImageZoom] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -143,12 +145,20 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
       {showBidModal && (
         <BidModal item={item} onClose={() => setShowBidModal(false)} />
       )}
-      {/* Description Modal */}
+      {/* Description Modal for The Piece */}
       {showDescModal && (
         <AuctionDescModal
           title={item.title}
           description={item.description ?? ""}
           onClose={() => setShowDescModal(false)}
+        />
+      )}
+      {/* Patron Modal */}
+      {showPatronModal && (
+        <AuctionDescModal
+          title={item.title}
+          description={item.patron && item.patron.trim() !== "" ? item.patron : "No patron information available."}
+          onClose={() => setShowPatronModal(false)}
         />
       )}
       {/* Contact Modal for non-admin users (kept for future use, not triggered) */}
@@ -210,13 +220,44 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
       </div>
 
       <CardHeader className="pb-2 pt-4">
-        <CardTitle className="line-clamp-2 text-[#084691] text-base font-bold leading-snug">{item.title}</CardTitle>
+        <CardTitle className="line-clamp-2 text-[#084691] text-base font-extrabold leading-snug">{item.title}</CardTitle>
+        {/* The Patron section */}
+        <div className="mt-2">
+          <div className="text-base text-[#084691] font-bold mb-0.5">The Patron</div>
+          <div className="text-[#225898] text-sm">
+            <span>
+              {item.patron && item.patron.trim() !== "" ? item.patron.slice(0, 120) + (item.patron.length > 120 ? "..." : "") : "No patron information available."}
+            </span>
+            {item.patron && item.patron.length > 120 && (
+              <button
+                className="ml-2 text-[#d71a21] hover:underline font-semibold focus:outline-none text-xs"
+                type="button"
+                onClick={e => { e.stopPropagation(); setShowPatronModal(true); }}
+              >
+                see more
+              </button>
+            )}
+            {(!item.patron || item.patron.length <= 120) && (
+              <button
+                className="ml-2 text-[#d71a21] hover:underline font-semibold focus:outline-none text-xs"
+                type="button"
+                onClick={e => { e.stopPropagation(); setShowPatronModal(true); }}
+              >
+                Read more
+              </button>
+            )}
+          </div>
+        </div>
+        {/* The Piece section */}
         {item.description && (
-          <DescriptionPreview
-            description={item.description ?? "NA"}
-            title={item.title}
-            onReadMore={() => setShowDescModal(true)}
-          />
+          <div className="mt-2">
+            <div className="text-base text-[#084691] font-bold mb-0.5">The Piece</div>
+            <DescriptionPreview
+              description={item.description ?? "NA"}
+              title={item.title}
+              onReadMore={() => setShowDescModal(true)}
+            />
+          </div>
         )}
       </CardHeader>
 

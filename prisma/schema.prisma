@@ -38,6 +38,7 @@ model Seat {
 model AuctionItem {
   id          String   @id @default(cuid())
   title       String
+  patron      String? // who gave/supported the auction item
   description String?
   imageUrl    String?
   startingBid Float   @default(0)
