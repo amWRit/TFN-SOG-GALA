@@ -54,7 +54,7 @@ export async function POST(request: Request) {
         description: description || null,
         imageUrl: imageUrl || null,
         startingBid: startingBid || 0,
-        currentBid: startingBid || 0,
+        currentBid: 0,
         endTime: endTime ? new Date(endTime) : null,
         isActive: isActive !== undefined ? isActive : true,
         patron: patron || null,

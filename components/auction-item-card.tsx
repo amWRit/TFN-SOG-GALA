@@ -220,26 +220,24 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
       </div>
 
       <CardHeader className="pb-2 pt-4">
-        <CardTitle className="line-clamp-2 text-[#084691] text-base font-extrabold leading-snug">{item.title}</CardTitle>
+          <CardTitle className="line-clamp-2 text-[#084691] text-xl font-extrabold leading-snug" style={{ textShadow: '0 2px 8px rgba(8,70,145,0.18), 0 1px 0 #fff' }}>{item.title}</CardTitle>
         {/* The Piece section */}
-        {item.description && (
-          <div className="mt-2">
-            <div className="text-base text-[#084691] font-bold mb-0.5">The Piece</div>
-            <div className="text-[#225898] text-sm font-normal">
-              <DescriptionPreview
-                description={item.description ?? "NA"}
-                title={item.title}
-                onReadMore={() => setShowDescModal(true)}
-              />
-            </div>
+        <div className="mt-2">
+          <div className="text-base text-[#084691] font-bold mb-0.5">The Piece</div>
+          <div className="text-[#225898] text-sm font-normal">
+            <DescriptionPreview
+              description={item.description && item.description.trim() !== "" ? item.description : "Information not available."}
+              title={item.title}
+              onReadMore={() => setShowDescModal(true)}
+            />
           </div>
-        )}
+        </div>
         {/* The Patron section */}
         <div className="mt-2">
           <div className="text-base text-[#084691] font-bold mb-0.5">The Patron</div>
           <div className="text-[#225898] text-sm font-normal">
             <DescriptionPreview
-              description={item.patron && item.patron.trim() !== "" ? item.patron : "No patron information available."}
+              description={item.patron && item.patron.trim() !== "" ? item.patron : "Information not available."}
               title={item.title}
               onReadMore={() => setShowPatronModal(true)}
             />
