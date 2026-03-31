@@ -51,6 +51,9 @@ interface AuctionItem {
   currentBidder: string | null;
   endTime: Date | null;
   isActive: boolean;
+  patron?: string | null;
+  actualPrice?: number | null;
+  soldPrice?: number | null;
 }
 
 interface AuctionItemCardProps {
@@ -102,6 +105,7 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
   const [timeRemaining, setTimeRemaining] = useState(formatTimeRemaining(item.endTime));
   const [showBidModal, setShowBidModal] = useState(false);
   const [showDescModal, setShowDescModal] = useState(false);
+  const [showPatronModal, setShowPatronModal] = useState(false);
   const [showContactModal, setShowContactModal] = useState(false);
   const [showImageZoom, setShowImageZoom] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -143,12 +147,20 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
       {showBidModal && (
         <BidModal item={item} onClose={() => setShowBidModal(false)} />
       )}
-      {/* Description Modal */}
+      {/* Description Modal for The Piece */}
       {showDescModal && (
         <AuctionDescModal
           title={item.title}
           description={item.description ?? ""}
           onClose={() => setShowDescModal(false)}
+        />
+      )}
+      {/* Patron Modal */}
+      {showPatronModal && (
+        <AuctionDescModal
+          title={item.title}
+          description={item.patron && item.patron.trim() !== "" ? item.patron : "No patron information available."}
+          onClose={() => setShowPatronModal(false)}
         />
       )}
       {/* Contact Modal for non-admin users (kept for future use, not triggered) */}
@@ -210,56 +222,84 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
       </div>
 
       <CardHeader className="pb-2 pt-4">
-        <CardTitle className="line-clamp-2 text-[#084691] text-base font-bold leading-snug">{item.title}</CardTitle>
-        {item.description && (
-          <DescriptionPreview
-            description={item.description ?? "NA"}
-            title={item.title}
-            onReadMore={() => setShowDescModal(true)}
-          />
-        )}
+          <CardTitle className="line-clamp-2 text-[#084691] text-xl font-extrabold leading-snug" style={{ textShadow: '0 2px 8px rgba(8,70,145,0.18), 0 1px 0 #fff' }}>{item.title}</CardTitle>
+        {/* The Product section */}
+        <div className="mt-2">
+          <div className="text-base text-[#084691] font-bold mb-0.5">The Product</div>
+          <div className="text-[#225898] text-sm font-normal">
+            <DescriptionPreview
+              description={item.description && item.description.trim() !== "" ? item.description : "Information not available."}
+              title={item.title}
+              onReadMore={() => setShowDescModal(true)}
+            />
+          </div>
+        </div>
+        {/* The Patron section */}
+        <div className="mt-2">
+          <div className="text-base text-[#084691] font-bold mb-0.5">The Patron</div>
+          <div className="text-[#225898] text-sm font-normal">
+            <DescriptionPreview
+              description={item.patron && item.patron.trim() !== "" ? item.patron : "Information not available."}
+              title={item.title}
+              onReadMore={() => setShowPatronModal(true)}
+            />
+          </div>
+        </div>
+        {/* Divider above price section */}
+        <div className="border-t border-[#084691]/20 mt-4 mb-2" />
+        {/* Actual Price & Start Bid row */}
+        <div className="flex items-center justify-between gap-2 mt-3">
+          <div className="flex flex-col items-start">
+            <span className="text-xs text-[#084691] uppercase tracking-wider mb-0.5">Actual Price</span>
+            <span className="font-playfair text-lg font-bold" style={{ color: '#D4AF37' }}>NPR {item.actualPrice?.toLocaleString?.() ?? 'NA'}</span>
+          </div>
+          <div className="flex flex-col items-end">
+            <span className="text-xs text-[#084691] uppercase tracking-wider mb-0.5">Start Bid</span>
+            <span className="font-playfair text-lg font-bold" style={{ color: '#D4AF37' }}>NPR {item.startingBid?.toLocaleString?.() ?? 'NA'}</span>
+          </div>
+        </div>
       </CardHeader>
 
+      {/* Divider */}
+      <div className="border-t border-[#084691]/20 mt-4 mb-2" />
+
       <CardContent className="pt-0">
-        {/* Current Bid */}
-        <div className="mb-4">
-          <div className="text-xs text-[#084691] uppercase tracking-wider mb-1">Current Bid</div>
-
-          <motion.div
-            key={item.currentBid}
-            initial={{ scale: 1.15, color: "#D4AF37" }}
-            animate={{ scale: 1, color: "#D4AF37" }}
-            transition={{ type: "spring", stiffness: 300, damping: 20 }}
-            className="font-playfair text-3xl font-bold"
-            style={{ color: "#D4AF37" }}
-          >
-            NPR {item.currentBid.toLocaleString()}
-          </motion.div>
-          <div className="text-xs text-[#084691] mt-1">
-            {item.currentBidder ? (
-              <span>Leading: <span className="text-[#084691] font-semibold">{item.currentBidder}</span></span>
-            ) : (
-              <span className="text-[#084691]/70">No bids yet</span>
-            )}
-          </div>
-        </div>
-
-        {/* Time + Starting Bid */}
-        <div className="flex items-center justify-between gap-2 mt-4 pt-4 border-t border-[#084691]/20 text-xs w-full">
-          <div className="flex items-center gap-1.5">
-            {item.endTime && (
-              <>
-                <Clock size={13} className="shrink-0 text-[#225898]" />
-                <span className={isClosed ? "text-red-500 font-semibold" : "text-[#225898]"}>
-                  {isClosed ? "Closed" : timeRemaining}
+        {/* Current Bid/Leading or Sold Price/Sold To depending on item status */}
+        {isClosed ? (
+          <div className="flex items-center justify-between gap-2 mb-4">
+            <div className="flex flex-col items-start">
+              <span className="text-xs text-[#084691] uppercase tracking-wider mb-0.5">Sold Price</span>
+              <span className="font-playfair text-lg font-bold" style={{ color: '#D4AF37' }}>NPR {item.soldPrice?.toLocaleString?.() ?? '0'}</span>
+            </div>
+            <div className="flex flex-col items-end">
+              <span className="text-xs text-[#084691] uppercase tracking-wider mb-0.5">Sold To</span>
+              {item.currentBidder ? (
+                <span className="font-playfair text-lg font-bold" style={{ color: '#D4AF37' }}>{item.currentBidder}</span>
+              ) : (
+                <span className="font-playfair text-lg font-bold" style={{ color: '#D4AF37' }}>
+                  No bids
                 </span>
-              </>
-            )}
+              )}
+            </div>
           </div>
-          <div className="text-[#225898]">
-            Start: NPR {item.startingBid.toLocaleString()}
+        ) : (
+          <div className="flex items-center justify-between gap-2 mb-4">
+            <div className="flex flex-col items-start">
+              <span className="text-xs text-[#084691] uppercase tracking-wider mb-0.5">Current Bid</span>
+              <span className="font-playfair text-lg font-bold" style={{ color: '#D4AF37' }}>NPR {item.currentBid.toLocaleString()}</span>
+            </div>
+            <div className="flex flex-col items-end">
+              <span className="text-xs text-[#084691] uppercase tracking-wider mb-0.5">Leading</span>
+              {item.currentBidder ? (
+                <span className="font-playfair text-lg font-bold" style={{ color: '#D4AF37' }}>{item.currentBidder}</span>
+              ) : (
+                <span className="font-playfair text-lg font-bold" style={{ color: '#D4AF37' }}>
+                  No bids yet
+                </span>
+              )}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Action hint */}
         <div className="mt-4 flex justify-center">
@@ -269,7 +309,6 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
             </div>
           ) : null}
         </div>
-
       </CardContent>
     </Card>
     </>

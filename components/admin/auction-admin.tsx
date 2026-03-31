@@ -42,7 +42,9 @@ export function AuctionAdmin() {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
+    patron: "",
     imageUrl: "",
+    actualPrice: "",
     startingBid: "",
     endTime: "",
     isActive: true,
@@ -54,7 +56,9 @@ export function AuctionAdmin() {
     setFormData({
       title: "",
       description: "",
+      patron: "",
       imageUrl: "",
+      actualPrice: "",
       startingBid: "",
       endTime: "",
       isActive: true
@@ -62,12 +66,14 @@ export function AuctionAdmin() {
     setShowForm(true);
   };
 
-  const handleEdit = (item: AuctionItem) => {
+  const handleEdit = (item: AuctionItem & { patron?: string; actualPrice?: number }) => {
     setEditingItem(item);
     setFormData({
       title: item.title,
       description: item.description || "",
+      patron: (item as any).patron || "",
       imageUrl: item.imageUrl || "",
+      actualPrice: (item as any).actualPrice?.toString() || "",
       startingBid: item.startingBid.toString(),
       endTime: item.endTime
         ? new Date(item.endTime).toISOString().slice(0, 16)
@@ -101,6 +107,8 @@ export function AuctionAdmin() {
         body: JSON.stringify({
           ...formData,
           imageUrl,
+          patron: formData.patron,
+          actualPrice: formData.actualPrice ? parseFloat(formData.actualPrice) : 0,
           startingBid: parseFloat(formData.startingBid),
           endTime: formData.endTime ? new Date(formData.endTime).toISOString() : null,
         }),
@@ -238,6 +246,20 @@ export function AuctionAdmin() {
             {editingItem ? "Edit Item" : "New Item"}
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium text-[#f5f5f5]/80 mb-2">
+                Title *
+              </label>
+              <input
+                type="text"
+                value={formData.title}
+                onChange={(e) =>
+                  setFormData({ ...formData, title: e.target.value })
+                }
+                className="w-full px-4 py-2 bg-[#1a1a1a]/50 border border-[#D4AF37]/30 rounded-lg text-[#f5f5f5]"
+                required
+              />
+            </div>
             <style>{`
               /* Make the calendar icon in datetime-local input white */
               input[type="datetime-local"]::-webkit-calendar-picker-indicator {
@@ -256,42 +278,57 @@ export function AuctionAdmin() {
                 color: #f5f5f5;
               }
             `}</style>
-            <div>
-              <label className="block text-sm font-medium text-[#f5f5f5]/80 mb-2">
-                Title *
-              </label>
-              <input
-                type="text"
-                value={formData.title}
-                onChange={(e) =>
-                  setFormData({ ...formData, title: e.target.value })
-                }
-                className="w-full px-4 py-2 bg-[#1a1a1a]/50 border border-[#D4AF37]/30 rounded-lg text-[#f5f5f5]"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-[#f5f5f5]/80 mb-2">
-                Starting Bid *
-              </label>
-              <input
-                type="number"
-                value={formData.startingBid}
-                onChange={(e) =>
-                  setFormData({ ...formData, startingBid: e.target.value })
-                }
-                className="w-full px-4 py-2 bg-[#1a1a1a]/50 border border-[#D4AF37]/30 rounded-lg text-[#f5f5f5]"
-                required
-              />
+            <div className="md:col-span-2 flex flex-col md:flex-row gap-4">
+              <div className="w-full md:w-1/2">
+                <label className="block text-sm font-medium text-[#f5f5f5]/80 mb-2">
+                  Actual Price
+                </label>
+                <input
+                  type="number"
+                  value={formData.actualPrice}
+                  onChange={(e) =>
+                    setFormData({ ...formData, actualPrice: e.target.value })
+                  }
+                  className="w-full px-4 py-2 bg-[#1a1a1a]/50 border border-[#D4AF37]/30 rounded-lg text-[#f5f5f5]"
+                  placeholder=""
+                />
+              </div>
+              <div className="w-full md:w-1/2">
+                <label className="block text-sm font-medium text-[#f5f5f5]/80 mb-2">
+                  Starting Bid *
+                </label>
+                <input
+                  type="number"
+                  value={formData.startingBid}
+                  onChange={(e) =>
+                    setFormData({ ...formData, startingBid: e.target.value })
+                  }
+                  className="w-full px-4 py-2 bg-[#1a1a1a]/50 border border-[#D4AF37]/30 rounded-lg text-[#f5f5f5]"
+                  required
+                />
+              </div>
             </div>
             <div className="md:col-span-2">
               <label className="block text-sm font-medium text-[#f5f5f5]/80 mb-2">
-                Description
+                About the Product
               </label>
               <textarea
                 value={formData.description}
                 onChange={(e) =>
                   setFormData({ ...formData, description: e.target.value })
+                }
+                className="w-full px-4 py-2 bg-[#1a1a1a]/50 border border-[#D4AF37]/30 rounded-lg text-[#f5f5f5]"
+                rows={3}
+              />
+            </div>
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium text-[#f5f5f5]/80 mb-2">
+                About the Patron
+              </label>
+              <textarea
+                value={formData.patron}
+                onChange={(e) =>
+                  setFormData({ ...formData, patron: e.target.value })
                 }
                 className="w-full px-4 py-2 bg-[#1a1a1a]/50 border border-[#D4AF37]/30 rounded-lg text-[#f5f5f5]"
                 rows={3}
@@ -315,6 +352,7 @@ export function AuctionAdmin() {
                 <span className="text-[#D4AF37]">(e.g. <span className="break-all">https://drive.google.com/file/d/FILE_ID/view?usp=sharing</span>).</span><br/>
               </p>
             </div>
+
             <div>
               <label className="block text-sm font-medium text-[#f5f5f5]/80 mb-2">
                 End Time
