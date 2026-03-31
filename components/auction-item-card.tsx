@@ -11,6 +11,36 @@ import { BidModal } from "@/components/auction-bid-modal";
 import { AuctionDescModal } from "@/components/auction-desc-modal";
 import { ContactModal } from "@/components/ContactModal";
 
+// Simple image zoom modal using Next.js Image
+function ImageZoomModal({ open, imageUrl, title, onClose }: { open: boolean, imageUrl: string, title: string, onClose: () => void }) {
+  if (!open) return null;
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70" onClick={onClose}>
+      <div
+        className="relative bg-white rounded-lg shadow-lg p-2 w-full max-w-2xl md:max-w-4xl lg:max-w-5xl xl:max-w-6xl"
+        style={{ maxHeight: '90vh' }}
+        onClick={e => e.stopPropagation()}
+      >
+        <div
+          className="relative w-full"
+          style={{ minHeight: '400px', minWidth: '300px', height: '80vh', maxHeight: '90vh' }}
+        >
+          <Image
+            src={imageUrl}
+            alt={title}
+            fill
+            className="rounded-lg object-contain"
+            style={{ objectFit: 'contain' }}
+            sizes="(max-width: 768px) 90vw, (max-width: 1200px) 80vw, 1000px"
+            priority
+          />
+        </div>
+        <button className="absolute top-2 right-2 text-gray-700 hover:text-red-500 text-xl font-bold" onClick={onClose} aria-label="Close">&times;</button>
+      </div>
+    </div>
+  );
+}
+
 interface AuctionItem {
   id: string;
   title: string;
@@ -73,6 +103,7 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
   const [showBidModal, setShowBidModal] = useState(false);
   const [showDescModal, setShowDescModal] = useState(false);
   const [showContactModal, setShowContactModal] = useState(false);
+  const [showImageZoom, setShowImageZoom] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [checkingAdmin, setCheckingAdmin] = useState(true);
   const router = useRouter();
@@ -120,8 +151,15 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
           onClose={() => setShowDescModal(false)}
         />
       )}
-      {/* Contact Modal for non-admin users */}
+      {/* Contact Modal for non-admin users (kept for future use, not triggered) */}
       <ContactModal open={showContactModal} onClose={() => setShowContactModal(false)} />
+      {/* Image Zoom Modal for non-admins */}
+      <ImageZoomModal
+        open={showImageZoom}
+        imageUrl={item.imageUrl && item.imageUrl.trim() !== "" ? item.imageUrl : "/images/auctionitemplateholder.jpg"}
+        title={item.title}
+        onClose={() => setShowImageZoom(false)}
+      />
       <Card
         className={`group relative border overflow-hidden transition-all duration-300 rounded-2xl ${
           isClosed
@@ -132,9 +170,8 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
         onClick={() => {
           if (isAdmin) {
             window.open(`/auction/${item.id}`, '_blank');
-          } else if (!isClosed && !showDescModal && !showBidModal && !showContactModal) {
-            // setShowBidModal(true); // Bid modal is now disabled for normal users
-            setShowContactModal(true);
+          } else if (!isClosed && !showDescModal && !showBidModal && !showContactModal && !showImageZoom) {
+            setShowImageZoom(true);
           }
         }}
         tabIndex={isClosed ? -1 : 0}
@@ -224,14 +261,7 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
             <div className="text-[#d71a21] font-medium flex items-center gap-1.5 text-xs">
               <Eye size={14} /> Click to view details
             </div>
-          ) : (
-            !isClosed && (
-              <div className="w-full py-2.5 rounded-xl bg-[#d71a21] text-white font-bold flex items-center gap-2 justify-center text-sm shadow-lg">
-                <Gavel size={15} /> Place a Bid
-              </div>
-            )
-            // null
-          )}
+          ) : null}
         </div>
 
       </CardContent>
