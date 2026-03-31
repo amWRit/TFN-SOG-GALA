@@ -10,7 +10,7 @@ const HeroAdminNavbar: React.FC<HeroAdminNavbarProps> = ({ showAdmin }) => {
   return (
     <div style={{ marginTop: 0, marginBottom: 24, display: 'flex', gap: 16, justifyContent: 'center' }}>
       <a href="/admin/dashboard" className={styles.heroAdminButton}>Admin Dashboard</a>
-      <a href="/auction" className={styles.heroAdminButton}>Auction</a>
+      <a href="/progress" className={styles.heroAdminButton}>Progress</a>
       <a href="/seating" className={styles.heroAdminButton}>Seating</a>
       <a href="/register" className={styles.heroAdminButton}>Register</a>
     </div>

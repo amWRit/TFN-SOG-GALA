@@ -10,6 +10,16 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// Gala configuration and fundraising progress
+model GalaConfig {
+  id               Int    @id @default(autoincrement())
+  galaYear         Int    @default(2026) // e.g. 2026
+  targetAmount     Int    @default(10000) // e.g. 10000
+  preAuctionTotal  Int    @default(0) // sum of all offline sources (bank + reg + donations)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
 // Seating assignments - stores who sits where
 model Seat {
   id             String   @id @default(cuid())

@@ -1,0 +1,27 @@
+.glass-swipe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  pointer-events: none;
+  z-index: 2;
+  background: linear-gradient(120deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.30) 40%, rgba(255,255,255,0.10) 80%);
+  animation: glassSwipeMove 2.5s linear infinite;
+  mix-blend-mode: lighten;
+  border-radius: inherit;
+}
+
+@keyframes glassSwipeMove {
+  0% {
+    transform: translateX(-60%) skewX(-20deg);
+    opacity: 0.7;
+  }
+  40% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(120%) skewX(-20deg);
+    opacity: 0.7;
+  }
+}
