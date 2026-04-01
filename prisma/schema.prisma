@@ -38,6 +38,7 @@ model Seat {
 model AuctionItem {
   id          String   @id @default(cuid())
   title       String
+  sequence    Int      @default(0)
   patron      String? // who gave/supported the auction item
   description String?
   imageUrl    String?
@@ -54,6 +55,7 @@ model AuctionItem {
   bids        Bid[]
 
   @@index([isActive])
+  @@index([sequence])
 }
 
 // Bid history for auction items

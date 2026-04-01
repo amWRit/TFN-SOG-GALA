@@ -10,6 +10,7 @@ import AuctionSkeleton from "./auction-skeleton";
 interface AuctionItem {
   id: string;
   title: string;
+  sequence: number;
   description: string | null;
   imageUrl: string | null;
   startingBid: number;
@@ -49,8 +50,8 @@ export function AuctionGrid() {
     );
   }
 
-  const activeItems = (items?.filter((item) => item.isActive) || []).sort((a, b) => b.startingBid - a.startingBid);
-  const inactiveItems = (items?.filter((item) => !item.isActive) || []).sort((a, b) => b.startingBid - a.startingBid);
+  const activeItems = (items?.filter((item) => item.isActive) || []).sort((a, b) => (a.sequence ?? 0) - (b.sequence ?? 0));
+  const inactiveItems = (items?.filter((item) => !item.isActive) || []).sort((a, b) => (a.sequence ?? 0) - (b.sequence ?? 0));
 
   return (
     <div className="space-y-12">

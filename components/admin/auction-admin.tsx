@@ -1,22 +1,39 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { AuctionAddBidModal } from "@/components/admin/auction-add-bid-modal";
 import { AuctionItemAdminCard } from "@/components/admin/auction-item-admin-card";
 import { AuctionBidHistoryModal } from "@/components/admin/auction-bid-history-modal";
+import { AuctionDetailModal } from "@/components/admin/auction-detail-modal";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
 import useSWR from "swr";
-import { Plus, Edit, Trash2, Gavel, Pause, Play, Pencil } from "lucide-react";
-import { OkModal } from "@/components/admin/ok-modal";
+import { Plus } from "lucide-react";
 import styles from '../../styles/admin-dashboard.module.css';
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  verticalListSortingStrategy,
+  useSortable,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 interface AuctionItem {
   id: string;
   title: string;
+  sequence: number;
+  patron?: string | null;
   description: string | null;
   imageUrl: string | null;
+  actualPrice?: number;
   startingBid: number;
   currentBid: number;
   currentBidder: string | null;
@@ -32,6 +49,8 @@ export function AuctionAdmin() {
   const [isSubmittingBid, setIsSubmittingBid] = useState(false);
   const [showHistoryModal, setShowHistoryModal] = useState(false);
   const [historyItemId, setHistoryItemId] = useState<string | null>(null);
+  const [showDetailModal, setShowDetailModal] = useState(false);
+  const [detailItemId, setDetailItemId] = useState<string | null>(null);
   
   const { data: items, mutate } = useSWR<AuctionItem[]>(
     "/api/admin/auction/items",
@@ -50,6 +69,7 @@ export function AuctionAdmin() {
     isActive: true,
   });
   const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'paused'>('all');
+  const sensors = useSensors(useSensor(PointerSensor));
 
   const handleCreate = () => {
     setEditingItem(null);
@@ -66,7 +86,7 @@ export function AuctionAdmin() {
     setShowForm(true);
   };
 
-  const handleEdit = (item: AuctionItem & { patron?: string; actualPrice?: number }) => {
+  const handleEdit = (item: AuctionItem) => {
     setEditingItem(item);
     setFormData({
       title: item.title,
@@ -81,6 +101,11 @@ export function AuctionAdmin() {
       isActive: item.isActive,
     });
     setShowForm(true);
+  };
+
+  const handleView = (item: AuctionItem) => {
+    setDetailItemId(item.id);
+    setShowDetailModal(true);
   };
 
   const handleSave = async () => {
@@ -196,6 +221,90 @@ export function AuctionAdmin() {
       toast.error("Failed to update item status");
     }
   };
+
+  const orderedItems = useMemo(
+    () => (items || []).slice().sort((a, b) => (a.sequence ?? 0) - (b.sequence ?? 0)),
+    [items]
+  );
+
+  const filteredItems = useMemo(
+    () =>
+      orderedItems.filter((item) => {
+        if (statusFilter === "all") return true;
+        if (statusFilter === "active") return item.isActive;
+        return !item.isActive;
+      }),
+    [orderedItems, statusFilter]
+  );
+
+  const selectedDetailItem = useMemo(
+    () => orderedItems.find((item) => item.id === detailItemId) || null,
+    [orderedItems, detailItemId]
+  );
+
+  async function handleDragEnd(event: any) {
+    const { active, over } = event;
+    if (!over || active.id === over.id || !items) return;
+
+    const oldIndex = orderedItems.findIndex((item) => item.id === active.id);
+    const newIndex = orderedItems.findIndex((item) => item.id === over.id);
+    if (oldIndex < 0 || newIndex < 0) return;
+
+    const reordered = arrayMove(orderedItems, oldIndex, newIndex).map((item, idx) => ({
+      ...item,
+      sequence: idx + 1,
+    }));
+
+    mutate(reordered, false);
+    try {
+      const res = await fetch("/api/admin/auction/items", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          order: reordered.map(({ id, sequence }) => ({ id, sequence })),
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to update order");
+      }
+
+      toast.success("Auction order updated");
+      mutate();
+    } catch {
+      toast.error("Failed to save auction order");
+      mutate();
+    }
+  }
+
+  function SortableAuctionCard({ item }: { item: AuctionItem }) {
+    const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: item.id });
+    const style = {
+      transform: CSS.Transform.toString(transform),
+      transition,
+      opacity: isDragging ? 0.6 : 1,
+      zIndex: isDragging ? 10 : undefined,
+    };
+
+    return (
+      <div ref={setNodeRef} style={style} {...attributes}>
+        <AuctionItemAdminCard
+          item={item}
+          onView={handleView}
+          onEdit={handleEdit}
+          onAddBid={(item) => { setBidModalItem(item); setShowBidModal(true); }}
+          onDelete={handleDelete}
+          onToggleActive={handleToggleActive}
+          onShowHistory={(item) => { setHistoryItemId(item.id); setShowHistoryModal(true); }}
+          deleteId={deleteId}
+          deleting={deleting}
+          confirmDelete={confirmDelete}
+          cancelDelete={() => setDeleteId(null)}
+          dragHandleProps={listeners}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -398,27 +507,42 @@ export function AuctionAdmin() {
       )}
 
       {/* Items List */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {items?.filter(item => {
-          if (statusFilter === 'all') return true;
-          if (statusFilter === 'active') return item.isActive;
-          if (statusFilter === 'paused') return !item.isActive;
-        }).slice().sort((a, b) => a.title.localeCompare(b.title)).map((item) => (
-          <AuctionItemAdminCard
-            key={item.id}
-            item={item}
-            onEdit={handleEdit}
-            onAddBid={(item) => { setBidModalItem(item); setShowBidModal(true); }}
-            onDelete={handleDelete}
-            onToggleActive={handleToggleActive}
-            onShowHistory={(item) => { setHistoryItemId(item.id); setShowHistoryModal(true); }}
-            deleteId={deleteId}
-            deleting={deleting}
-            confirmDelete={confirmDelete}
-            cancelDelete={() => setDeleteId(null)}
-          />
-        ))}
-      </div>
+      {statusFilter !== "all" && (
+        <p className="text-xs text-[#f5f5f5]/70 -mt-2">
+          Drag-and-drop ordering works across all items. Switch to <b>All</b> to reorder.
+        </p>
+      )}
+
+      {statusFilter === "all" ? (
+        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+          <SortableContext items={orderedItems.map((item) => item.id)} strategy={verticalListSortingStrategy}>
+            <div className="grid grid-cols-1 gap-4">
+              {orderedItems.map((item) => (
+                <SortableAuctionCard key={item.id} item={item} />
+              ))}
+            </div>
+          </SortableContext>
+        </DndContext>
+      ) : (
+        <div className="grid grid-cols-1 gap-4">
+          {filteredItems.map((item) => (
+            <AuctionItemAdminCard
+              key={item.id}
+              item={item}
+              onView={handleView}
+              onEdit={handleEdit}
+              onAddBid={(item) => { setBidModalItem(item); setShowBidModal(true); }}
+              onDelete={handleDelete}
+              onToggleActive={handleToggleActive}
+              onShowHistory={(item) => { setHistoryItemId(item.id); setShowHistoryModal(true); }}
+              deleteId={deleteId}
+              deleting={deleting}
+              confirmDelete={confirmDelete}
+              cancelDelete={() => setDeleteId(null)}
+            />
+          ))}
+        </div>
+      )}
     <AuctionBidHistoryModal
       open={showHistoryModal}
       itemId={historyItemId}
@@ -430,6 +554,11 @@ export function AuctionAdmin() {
       isSubmitting={isSubmittingBid}
       onClose={() => setShowBidModal(false)}
       onSubmit={handleUpdateBid}
+    />
+    <AuctionDetailModal
+      open={showDetailModal}
+      item={selectedDetailItem}
+      onClose={() => setShowDetailModal(false)}
     />
   </div>
   );

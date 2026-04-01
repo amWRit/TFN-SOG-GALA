@@ -15,8 +15,8 @@ export async function GET() {
         },
       },
       orderBy: [
-        { isActive: "desc" },
-        { createdAt: "desc" },
+        { sequence: "asc" },
+        { createdAt: "asc" },
       ],
     });
 
