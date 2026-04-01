@@ -61,7 +61,7 @@ export function AuctionGrid() {
             <span className="inline-block w-3 h-3 rounded-full bg-[#d71a21] animate-pulse" />
             Bidding Now Open
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {activeItems.map((item, index) => (
               <motion.div
                 key={item.id}
@@ -83,7 +83,7 @@ export function AuctionGrid() {
           <h2 className="font-playfair text-3xl md:text-4xl font-bold text-white/60 mb-8">
             Auction Closed
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {inactiveItems.map((item, index) => (
               <motion.div
                 key={item.id}
