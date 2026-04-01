@@ -1,6 +1,7 @@
 
 import React from "react";
 import Image from "next/image";
+import { Tag } from "lucide-react";
 
 
 interface ProgramCardProps {
@@ -92,7 +93,10 @@ const ProgramCard: React.FC<ProgramCardProps> = ({ item, truncate = defaultTrunc
       </span>
       {/* External link removed */}
     </div>
-    <div style={{ color: "#d71a21", fontWeight: 700, fontSize: 13, textTransform: 'uppercase', letterSpacing: 0.5, marginTop: 4 }}>{item.type}</div>
+    <div style={{ color: "#d71a21", fontWeight: 700, fontSize: 13, textTransform: 'uppercase', letterSpacing: 0.5, marginTop: 4, display: 'flex', alignItems: 'center', gap: 6 }}>
+      <Tag size={13} />
+      <span>{item.type}</span>
+    </div>
   </div>
 );
 
