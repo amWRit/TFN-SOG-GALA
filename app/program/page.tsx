@@ -114,7 +114,7 @@ export default function ProgramPage() {
         <div className="absolute inset-0 bg-gradient-to-br from-[#084691]/88 via-[#225898]/75 to-[#084691]/88" />
         <div className="relative z-10 text-center px-4 py-4 w-full max-w-6xl mx-auto">
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-2 max-w-6xl mx-auto" style={{ letterSpacing: 1 }}>
-            Event <span className="text-[#d71a21]">Program</span>
+            Program <span className="text-[#d71a21]">Details</span>
           </h1>
           <p className="text-lg text-gray-200 max-w-4xl mx-auto mb-2 break-words">
             Explore the full schedule of the gala, including performances, speakers, and more.

@@ -93,7 +93,7 @@ export default function AuctionPage() {
         <div className="absolute inset-0 bg-gradient-to-br from-[#084691]/88 via-[#225898]/75 to-[#084691]/88" />
         <div className="relative z-10 text-center px-4 py-4 w-full max-w-6xl mx-auto">
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-2 max-w-6xl mx-auto" style={{ letterSpacing: 1 }}>
-            Auction <span className="text-[#d71a21]">Event</span>
+            Auction <span className="text-[#d71a21]">Details</span>
           </h1>
           <p className="text-lg text-gray-200 max-w-4xl mx-auto mb-2 break-words">
             Bid on exclusive experiences and items. All proceeds support Teach For Nepal's mission.

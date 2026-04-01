@@ -60,7 +60,7 @@ export function AuctionGrid() {
         <div>
           <h2 className="font-playfair text-3xl md:text-4xl font-bold text-white mb-8 flex items-center justify-center gap-3">
             <span className="inline-block w-8 h-2 rounded-full bg-[#d71a21] animate-pulse" style={{ minWidth: 24, minHeight: 8, borderRadius: 6 }} />
-            Bidding Now Open
+            Bidding Open
             <span className="inline-block w-8 h-2 rounded-full bg-[#d71a21] animate-pulse" style={{ minWidth: 24, minHeight: 8, borderRadius: 6 }} />
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
