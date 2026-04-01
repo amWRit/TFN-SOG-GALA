@@ -121,6 +121,7 @@ async function main() {
       const baseBid = Math.floor(Math.random() * 1000) + 100;
       return {
         title: `Auction Item ${index + 1}`,
+        sequence: index + 1,
         description: `Description for Auction Item ${index + 1}. A unique experience or item supporting Teach For Nepal-style initiatives.`,
         imageUrl: auctionImg,
         startingBid: baseBid,

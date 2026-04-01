@@ -1,15 +1,17 @@
 "use client";
 import { Card } from "@/components/ui/card";
-import { Pencil, Gavel, Trash2, Pause, Play, Activity, MoreVertical } from "lucide-react";
+import { Pencil, Gavel, Trash2, Pause, Play, Activity, MoreVertical, GripVertical } from "lucide-react";
 import { OkModal } from "@/components/admin/ok-modal";
 import { DropdownMenu } from "@/components/ui/dropdown-menu";
-import styles from '../../styles/admin-dashboard.module.css';
 
 interface AuctionItem {
   id: string;
   title: string;
+  sequence: number;
+  patron?: string | null;
   description: string | null;
   imageUrl: string | null;
+  actualPrice?: number;
   startingBid: number;
   currentBid: number;
   currentBidder: string | null;
@@ -19,19 +21,22 @@ interface AuctionItem {
 
 interface AuctionItemAdminCardProps {
   item: AuctionItem;
+  onView?: (item: AuctionItem) => void;
   onEdit: (item: AuctionItem) => void;
   onAddBid: (item: AuctionItem) => void;
   onDelete: (id: string) => void;
-  onToggleActive: (item: AuctionItem) => void;
+  onToggleActive: (item: AuctionItem) => void | Promise<void>;
   onShowHistory: (item: AuctionItem) => void;
   deleteId: string | null;
   deleting: boolean;
   confirmDelete: () => void;
   cancelDelete: () => void;
+  dragHandleProps?: React.HTMLAttributes<HTMLDivElement>;
 }
 
 export function AuctionItemAdminCard({
   item,
+  onView,
   onEdit,
   onAddBid,
   onDelete,
@@ -40,26 +45,68 @@ export function AuctionItemAdminCard({
   deleteId,
   deleting,
   confirmDelete,
-  cancelDelete
+  cancelDelete,
+  dragHandleProps
 }: AuctionItemAdminCardProps) {
+  const handleCardClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    const target = e.target as HTMLElement;
+    if (
+      target.closest('[data-drag-handle]') ||
+      target.closest('[data-actions-button]') ||
+      target.closest('[data-actions-content]')
+    ) {
+      return;
+    }
+    onView?.(item);
+  };
+
   return (
-    <Card className="glass-strong p-4 relative">
-      <div className="flex justify-between items-start mb-2 gap-2">
-        <h3 className="font-playfair text-lg font-bold text-[#D4AF37] break-words max-w-[70%]">
-          {item.title}
-        </h3>
+    <Card
+      className="glass-strong p-4 relative cursor-pointer"
+      onClick={handleCardClick}
+      role="button"
+      tabIndex={0}
+      aria-label="Open Auction Item Details"
+    >
+      <div className="flex justify-between items-center gap-2">
+        <div className="flex items-center gap-2 flex-1 min-w-0">
+          <div
+            {...dragHandleProps}
+            className="flex items-center justify-center cursor-grab active:cursor-grabbing text-[#D4AF37]"
+            style={{ touchAction: 'none' }}
+            tabIndex={-1}
+            aria-label="Drag to reorder"
+            data-drag-handle
+          >
+            <GripVertical size={18} />
+          </div>
+          <div className="hidden sm:block text-lg font-bold text-[#D4AF37] w-8 text-center select-none shrink-0">
+            {item.sequence}
+          </div>
+          <h3
+            className="font-playfair text-lg font-bold text-[#f5f5f5] min-w-0 truncate flex-1 md:flex-none md:w-[520px]"
+            title={item.title}
+          >
+            {item.title}
+          </h3>
+          <div className="hidden md:flex items-center gap-4 text-xs text-[#f5f5f5]/80 whitespace-nowrap shrink-0">
+            <span className="inline-block w-[190px]">Actual Price: <b>NPR {(item.actualPrice || 0).toLocaleString()}</b></span>
+            <span className="inline-block w-[190px]">Starting Bid: <b>NPR {item.startingBid.toLocaleString()}</b></span>
+          </div>
+        </div>
         <DropdownMenu.Root>
           <DropdownMenu.Trigger asChild>
             <button
               type="button"
               className="w-10 h-10 rounded-full bg-[#D4AF37]/20 hover:bg-[#D4AF37]/40 transition flex items-center justify-center flex-shrink-0"
               title="Actions"
+              data-actions-button
             >
               <MoreVertical size={20} className="text-[#D4AF37]" />
             </button>
           </DropdownMenu.Trigger>
           <DropdownMenu.Portal>
-            <DropdownMenu.Content className="z-[1000] min-w-[100px] rounded-md bg-[#232323] p-2 shadow-lg border border-[#D4AF37]/30">
+            <DropdownMenu.Content className="z-[1000] min-w-[100px] rounded-md bg-[#232323] p-2 shadow-lg border border-[#D4AF37]/30" data-actions-content>
               <DropdownMenu.Item onSelect={() => onAddBid(item)} className="flex items-center gap-2 px-2 py-2 rounded hover:bg-[#D4AF37]/10 cursor-pointer text-[#f5f5f5]/80">
                   <Gavel size={16} className="text-[#D4AF37]" />
                   <span>Bid</span>
@@ -94,12 +141,6 @@ export function AuctionItemAdminCard({
           okDisabled={deleting}
           cancelDisabled={deleting}
         />
-      </div>
-      <div className="text-sm text-[#f5f5f5]/80 mb-1">
-        Current Bid: NPR {item.currentBid.toLocaleString()}
-      </div>
-      <div className="text-xs text-[#f5f5f5]/60 mb-2">
-        Current Bidder: {item.currentBidder ? item.currentBidder : 'NA'}
       </div>
       {/* Pause/Play moved to dropdown menu */}
     </Card>

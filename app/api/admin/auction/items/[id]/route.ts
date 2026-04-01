@@ -18,7 +18,7 @@ export async function PUT(
 
   try {
     const body = await request.json();
-    const { title, description, imageUrl, startingBid, endTime, isActive, patron, actualPrice } = body;
+    const { title, description, imageUrl, startingBid, endTime, isActive, patron, actualPrice, sequence } = body;
     const { id } = await context.params;
     let soldPriceUpdate = {};
     if (isActive === false) {
@@ -40,6 +40,7 @@ export async function PUT(
         ...(isActive !== undefined && { isActive }),
         ...(patron !== undefined && { patron }),
         ...(actualPrice !== undefined && { actualPrice }),
+        ...(sequence !== undefined && { sequence }),
         ...soldPriceUpdate,
       },
     });
@@ -67,6 +68,21 @@ export async function DELETE(
     await prisma.auctionItem.delete({
       where: { id },
     });
+
+    const remaining = await prisma.auctionItem.findMany({
+      select: { id: true },
+      orderBy: [{ sequence: "asc" }, { createdAt: "asc" }],
+    });
+
+    await prisma.$transaction(
+      remaining.map((item, index) =>
+        prisma.auctionItem.update({
+          where: { id: item.id },
+          data: { sequence: index + 1 },
+        })
+      )
+    );
+
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Error deleting auction item:", error);
