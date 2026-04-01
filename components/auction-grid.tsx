@@ -57,9 +57,10 @@ export function AuctionGrid() {
       {/* Active Items */}
       {activeItems.length > 0 && (
         <div>
-          <h2 className="font-playfair text-3xl md:text-4xl font-bold text-white mb-8 flex items-center gap-3">
-            <span className="inline-block w-3 h-3 rounded-full bg-[#d71a21] animate-pulse" />
+          <h2 className="font-playfair text-3xl md:text-4xl font-bold text-white mb-8 flex items-center justify-center gap-3">
+            <span className="inline-block w-8 h-2 rounded-full bg-[#d71a21] animate-pulse" style={{ minWidth: 24, minHeight: 8, borderRadius: 6 }} />
             Bidding Now Open
+            <span className="inline-block w-8 h-2 rounded-full bg-[#d71a21] animate-pulse" style={{ minWidth: 24, minHeight: 8, borderRadius: 6 }} />
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {activeItems.map((item, index) => (
@@ -80,7 +81,7 @@ export function AuctionGrid() {
       {/* Inactive/Closed Items */}
       {inactiveItems.length > 0 && (
         <div>
-          <h2 className="font-playfair text-3xl md:text-4xl font-bold text-white/60 mb-8">
+          <h2 className="font-playfair text-3xl md:text-4xl font-bold text-white/60 mb-8 text-center">
             Auction Closed
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
