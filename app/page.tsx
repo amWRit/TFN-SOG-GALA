@@ -14,7 +14,9 @@ const TeachForNepalHomepage = () => {
     <div className={styles.heroContainer}>
       {/* <Navbar /> */}
       <Hero2 />
-      <Highlights />
+      {/* Add a small empty div to force scroll */}
+      <div style={{ height: 'calc(var(--tab-bar-height, 75px) + 44px)' }} />
+      {/* <Highlights /> */}
       {/* <CTA /> */}
     </div>
   );

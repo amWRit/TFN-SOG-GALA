@@ -16,7 +16,7 @@ const HeroImageSection: React.FC<HeroImageSectionProps> = ({ onShowVideo }) => {
     const handleScroll = () => {
       if (!sectionRef.current) return;
       const rect = sectionRef.current.getBoundingClientRect();
-      if (rect.top < window.innerHeight * 0.7) {
+        if (rect.bottom > 0 && rect.top < window.innerHeight) {
         setShowText(true);
       } else {
         setShowText(false);
