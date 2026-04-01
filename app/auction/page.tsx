@@ -100,6 +100,7 @@ export default function AuctionPage() {
           </p>
         </div>
       </div>
+      <div className="w-full h-[10px] bg-white/90" />
 
       {/* ── Content below hero ── */}
       {/* <div className="px-4 w-full pt-4 pb-4">
