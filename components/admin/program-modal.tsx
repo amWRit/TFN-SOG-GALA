@@ -90,9 +90,14 @@ export const ProgramModal: React.FC<ProgramModalProps> = ({ open, mode, item, on
     // Convert Google Drive share link to direct image link if needed for speakerImgUrl and imageUrl
     let speakerImgUrl = processDriveLink(form.speakerImgUrl);
     let imageUrl = processDriveLink(form.imageUrl);
-    // Convert empty string dates to null
-    const startTime = form.startTime ? form.startTime : null;
-    const endTime = form.endTime ? form.endTime : null;
+    // Convert datetime-local string to full ISO string, or null if empty
+    const toISO = (val: string) => {
+      if (!val || val.trim() === "") return null;
+      const d = new Date(val);
+      return isNaN(d.getTime()) ? null : d.toISOString();
+    };
+    const startTime = toISO(form.startTime);
+    const endTime = toISO(form.endTime);
     onSave({ ...form, speakerImgUrl, imageUrl, startTime, endTime });
   }
 
