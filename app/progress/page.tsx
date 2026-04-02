@@ -6,6 +6,8 @@ import { Home, CheckCircle, Clock, Loader, PartyPopper } from "lucide-react";
 import styles from "../../styles/progress.module.css";
 import { useRouter } from "next/navigation";
 import NotFound from "@/components/NotFound";
+import FallingConfetti from "@/components/FallingConfetti";
+import ThankYouCard from "@/components/ThankYouCard";
 
 interface FundraisingSummary {
   galaYear: number;
@@ -77,6 +79,7 @@ export default function ProgressPage() {
 
   return (
     <div className="min-h-screen bg-[#07122b] flex flex-col items-center justify-center px-4 py-8">
+      {goalReached && <FallingConfetti />}
       {/* Home Button */}
       <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50">
         <a href="/" className="flex items-center gap-2 px-4 py-2 bg-white/90 text-gray-900 rounded-full shadow-lg font-semibold hover:bg-white transition-all border border-gray-200">
@@ -207,6 +210,9 @@ export default function ProgressPage() {
           {/* Empty cell for spacing on small screens */}
           <div className="hidden md:block" />
         </div>
+
+        {/* Thank You Card */}
+        {goalReached && <ThankYouCard />}
       </div>
     </div>
   );
