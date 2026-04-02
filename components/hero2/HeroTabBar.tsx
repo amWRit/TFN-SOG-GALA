@@ -19,7 +19,7 @@ const HeroTabBar: React.FC<HeroTabBarProps> = ({ onShowVideo }) => (
       <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
         <Ticket size={26} style={{ marginBottom: 2 }} />
         <span className={styles.tabLabelLong}>Book Tickets</span>
-        <span className={styles.tabLabelShort}>Book Tickets</span>
+        <span className={styles.tabLabelShort}>Tickets</span>
       </span>
     </a>
     <a
@@ -29,7 +29,7 @@ const HeroTabBar: React.FC<HeroTabBarProps> = ({ onShowVideo }) => (
       <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
         <Info size={26} style={{ marginBottom: 2 }} />
         <span className={styles.tabLabelLong}>About the Gala</span>
-        <span className={styles.tabLabelShort}>About Gala</span>
+        <span className={styles.tabLabelShort}>About</span>
       </span>
     </a>
     <a
