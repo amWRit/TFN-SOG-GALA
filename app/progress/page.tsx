@@ -127,6 +127,19 @@ export default function ProgressPage() {
             style={{ left: `calc(${Math.min(100, 100)}% - 2px)` }}
           />
         </div>
+        {/* Above and Beyond Celebration */}
+        {totalRaised > targetAmount && (
+          <div className="w-full flex flex-col items-center mb-6 pt-6">
+            <div className="flex items-center gap-2 mb-1 animate-bounce">
+              <span className="text-2xl">🎉</span>
+              <span className="text-2xl md:text-3xl font-extrabold text-yellow-300 drop-shadow">Above & Beyond</span>
+              <span className="text-2xl">🎉</span>
+            </div>
+            <div className="text-3xl md:text-4xl font-bold text-yellow-200 bg-[#1a2540]/80 px-6 py-2 rounded-full shadow-lg mt-2 animate-pulse">
+              +NPR {(totalRaised - targetAmount).toLocaleString()}
+            </div>
+          </div>
+        )}
         {/* Bar labels */}
         <div className="w-full mb-8">
           <div className="hidden md:flex justify-between text-white text-sm md:text-base font-medium">
