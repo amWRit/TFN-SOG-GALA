@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ProgressSkeleton from "@/components/progress-skeleton";
 import { Home, CheckCircle, Clock, Loader, PartyPopper } from "lucide-react";
 import styles from "../../styles/progress.module.css";
@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import NotFound from "@/components/NotFound";
 import FallingConfetti from "@/components/FallingConfetti";
 import ThankYouCard from "@/components/ThankYouCard";
+import PopperConfetti from "@/components/PopperConfetti";
 
 interface FundraisingSummary {
   galaYear: number;
@@ -27,6 +28,8 @@ export default function ProgressPage() {
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [checkingAdmin, setCheckingAdmin] = useState(true);
+  const [popTrigger, setPopTrigger] = useState(0);
+  const prevTotalRaisedRef = useRef<number | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -46,7 +49,12 @@ export default function ProgressPage() {
       setLoading(true);
       const res = await fetch("/api/fundraising/summary");
       if (res.ok) {
-        setSummary(await res.json());
+        const data = await res.json();
+        setSummary(data);
+        if (prevTotalRaisedRef.current !== null && data.totalRaised > prevTotalRaisedRef.current) {
+          setPopTrigger((t) => t + 1);
+        }
+        prevTotalRaisedRef.current = data.totalRaised;
       }
       setLoading(false);
     };
@@ -80,6 +88,7 @@ export default function ProgressPage() {
   return (
     <div className="min-h-screen bg-[#07122b] flex flex-col items-center justify-center px-4 py-8">
       {goalReached && <FallingConfetti />}
+      <PopperConfetti trigger={popTrigger} />
       {/* Home Button */}
       <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50">
         <a href="/" className="flex items-center gap-2 px-4 py-2 bg-white/90 text-gray-900 rounded-full shadow-lg font-semibold hover:bg-white transition-all border border-gray-200">
