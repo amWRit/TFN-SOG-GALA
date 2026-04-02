@@ -25,6 +25,8 @@ html {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  /* Safe area for iOS notch */
+  padding-top: env(safe-area-inset-top);
 }
 /* Overlay text for HeroImageSection */
 .heroImageText {
@@ -75,6 +77,8 @@ html {
   flex-direction: column;
   padding: 0;
   justify-content: flex-end;
+  /* Safe area for iOS notch */
+  padding-top: env(safe-area-inset-top);
 }
 
 .heroImageSection {

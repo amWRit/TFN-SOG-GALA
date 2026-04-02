@@ -222,11 +222,11 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
         <div className="flex items-center justify-between gap-2 mt-3">
           <div className="flex flex-col items-start">
             <span className="text-xs text-[#084691] uppercase tracking-wider mb-0.5">Actual Price</span>
-            <span className="font-playfair text-lg font-bold" style={{ color: '#D4AF37' }}>NPR {item.actualPrice?.toLocaleString?.() ?? 'NA'}</span>
+            <span className="font-playfair text-base font-bold" style={{ color: '#D4AF37' }}>NPR {item.actualPrice?.toLocaleString?.() ?? 'NA'}</span>
           </div>
           <div className="flex flex-col items-end">
             <span className="text-xs text-[#084691] uppercase tracking-wider mb-0.5">Start Bid</span>
-            <span className="font-playfair text-lg font-bold" style={{ color: '#D4AF37' }}>NPR {item.startingBid?.toLocaleString?.() ?? 'NA'}</span>
+            <span className="font-playfair text-base font-bold" style={{ color: '#D4AF37' }}>NPR {item.startingBid?.toLocaleString?.() ?? 'NA'}</span>
           </div>
         </div>
       </CardHeader>
@@ -240,14 +240,14 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
           <div className="flex items-center justify-between gap-2 mb-4">
             <div className="flex flex-col items-start">
               <span className="text-xs text-[#084691] uppercase tracking-wider mb-0.5">Sold Price</span>
-              <span className="font-playfair text-lg font-bold" style={{ color: '#D4AF37' }}>NPR {item.soldPrice?.toLocaleString?.() ?? '0'}</span>
+              <span className="font-playfair text-base font-bold" style={{ color: '#D4AF37' }}>NPR {item.soldPrice?.toLocaleString?.() ?? '0'}</span>
             </div>
             <div className="flex flex-col items-end">
               <span className="text-xs text-[#084691] uppercase tracking-wider mb-0.5">Sold To</span>
               {item.currentBidder ? (
-                <span className="font-playfair text-lg font-bold" style={{ color: '#D4AF37' }}>{item.currentBidder}</span>
+                <span className="font-playfair text-base font-bold" style={{ color: '#D4AF37' }}>{item.currentBidder}</span>
               ) : (
-                <span className="font-playfair text-lg font-bold" style={{ color: '#D4AF37' }}>
+                <span className="font-playfair text-base font-bold" style={{ color: '#D4AF37' }}>
                   No bids
                 </span>
               )}
@@ -257,14 +257,14 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
           <div className="flex items-center justify-between gap-2 mb-4">
             <div className="flex flex-col items-start">
               <span className="text-xs text-[#084691] uppercase tracking-wider mb-0.5">Current Bid</span>
-              <span className="font-playfair text-lg font-bold" style={{ color: '#D4AF37' }}>NPR {item.currentBid.toLocaleString()}</span>
+              <span className="font-playfair text-base font-bold" style={{ color: '#D4AF37' }}>NPR {item.currentBid.toLocaleString()}</span>
             </div>
             <div className="flex flex-col items-end">
               <span className="text-xs text-[#084691] uppercase tracking-wider mb-0.5">Leading</span>
               {item.currentBidder ? (
-                <span className="font-playfair text-lg font-bold" style={{ color: '#D4AF37' }}>{item.currentBidder}</span>
+                <span className="font-playfair text-base font-bold" style={{ color: '#D4AF37' }}>{item.currentBidder}</span>
               ) : (
-                <span className="font-playfair text-lg font-bold" style={{ color: '#D4AF37' }}>
+                <span className="font-playfair text-base font-bold" style={{ color: '#D4AF37' }}>
                   No bids yet
                 </span>
               )}
