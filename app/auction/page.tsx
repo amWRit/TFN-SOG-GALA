@@ -27,20 +27,20 @@ export default function AuctionPage() {
   const [pathname, setPathname] = useState(getInitialPathname());
   const hasMounted = useHasMounted();
 
-  useEffect(() => {
-    async function fetchTotal() {
-      try {
-        const res = await fetch("/api/total-raised");
-        if (res.ok) {
-          const data = await res.json();
-          setTotal(data.total);
-        }
-      } catch {}
-    }
-    fetchTotal();
-    const interval = setInterval(fetchTotal, 5000);
-    return () => clearInterval(interval);
-  }, []);
+  // useEffect(() => {
+  //   async function fetchTotal() {
+  //     try {
+  //       const res = await fetch("/api/total-raised");
+  //       if (res.ok) {
+  //         const data = await res.json();
+  //         setTotal(data.total);
+  //       }
+  //     } catch {}
+  //   }
+  //   fetchTotal();
+  //   const interval = setInterval(fetchTotal, 5000);
+  //   return () => clearInterval(interval);
+  // }, []);
 
   return (
     <div className="min-h-screen bg-[#f0f4fa]">

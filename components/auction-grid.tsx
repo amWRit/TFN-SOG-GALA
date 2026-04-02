@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { AuctionItemCard } from "@/components/auction-item-card";
@@ -26,15 +26,28 @@ const fetcher = (url: string) =>
     .then((data) => (Array.isArray(data) ? data : data.items ?? []));
 
 export function AuctionGrid() {
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [checkingAdmin, setCheckingAdmin] = useState(true);
+
+  useEffect(() => {
+    async function checkAdmin() {
+      const res = await fetch("/api/admin/session");
+      const data = await res.json();
+      setIsAdmin(data.authenticated === true);
+      setCheckingAdmin(false);
+    }
+    checkAdmin();
+  }, []);
+
   const { data: items, error, isLoading } = useSWR<AuctionItem[]>(
     "/api/auction/items",
     fetcher,
     {
-      refreshInterval: 3000, // Refresh every 3 seconds for live updates
+      refreshInterval: isAdmin ? 3000 : 0,
     }
   );
 
-  if (isLoading) {
+  if (checkingAdmin || isLoading) {
     return (
       <div className="relative z-10" style={{ padding: 32 }}>
         <AuctionSkeleton count={4} />

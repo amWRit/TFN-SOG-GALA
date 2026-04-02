@@ -1,9 +1,14 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ProgressSkeleton from "@/components/progress-skeleton";
 import { Home, CheckCircle, Clock, Loader, PartyPopper } from "lucide-react";
 import styles from "../../styles/progress.module.css";
+import { useRouter } from "next/navigation";
+import NotFound from "@/components/NotFound";
+import FallingConfetti from "@/components/FallingConfetti";
+import ThankYouCard from "@/components/ThankYouCard";
+import PopperConfetti from "@/components/PopperConfetti";
 
 interface FundraisingSummary {
   galaYear: number;
@@ -21,22 +26,45 @@ interface FundraisingSummary {
 export default function ProgressPage() {
   const [summary, setSummary] = useState<FundraisingSummary | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [checkingAdmin, setCheckingAdmin] = useState(true);
+  const [popTrigger, setPopTrigger] = useState(0);
+  const prevTotalRaisedRef = useRef<number | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
+    async function checkAdmin() {
+      const res = await fetch("/api/admin/session");
+      const data = await res.json();
+      setIsAdmin(data.authenticated === true);
+      setCheckingAdmin(false);
+    }
+    checkAdmin();
+  }, []);
+
+  useEffect(() => {
+    if (!isAdmin) return;
     let interval: NodeJS.Timeout;
     const fetchSummary = async () => {
       setLoading(true);
       const res = await fetch("/api/fundraising/summary");
       if (res.ok) {
-        setSummary(await res.json());
+        const data = await res.json();
+        setSummary(data);
+        if (prevTotalRaisedRef.current !== null && data.totalRaised > prevTotalRaisedRef.current) {
+          setPopTrigger((t) => t + 1);
+        }
+        prevTotalRaisedRef.current = data.totalRaised;
       }
       setLoading(false);
     };
     fetchSummary();
     interval = setInterval(fetchSummary, 5000);
     return () => clearInterval(interval);
-  }, []);
+  }, [isAdmin]);
 
+  if (checkingAdmin) return <ProgressSkeleton />;
+  if (!isAdmin) return <NotFound />;
   if (loading && !summary) return <ProgressSkeleton />;
   if (!summary) return <div className="text-center text-red-500">No data available</div>;
 
@@ -59,6 +87,8 @@ export default function ProgressPage() {
 
   return (
     <div className="min-h-screen bg-[#07122b] flex flex-col items-center justify-center px-4 py-8">
+      {goalReached && <FallingConfetti />}
+      <PopperConfetti trigger={popTrigger} />
       {/* Home Button */}
       <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50">
         <a href="/" className="flex items-center gap-2 px-4 py-2 bg-white/90 text-gray-900 rounded-full shadow-lg font-semibold hover:bg-white transition-all border border-gray-200">
@@ -109,6 +139,19 @@ export default function ProgressPage() {
             style={{ left: `calc(${Math.min(100, 100)}% - 2px)` }}
           />
         </div>
+        {/* Above and Beyond Celebration */}
+        {totalRaised > targetAmount && (
+          <div className="w-full flex flex-col items-center mb-6 pt-6">
+            <div className="flex items-center gap-2 mb-1 animate-bounce">
+              <span className="text-2xl">🎉</span>
+              <span className="text-2xl md:text-3xl font-extrabold text-yellow-300 drop-shadow">Above & Beyond</span>
+              <span className="text-2xl">🎉</span>
+            </div>
+            <div className="text-3xl md:text-4xl font-bold text-yellow-200 bg-[#1a2540]/80 px-6 py-2 rounded-full shadow-lg mt-2 animate-pulse">
+              +NPR {(totalRaised - targetAmount).toLocaleString()}
+            </div>
+          </div>
+        )}
         {/* Bar labels */}
         <div className="w-full mb-8">
           <div className="hidden md:flex justify-between text-white text-sm md:text-base font-medium">
@@ -141,29 +184,18 @@ export default function ProgressPage() {
           </div>
         </div>
         {/* Stat Row */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center mt-8 bg-[#101b36] rounded-lg py-6 px-2 md:px-6 lg:px-8">
-          <div>
-            <div className="flex flex-col items-center">
-              <CheckCircle className="text-green-400 w-5 h-5 mb-1" />
-              <span className="text-3xl md:text-4xl font-bold text-white">{itemsSold}</span>
-            </div>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-center mt-8 bg-[#101b36] rounded-lg py-6 px-2 md:px-6 lg:px-8">
+          <div className="flex flex-col items-center justify-center min-h-[80px]">
+            <CheckCircle className="text-green-400 w-5 h-5 mb-1" />
+            <span className="text-3xl md:text-4xl font-bold text-white">{itemsSold}</span>
             <div className="uppercase text-xs text-gray-400 mt-1">Items Sold</div>
           </div>
-          <div>
-            <div className="flex flex-col items-center">
-              <span className="text-yellow-400 text-lg md:text-xl font-semibold leading-tight">NPR</span>
-              <span className="text-3xl md:text-4xl font-bold text-yellow-400">{highestBid.toLocaleString()}</span>
-            </div>
-            <div className="uppercase text-xs text-gray-400 mt-1">Highest Bid</div>
-          </div>
-          <div>
-            <div className="flex flex-col items-center">
-              <Loader className="text-blue-400 w-5 h-5 mb-1" />
-              <span className="text-3xl md:text-4xl font-bold text-white">{itemsRemaining}</span>
-            </div>
+          <div className="flex flex-col items-center justify-center min-h-[80px]">
+            <Loader className="text-blue-400 w-5 h-5 mb-1" />
+            <span className="text-3xl md:text-4xl font-bold text-white">{itemsRemaining}</span>
             <div className="uppercase text-xs text-gray-400 mt-1">Items Remaining</div>
           </div>
-          <div>
+          <div className="flex flex-col items-center justify-center min-h-[80px] col-span-2 md:col-span-1">
             <div className={`flex flex-col items-center ${goalReached ? "text-red-400" : "text-yellow-400"}`}> 
               {goalReached ? (
                 <>
@@ -184,7 +216,12 @@ export default function ProgressPage() {
               </div>
             ) : null}
           </div>
+          {/* Empty cell for spacing on small screens */}
+          <div className="hidden md:block" />
         </div>
+
+        {/* Thank You Card */}
+        {goalReached && <ThankYouCard />}
       </div>
     </div>
   );
