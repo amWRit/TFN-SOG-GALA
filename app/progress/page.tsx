@@ -4,6 +4,8 @@ import React, { useEffect, useState } from "react";
 import ProgressSkeleton from "@/components/progress-skeleton";
 import { Home, CheckCircle, Clock, Loader, PartyPopper } from "lucide-react";
 import styles from "../../styles/progress.module.css";
+import { useRouter } from "next/navigation";
+import NotFound from "@/components/NotFound";
 
 interface FundraisingSummary {
   galaYear: number;
@@ -21,8 +23,22 @@ interface FundraisingSummary {
 export default function ProgressPage() {
   const [summary, setSummary] = useState<FundraisingSummary | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [checkingAdmin, setCheckingAdmin] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
+    async function checkAdmin() {
+      const res = await fetch("/api/admin/session");
+      const data = await res.json();
+      setIsAdmin(data.authenticated === true);
+      setCheckingAdmin(false);
+    }
+    checkAdmin();
+  }, []);
+
+  useEffect(() => {
+    if (!isAdmin) return;
     let interval: NodeJS.Timeout;
     const fetchSummary = async () => {
       setLoading(true);
@@ -35,8 +51,10 @@ export default function ProgressPage() {
     fetchSummary();
     interval = setInterval(fetchSummary, 5000);
     return () => clearInterval(interval);
-  }, []);
+  }, [isAdmin]);
 
+  if (checkingAdmin) return <ProgressSkeleton />;
+  if (!isAdmin) return <NotFound />;
   if (loading && !summary) return <ProgressSkeleton />;
   if (!summary) return <div className="text-center text-red-500">No data available</div>;
 
