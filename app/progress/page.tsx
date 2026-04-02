@@ -159,29 +159,18 @@ export default function ProgressPage() {
           </div>
         </div>
         {/* Stat Row */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center mt-8 bg-[#101b36] rounded-lg py-6 px-2 md:px-6 lg:px-8">
-          <div>
-            <div className="flex flex-col items-center">
-              <CheckCircle className="text-green-400 w-5 h-5 mb-1" />
-              <span className="text-3xl md:text-4xl font-bold text-white">{itemsSold}</span>
-            </div>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-center mt-8 bg-[#101b36] rounded-lg py-6 px-2 md:px-6 lg:px-8">
+          <div className="flex flex-col items-center justify-center min-h-[80px]">
+            <CheckCircle className="text-green-400 w-5 h-5 mb-1" />
+            <span className="text-3xl md:text-4xl font-bold text-white">{itemsSold}</span>
             <div className="uppercase text-xs text-gray-400 mt-1">Items Sold</div>
           </div>
-          <div>
-            <div className="flex flex-col items-center">
-              <span className="text-yellow-400 text-lg md:text-xl font-semibold leading-tight">NPR</span>
-              <span className="text-3xl md:text-4xl font-bold text-yellow-400">{highestBid.toLocaleString()}</span>
-            </div>
-            <div className="uppercase text-xs text-gray-400 mt-1">Highest Bid</div>
-          </div>
-          <div>
-            <div className="flex flex-col items-center">
-              <Loader className="text-blue-400 w-5 h-5 mb-1" />
-              <span className="text-3xl md:text-4xl font-bold text-white">{itemsRemaining}</span>
-            </div>
+          <div className="flex flex-col items-center justify-center min-h-[80px]">
+            <Loader className="text-blue-400 w-5 h-5 mb-1" />
+            <span className="text-3xl md:text-4xl font-bold text-white">{itemsRemaining}</span>
             <div className="uppercase text-xs text-gray-400 mt-1">Items Remaining</div>
           </div>
-          <div>
+          <div className="flex flex-col items-center justify-center min-h-[80px] col-span-2 md:col-span-1">
             <div className={`flex flex-col items-center ${goalReached ? "text-red-400" : "text-yellow-400"}`}> 
               {goalReached ? (
                 <>
@@ -202,6 +191,8 @@ export default function ProgressPage() {
               </div>
             ) : null}
           </div>
+          {/* Empty cell for spacing on small screens */}
+          <div className="hidden md:block" />
         </div>
       </div>
     </div>
