@@ -224,13 +224,13 @@ export default function AuctionItemPage() {
         >
           {/* Label */}
           <div className="text-base md:text-xl uppercase tracking-widest text-white font-bold mb-6 text-center shrink-0">
-            Current Bid (NPR)
+            {item.currentBid > 0 ? "Current Bid (NPR)" : "Starting Bid (NPR)"}
           </div>
 
           {/* Bid amount — flex-1 centres it vertically */}
           <div className="flex-1 flex flex-col items-center justify-center">
             <motion.div
-              key={item.currentBid}
+              key={item.currentBid > 0 ? item.currentBid : item.startingBid}
               initial={{ scale: 1.18, opacity: 0.7 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ type: "spring", stiffness: 300, damping: 18 }}
@@ -267,12 +267,12 @@ export default function AuctionItemPage() {
                     display: "block",
                   }}
                 >
-                  {item.currentBid.toLocaleString()}
+                  {(item.currentBid > 0 ? item.currentBid : item.startingBid).toLocaleString()}
                 </span>
               </div>
             </motion.div>
 
-            {item.currentBidder && (
+            {item.currentBid > 0 && item.currentBidder && (
               <div className="flex items-center justify-center gap-2 bg-[#084691]/20 px-5 py-3 rounded-2xl mt-6 w-full">
                 <User className="w-5 h-5 text-white shrink-0" />
                 <span className="text-white font-semibold text-lg">{item.currentBidder}</span>
@@ -282,10 +282,12 @@ export default function AuctionItemPage() {
 
           {/* Bottom strip — always pinned to bottom of right card */}
           <div className="shrink-0 mt-6 pt-5 border-t border-white/10 flex flex-col items-center gap-3">
-            <div className="flex items-center gap-2 text-white text-sm">
-              <TrendingUp className="w-4 h-4" />
-              Starting bid: NPR {item.startingBid.toLocaleString()}
-            </div>
+            {item.currentBid > 0 && (
+              <div className="flex items-center gap-2 text-white text-sm">
+                <TrendingUp className="w-4 h-4" />
+                Starting bid: NPR {item.startingBid.toLocaleString()}
+              </div>
+            )}
             {isClosed && (
               <div className="px-6 py-3 bg-gray-100 rounded-2xl text-[#225898] font-semibold uppercase tracking-wider text-sm w-full text-center">
                 Auction Closed
