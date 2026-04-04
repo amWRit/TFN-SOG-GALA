@@ -20,10 +20,13 @@ function timeAgo(dateStr: string): string {
   return `${hours}h ago`;
 }
 
+
 export function AuctionBidHistory({ itemId }: { itemId: string }) {
   const [bids, setBids] = useState<Bid[]>([]);
-  const [historyOpen, setHistoryOpen] = useState(true);
+  // Collapsed by default
+  const [historyOpen, setHistoryOpen] = useState(false);
   const prevBidCountRef = useRef(0);
+  const isFirstFetch = useRef(true);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -32,11 +35,14 @@ export function AuctionBidHistory({ itemId }: { itemId: string }) {
       if (res.ok) {
         const data = await res.json();
         const incoming: Bid[] = data.bids ?? [];
-        if (incoming.length > prevBidCountRef.current) {
+        if (!isFirstFetch.current && incoming.length > prevBidCountRef.current) {
           setHistoryOpen(true);
         }
         prevBidCountRef.current = incoming.length;
         setBids(incoming);
+        if (isFirstFetch.current) {
+          isFirstFetch.current = false;
+        }
       }
     }
     fetchBids();

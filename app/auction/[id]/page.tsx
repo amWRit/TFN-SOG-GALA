@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { Clock, Home, TrendingUp, User } from "lucide-react";
+import { Clock, Home, TrendingUp, User, Gavel } from "lucide-react";
 import { AuctionDescModal } from "../../../components/auction-desc-modal";
 import { AuctionBidHistory } from "../../../components/auction-bid-history";
 
@@ -151,13 +151,22 @@ export default function AuctionItemPage() {
             {item.title}
           </h1>
         </motion.div>
-        <a
-          href="/auction"
-          className="flex items-center gap-2 px-4 py-2 bg-white text-[#084691] rounded-full shadow-lg font-semibold hover:bg-[#084691]/90 hover:text-white transition-all border border-[#084691] shrink-0 ml-4"
-        >
-          <Home className="w-5 h-5" />
-          Home
-        </a>
+        <div className="flex gap-2 ml-4">
+          <a
+            href="/"
+            className="flex items-center gap-2 px-4 py-2 bg-white text-[#084691] rounded-full shadow-lg font-semibold hover:bg-[#084691]/90 hover:text-white transition-all border border-[#084691] shrink-0"
+          >
+            <Home className="w-5 h-5" />
+            Home
+          </a>
+          <a
+            href="/auction"
+            className="flex items-center gap-2 px-4 py-2 bg-white text-[#084691] rounded-full shadow-lg font-semibold hover:bg-[#084691]/90 hover:text-white transition-all border border-[#084691] shrink-0"
+          >
+            <Gavel className="w-5 h-5" />
+            Auction
+          </a>
+        </div>
       </div>
 
       {/* Grid: single col on mobile, two cols on md+ */}

@@ -48,14 +48,11 @@ html {
 /* Admin button style for HeroTop */
 .heroAdminNavbar {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
 }
 @media (min-width: 640px) {
   .heroAdminNavbar {
-    grid-template-columns: repeat(5, 1fr);
-  }
-  .heroAdminNavbar a[style*="span 2"] {
-    grid-column: span 1 !important;
+    grid-template-columns: repeat(6, 1fr);
   }
 }
 

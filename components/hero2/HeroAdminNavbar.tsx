@@ -1,39 +1,21 @@
 
+'use client';
+
 import React from 'react';
 import styles from './hero.module.css';
-import { Shield, TrendingUp, Trophy, Armchair, CalendarCheck } from 'lucide-react';
+import { Shield, TrendingUp, Trophy, Armchair, Monitor, Tv } from 'lucide-react';
 
 interface HeroAdminNavbarProps {
   showAdmin: boolean;
 }
 
-
 const navLinks = [
-  {
-    href: "/admin/dashboard",
-    label: "Admin",
-    Icon: Shield,
-  },
-  {
-    href: "/progress",
-    label: "Progress",
-    Icon: TrendingUp,
-  },
-  {
-    href: "/leaderboard",
-    label: "Leaderboard",
-    Icon: Trophy,
-  },
-  {
-    href: "/seating",
-    label: "Seating",
-    Icon: Armchair,
-  },
-  // {
-  //   href: "/register",
-  //   label: "Register",
-  //   Icon: CalendarCheck,
-  // },
+  { href: "/admin/dashboard", label: "Admin", Icon: Shield },
+  { href: "/progress", label: "Progress", Icon: TrendingUp },
+  { href: "/leaderboard", label: "Leaderboard", Icon: Trophy },
+  { href: "/seating", label: "Seating", Icon: Armchair },
+  { href: "/display1", label: "Auction/Progress", Icon: Monitor },
+  { href: "/display2", label: "Progress/Leaderboard", Icon: Tv },
 ];
 
 const HeroAdminNavbar: React.FC<HeroAdminNavbarProps> = ({ showAdmin }) => {
@@ -43,7 +25,7 @@ const HeroAdminNavbar: React.FC<HeroAdminNavbarProps> = ({ showAdmin }) => {
       style={{ marginTop: 0, marginBottom: 24, gap: 12, justifyItems: 'stretch' }}
       className={styles.heroAdminNavbar}
     >
-      {navLinks.map(({ href, label, Icon }, idx) => (
+      {navLinks.map(({ href, label, Icon }) => (
         <a
           key={href}
           href={href}
