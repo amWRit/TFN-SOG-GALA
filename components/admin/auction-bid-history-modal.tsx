@@ -16,10 +16,12 @@ interface Bid {
 interface AuctionBidHistoryModalProps {
   open: boolean;
   itemId: string | null;
+  isActive?: boolean;
+  itemTitle?: string;
   onClose: () => void;
 }
 
-export function AuctionBidHistoryModal({ open, itemId, onClose }: AuctionBidHistoryModalProps) {
+export function AuctionBidHistoryModal({ open, itemId, isActive, itemTitle, onClose }: AuctionBidHistoryModalProps) {
   const [bids, setBids] = useState<Bid[]>([]);
   const [loading, setLoading] = useState(false);
   const [deleteBidId, setDeleteBidId] = useState<string | null>(null);
@@ -125,9 +127,12 @@ export function AuctionBidHistoryModal({ open, itemId, onClose }: AuctionBidHist
         >
           ×
         </button>
-        <h3 className={"font-playfair text-xl font-bold text-[#D4AF37] mb-4 text-center " + styles.modalTitle}>
+        <h3 className={"font-playfair text-xl font-bold text-[#D4AF37] mb-1 text-center " + styles.modalTitle}>
           Bid History
         </h3>
+        {itemTitle && (
+          <p className="text-center text-[#f5f5f5]/60 text-sm mb-4 truncate">{itemTitle}</p>
+        )}
         {loading ? (
           <div className={"text-center text-[#D4AF37] py-8 " + styles.loadingText}>Loading...</div>
         ) : bids.length === 0 ? (
@@ -201,9 +206,11 @@ export function AuctionBidHistoryModal({ open, itemId, onClose }: AuctionBidHist
                     <td className={"px-3 py-2 " + styles.tableCell}>{new Date(bid.createdAt).toLocaleString()}</td>
                     <td className={"px-3 py-2 text-right " + styles.tableCell}>
                       <div className="flex items-center justify-end gap-2">
-                        <button onClick={() => handleEditStart(bid)} title="Edit Bid" className="text-[#D4AF37] hover:text-white transition">
-                          <Pencil size={16} />
-                        </button>
+                        {isActive && (
+                          <button onClick={() => handleEditStart(bid)} title="Edit Bid" className="text-[#D4AF37] hover:text-white transition">
+                            <Pencil size={16} />
+                          </button>
+                        )}
                         <button onClick={() => handleDelete(bid.id)} title="Delete Bid" className="text-red-500 hover:text-white transition">
                           <Trash2 size={18} />
                         </button>
