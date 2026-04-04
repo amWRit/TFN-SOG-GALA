@@ -1,10 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+
+import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import NotFound from '@/components/NotFound';
 
-export default function Display3() {
+function Display3Inner() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [checking, setChecking] = useState(true);
   const [leftWidth, setLeftWidth] = useState(600);
@@ -78,5 +79,13 @@ export default function Display3() {
         <div style={{ position: 'fixed', inset: 0, zIndex: 9999, cursor: 'col-resize' }} />
       )}
     </div>
+  );
+}
+
+export default function Display3() {
+  return (
+    <Suspense>
+      <Display3Inner />
+    </Suspense>
   );
 }
