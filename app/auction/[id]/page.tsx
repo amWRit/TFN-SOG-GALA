@@ -135,7 +135,7 @@ export default function AuctionItemPage() {
       {/* Background */}
       <div className="absolute inset-0 bg-gray-900 -z-10">
         <img
-          src="/images/tfnimage1.jpg"
+          src="/samples/conceptnotes/images/1.jpg"
           alt=""
           className="w-full h-full object-cover opacity-30"
         />

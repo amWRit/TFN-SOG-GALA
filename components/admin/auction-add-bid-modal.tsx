@@ -21,13 +21,13 @@ interface AuctionAddBidModalProps {
 
 export function AuctionAddBidModal({ open, item, isSubmitting, onClose, onSubmit }: AuctionAddBidModalProps) {
   const minBid = item ? (item.currentBid > 0 ? item.currentBid + 1 : item.startingBid) : 1;
-  const [amount, setAmount] = useState(open && item ? String(minBid) : "");
+  const [amount, setAmount] = useState("");
   const [bidder, setBidder] = useState("");
 
   // Reset amount to minBid whenever modal opens or item changes
   React.useEffect(() => {
     if (open && item) {
-      setAmount(String(item.currentBid > 0 ? item.currentBid + 1 : item.startingBid));
+      setAmount("");
     }
   }, [open, item]);
 
@@ -84,6 +84,7 @@ export function AuctionAddBidModal({ open, item, isSubmitting, onClose, onSubmit
               required
               className="w-full px-3 py-2 rounded bg-[#1a1a1a] border border-[#D4AF37]/30 text-[#f5f5f5] text-2xl"
               value={amount}
+              placeholder={(item.currentBid > 0 ? item.currentBid + 1 : item.startingBid).toLocaleString()}
               onChange={e => setAmount(e.target.value)}
             />
           </div>
