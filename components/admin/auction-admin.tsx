@@ -49,6 +49,8 @@ export function AuctionAdmin() {
   const [isSubmittingBid, setIsSubmittingBid] = useState(false);
   const [showHistoryModal, setShowHistoryModal] = useState(false);
   const [historyItemId, setHistoryItemId] = useState<string | null>(null);
+  const [historyItemIsActive, setHistoryItemIsActive] = useState(false);
+  const [historyItemTitle, setHistoryItemTitle] = useState<string>("");
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [detailItemId, setDetailItemId] = useState<string | null>(null);
   
@@ -295,7 +297,7 @@ export function AuctionAdmin() {
           onAddBid={(item) => { setBidModalItem(item); setShowBidModal(true); }}
           onDelete={handleDelete}
           onToggleActive={handleToggleActive}
-          onShowHistory={(item) => { setHistoryItemId(item.id); setShowHistoryModal(true); }}
+          onShowHistory={(item) => { setHistoryItemId(item.id); setHistoryItemIsActive(item.isActive); setHistoryItemTitle(item.title); setShowHistoryModal(true); }}
           deleteId={deleteId}
           deleting={deleting}
           confirmDelete={confirmDelete}
@@ -534,7 +536,7 @@ export function AuctionAdmin() {
               onAddBid={(item) => { setBidModalItem(item); setShowBidModal(true); }}
               onDelete={handleDelete}
               onToggleActive={handleToggleActive}
-              onShowHistory={(item) => { setHistoryItemId(item.id); setShowHistoryModal(true); }}
+              onShowHistory={(item) => { setHistoryItemId(item.id); setHistoryItemIsActive(item.isActive); setHistoryItemTitle(item.title); setShowHistoryModal(true); }}
               deleteId={deleteId}
               deleting={deleting}
               confirmDelete={confirmDelete}
@@ -546,6 +548,8 @@ export function AuctionAdmin() {
     <AuctionBidHistoryModal
       open={showHistoryModal}
       itemId={historyItemId}
+      isActive={historyItemIsActive}
+      itemTitle={historyItemTitle}
       onClose={() => setShowHistoryModal(false)}
     />
     <AuctionAddBidModal
