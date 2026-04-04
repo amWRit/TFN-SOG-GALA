@@ -89,7 +89,8 @@ export function AuctionItemAdminCard({
           >
             {item.title}
           </h3>
-          <div className="hidden md:flex items-center gap-4 text-xs text-[#f5f5f5]/80 whitespace-nowrap shrink-0">
+          {/* Hide Actual Price and Starting Bid on md screens, show only on lg+ */}
+          <div className="hidden lg:flex items-center gap-4 text-xs text-[#f5f5f5]/80 whitespace-nowrap shrink-0">
             <span className="inline-block w-[190px]">Actual Price: <b>NPR {(item.actualPrice || 0).toLocaleString()}</b></span>
             <span className="inline-block w-[190px]">Starting Bid: <b>NPR {item.startingBid.toLocaleString()}</b></span>
           </div>

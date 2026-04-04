@@ -20,14 +20,14 @@ interface AuctionAddBidModalProps {
 
 
 export function AuctionAddBidModal({ open, item, isSubmitting, onClose, onSubmit }: AuctionAddBidModalProps) {
-  const minBid = item ? (item.currentBid > 0 ? item.currentBid + 100 : item.startingBid + 100) : 100;
+  const minBid = item ? (item.currentBid > 0 ? item.currentBid + 1 : item.startingBid) : 1;
   const [amount, setAmount] = useState(open && item ? String(minBid) : "");
   const [bidder, setBidder] = useState("");
 
   // Reset amount to minBid whenever modal opens or item changes
   React.useEffect(() => {
     if (open && item) {
-      setAmount(String(item.currentBid > 0 ? item.currentBid + 100 : item.startingBid + 100));
+      setAmount(String(item.currentBid > 0 ? item.currentBid + 1 : item.startingBid));
     }
   }, [open, item]);
 
@@ -57,7 +57,7 @@ export function AuctionAddBidModal({ open, item, isSubmitting, onClose, onSubmit
               toast.error('Please enter a valid bid amount.');
               return;
             }
-            const minBid = item.currentBid > 0 ? item.currentBid + 1 : item.startingBid + 1;
+            const minBid = item.currentBid > 0 ? item.currentBid + 1 : item.startingBid;
             if (amountNum < minBid) {
               toast.error(`Bid must be at least NPR ${minBid.toLocaleString()}`);
               return;
@@ -73,14 +73,14 @@ export function AuctionAddBidModal({ open, item, isSubmitting, onClose, onSubmit
             <label className="block text-sm font-medium text-[#f5f5f5]/80 mb-1">
               Bid Amount *
               <span className="text-xs text-[#D4AF37]">
-                (Min: NPR {(item.currentBid > 0 ? item.currentBid + 100 : item.startingBid + 100).toLocaleString()})
+                (Min: NPR {(item.currentBid > 0 ? item.currentBid + 1 : item.startingBid).toLocaleString()})
               </span>
             </label>
             <input
               type="number"
               name="amount"
-              min={item.currentBid > 0 ? item.currentBid + 100 : item.startingBid + 100}
-              step="100"
+              min={item.currentBid > 0 ? item.currentBid + 1 : item.startingBid}
+              step=""
               required
               className="w-full px-3 py-2 rounded bg-[#1a1a1a] border border-[#D4AF37]/30 text-[#f5f5f5] text-2xl"
               value={amount}
@@ -98,14 +98,17 @@ export function AuctionAddBidModal({ open, item, isSubmitting, onClose, onSubmit
               onChange={e => setBidder(e.target.value)}
             />
           </div>
-          <div className="flex gap-2 justify-end mt-6">
-            <Button
-              type="submit"
-              className="px-4 py-2 rounded bg-[#D4AF37] text-[#1a1a1a] font-bold hover:bg-[#bfa134] disabled:opacity-60 disabled:cursor-not-allowed"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? 'Submitting...' : 'Submit Bid'}
-            </Button>
+          <div className="flex items-center justify-between gap-2 mt-6">
+            <span className="text-xs text-[#f5f5f5]/70">Press <b>Enter</b> to submit</span>
+            <div className="flex gap-2 justify-end">
+              <Button
+                type="submit"
+                className="px-4 py-2 rounded bg-[#D4AF37] text-[#1a1a1a] font-bold hover:bg-[#bfa134] disabled:opacity-60 disabled:cursor-not-allowed"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? 'Submitting...' : 'Submit Bid'}
+              </Button>
+            </div>
           </div>
         </form>
       </div>
