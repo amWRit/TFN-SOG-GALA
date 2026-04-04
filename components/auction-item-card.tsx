@@ -152,7 +152,7 @@ export function AuctionItemCard({ item }: AuctionItemCardProps) {
         style={{ background: '#eef3fb', borderTop: '5px solid #d71a21' }}
         onClick={() => {
           if (isAdmin) {
-            window.open(`/auction/${item.id}`, '_blank');
+            router.push(`/auction/${item.id}`);
           } else if (!isClosed && !showDescModal && !showBidModal && !showContactModal && !showImageZoom) {
             setShowImageZoom(true);
           }

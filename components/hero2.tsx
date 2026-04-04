@@ -11,7 +11,8 @@ const Hero2 = () => {
   const [showVideo, setShowVideo] = useState(false);
   const [showAdmin, setShowAdmin] = useState(false);
   const logoRef = useRef<HTMLImageElement | null>(null);
-  let longPressTimer = useRef<NodeJS.Timeout | null>(null);
+  const tapCountRef = useRef(0);
+  const tapTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Secret key sequence for desktop
   useEffect(() => {
@@ -28,23 +29,26 @@ const Hero2 = () => {
     return () => window.removeEventListener('keydown', handler);
   }, []);
 
-  // Long-press for mobile (on logo)
+  // Triple-tap on logo for mobile
   useEffect(() => {
     const logo = logoRef.current;
     if (!logo) return;
-    const handleTouchStart = () => {
-      longPressTimer.current = setTimeout(() => setShowAdmin(true), 1200);
-    };
     const handleTouchEnd = () => {
-      if (longPressTimer.current !== null) {
-        clearTimeout(longPressTimer.current);
+      tapCountRef.current += 1;
+      if (tapTimerRef.current) clearTimeout(tapTimerRef.current);
+      if (tapCountRef.current >= 3) {
+        setShowAdmin(true);
+        tapCountRef.current = 0;
+        return;
       }
+      tapTimerRef.current = setTimeout(() => {
+        tapCountRef.current = 0;
+      }, 600);
     };
-    logo.addEventListener('touchstart', handleTouchStart);
     logo.addEventListener('touchend', handleTouchEnd);
     return () => {
-      logo.removeEventListener('touchstart', handleTouchStart);
       logo.removeEventListener('touchend', handleTouchEnd);
+      if (tapTimerRef.current) clearTimeout(tapTimerRef.current);
     };
   }, []);
 
