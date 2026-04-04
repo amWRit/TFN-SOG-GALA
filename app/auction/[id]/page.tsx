@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { Clock, Home, TrendingUp, User } from "lucide-react";
 import { AuctionDescModal } from "../../../components/auction-desc-modal";
+import { AuctionBidHistory } from "../../../components/auction-bid-history";
 
 interface AuctionItem {
   id: string;
@@ -17,6 +18,7 @@ interface AuctionItem {
   endTime: Date | null;
   isActive: boolean;
 }
+
 
 function formatTimeRemaining(endTime: Date | null): string {
   if (!endTime) return "No time limit";
@@ -296,6 +298,8 @@ export default function AuctionItemPage() {
           </div>
         </div>
       </div>
+
+      <AuctionBidHistory itemId={id as string} />
 
       {showDescModal && item.description && (
         <AuctionDescModal
