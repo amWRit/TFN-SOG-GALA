@@ -1,7 +1,7 @@
 
 
 import styles from './hero.module.css';
-import { Ticket, Info, ClipboardList, Play, Gavel } from 'lucide-react';
+import { Ticket, Info, ClipboardList, Play, Gavel, CalendarCheck, List } from 'lucide-react';
 
 interface HeroTabBarProps {
   onShowVideo: () => void;
@@ -23,21 +23,11 @@ const HeroTabBar: React.FC<HeroTabBarProps> = ({ onShowVideo }) => (
       </span>
     </a>
     <a
-      href="/about"
-      className={styles.tabButton}
-    >
-      <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
-        <Info size={26} style={{ marginBottom: 2 }} />
-        <span className={styles.tabLabelLong}>About the Gala</span>
-        <span className={styles.tabLabelShort}>About</span>
-      </span>
-    </a>
-    <a
       href="/program"
       className={styles.tabButton}
     >
       <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
-        <ClipboardList size={26} style={{ marginBottom: 2 }} />
+        <List size={26} style={{ marginBottom: 2 }} />
         <span className={styles.tabLabelLong}>Program Details</span>
         <span className={styles.tabLabelShort}>Program</span>
       </span>
@@ -61,6 +51,28 @@ const HeroTabBar: React.FC<HeroTabBarProps> = ({ onShowVideo }) => (
         <Gavel size={26} style={{ marginBottom: 2 }} />
         <span className={styles.tabLabelLong}>Auction Details</span>
         <span className={styles.tabLabelShort}>Auction</span>
+      </span>
+    </a>
+    <a
+      href="https://docs.google.com/forms/d/e/1FAIpQLSeaP-ZaY6M41ktMYuf3-mpzATJIyfwq5pqw1S2LfNxpyGJgow/viewform"
+      target="_blank"
+      rel="noopener noreferrer"
+      className={styles.tabButton}
+    >
+      <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
+        <CalendarCheck size={26} style={{ marginBottom: 2 }} />
+        <span className={styles.tabLabelLong}>RSVP</span>
+        <span className={styles.tabLabelShort}>RSVP</span>
+      </span>
+    </a>
+    <a
+      href="/about"
+      className={styles.tabButton}
+    >
+      <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
+        <Info size={26} style={{ marginBottom: 2 }} />
+        <span className={styles.tabLabelLong}>About the Gala</span>
+        <span className={styles.tabLabelShort}>About</span>
       </span>
     </a>
   </div>
