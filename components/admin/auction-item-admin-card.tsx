@@ -108,7 +108,7 @@ export function AuctionItemAdminCard({
           </DropdownMenu.Trigger>
           <DropdownMenu.Portal>
             <DropdownMenu.Content className="z-[1000] min-w-[100px] rounded-md bg-[#232323] p-2 shadow-lg border border-[#D4AF37]/30" data-actions-content>
-              <DropdownMenu.Item onSelect={() => onAddBid(item)} className="flex items-center gap-2 px-2 py-2 rounded hover:bg-[#D4AF37]/10 cursor-pointer text-[#f5f5f5]/80">
+              <DropdownMenu.Item onSelect={() => onAddBid(item)} disabled={!item.isActive} className={`flex items-center gap-2 px-2 py-2 rounded cursor-pointer text-[#f5f5f5]/80 ${item.isActive ? "hover:bg-[#D4AF37]/10" : "opacity-40 cursor-not-allowed pointer-events-none"}`}>
                   <Gavel size={16} className="text-[#D4AF37]" />
                   <span>Bid</span>
               </DropdownMenu.Item>

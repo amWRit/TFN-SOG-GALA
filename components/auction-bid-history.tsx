@@ -26,7 +26,6 @@ export function AuctionBidHistory({ itemId }: { itemId: string }) {
   // Collapsed by default
   const [historyOpen, setHistoryOpen] = useState(false);
   const prevBidCountRef = useRef(0);
-  const isFirstFetch = useRef(true);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -35,14 +34,8 @@ export function AuctionBidHistory({ itemId }: { itemId: string }) {
       if (res.ok) {
         const data = await res.json();
         const incoming: Bid[] = data.bids ?? [];
-        if (!isFirstFetch.current && incoming.length > prevBidCountRef.current) {
-          setHistoryOpen(true);
-        }
         prevBidCountRef.current = incoming.length;
         setBids(incoming);
-        if (isFirstFetch.current) {
-          isFirstFetch.current = false;
-        }
       }
     }
     fetchBids();
@@ -66,14 +59,14 @@ export function AuctionBidHistory({ itemId }: { itemId: string }) {
             <span className="font-playfair text-[#D4AF37] font-bold text-lg tracking-wide">
               Bid History
             </span>
-            {bids.length > 0 && (
+            {/* {bids.length > 0 && (
               <span className="px-2.5 py-0.5 rounded-full bg-[#D4AF37]/20 border border-[#D4AF37]/40 text-[#D4AF37] text-xs font-bold">
                 {bids.length} bid{bids.length !== 1 ? "s" : ""}
               </span>
-            )}
-            {bids.length === 0 && (
+            )} */}
+            {/* {bids.length === 0 && (
               <span className="text-white/40 text-sm">No bids yet</span>
-            )}
+            )} */}
           </div>
           {historyOpen ? (
             <ChevronUp className="w-5 h-5 text-[#D4AF37]" />
