@@ -267,14 +267,14 @@ export default function AuctionItemPage() {
                 style={{ background: "rgba(255,255,255,0.05)" }}
               >
                 <span className="text-[10px] md:text-xs uppercase tracking-widest text-white/60 mb-3 text-center">
-                  {isClosed ? "Sold To" : "Starting Bid"}
+                  {isClosed ? "Final Bidder" : "Starting Bid"}
                 </span>
                 {isClosed ? (
                   <span
                     className="font-playfair font-bold text-white text-center leading-snug"
                     style={{ fontSize: "clamp(1.6rem, 3.5vw, 2.8rem)", wordBreak: "break-word" }}
                   >
-                    {item.currentBidder ?? "—"}
+                    {(!item.currentBidder || item.currentBidder === "NA") ? "—" : item.currentBidder}
                   </span>
                 ) : (
                   <>
