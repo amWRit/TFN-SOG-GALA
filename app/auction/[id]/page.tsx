@@ -1,11 +1,12 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { Clock, Home, TrendingUp, User, Gavel } from "lucide-react";
+import { Clock, Home, Gavel } from "lucide-react";
 import { AuctionDescModal } from "../../../components/auction-desc-modal";
 import { AuctionBidHistory } from "../../../components/auction-bid-history";
+import PopperConfetti from "../../../components/PopperConfetti";
 
 interface AuctionItem {
   id: string;
@@ -13,6 +14,8 @@ interface AuctionItem {
   description: string | null;
   imageUrl: string | null;
   startingBid: number;
+  actualPrice: number;
+  soldPrice: number;
   currentBid: number;
   currentBidder: string | null;
   endTime: Date | null;
@@ -70,6 +73,8 @@ export default function AuctionItemPage() {
   const [timeRemaining, setTimeRemaining] = useState<string>("");
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
   const [showDescModal, setShowDescModal] = useState(false);
+  const [confettiTrigger, setConfettiTrigger] = useState(0);
+  const confettiFiredRef = useRef(false);
 
   useEffect(() => {
     async function checkAdmin() {
@@ -105,6 +110,19 @@ export default function AuctionItemPage() {
     return () => clearInterval(interval);
   }, [item?.endTime]);
 
+  useEffect(() => {
+    if (!item) return;
+    const closed =
+      !item.isActive ||
+      (item.endTime && new Date(item.endTime).getTime() <= new Date().getTime());
+    if (closed && !confettiFiredRef.current) {
+      confettiFiredRef.current = true;
+      setConfettiTrigger((t) => t + 1);
+      // const audio = new Audio("/audio/tada.mp3");
+      // audio.play().catch(() => {});
+    }
+  }, [item]);
+
   if (isAdmin === null || !item) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -121,19 +139,6 @@ export default function AuctionItemPage() {
 
   return (
     <main className="relative min-h-screen flex flex-col p-0 m-0 w-full overflow-hidden">
-      <style>{`
-        @keyframes bidZoomPulse {
-          0%   { transform: scale(1);    text-shadow: 0 0 0px rgba(212,175,55,0); }
-          45%  { transform: scale(1.12); text-shadow: 0 0 24px rgba(212,175,55,0.55); }
-          100% { transform: scale(1);    text-shadow: 0 0 0px rgba(212,175,55,0); }
-        }
-        @keyframes bidRingPulse {
-          0%   { opacity: 0.25; transform: scale(1); }
-          50%  { opacity: 0.7;  transform: scale(1.025); }
-          100% { opacity: 0.25; transform: scale(1); }
-        }
-      `}</style>
-
       {/* Background */}
       <div className="absolute inset-0 bg-gray-900 -z-10">
         <img
@@ -228,80 +233,71 @@ export default function AuctionItemPage() {
         </div>
 
         {/* ── RIGHT COLUMN ── */}
-        {/* flex flex-col + h-full not needed — grid stretch handles it */}
         <div
-          className={`flex flex-col rounded-2xl border border-[#D4AF37] backdrop-blur-md shadow-xl p-6 md:p-10 ${isClosed ? "opacity-60" : ""}`}
+          className="flex flex-col rounded-2xl border border-[#D4AF37] backdrop-blur-md shadow-xl p-6 md:p-10"
           style={{ background: "rgba(8,70,145,0.15)" }}
         >
-          {/* Label */}
-          <div className="text-base md:text-xl uppercase tracking-widest text-white font-bold mb-6 text-center shrink-0">
-            {item.currentBid > 0 ? "Current Bid (NPR)" : "Starting Bid (NPR)"}
-          </div>
+          <div className="flex-1 flex flex-col justify-center gap-8">
 
-          {/* Bid amount — flex-1 centres it vertically */}
-          <div className="flex-1 flex flex-col items-center justify-center">
-            <motion.div
-              key={item.currentBid > 0 ? item.currentBid : item.startingBid}
-              initial={{ scale: 1.18, opacity: 0.7 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ type: "spring", stiffness: 300, damping: 18 }}
-              className="relative w-full flex items-center justify-center"
-            >
-              {!isClosed && (
-                <span
-                  className="absolute inset-0 rounded-2xl pointer-events-none"
-                  style={{
-                    animation: "bidRingPulse 2s ease-in-out infinite",
-                    border: "2px solid #D4AF37",
-                    borderRadius: "1rem",
-                  }}
-                />
-              )}
+            {/* Two frosted stat cards */}
+            <div className="flex flex-col gap-4">
+
+              {/* Card 1: Actual Price (active) / Sold Price (closed) */}
               <div
-                className="w-full flex items-center justify-center rounded-2xl py-8 px-6"
-                style={{
-                  background: "linear-gradient(135deg, rgba(212,175,55,0.12) 0%, rgba(8,70,145,0.08) 100%)",
-                  border: "1.5px solid transparent",
-                  boxShadow: isClosed
-                    ? "none"
-                    : "0 0 32px 4px rgba(212,175,55,0.18), 0 2px 24px 0 rgba(0,0,0,0.4)",
-                  backdropFilter: "blur(8px)",
-                }}
+                className="flex flex-col items-center justify-center rounded-2xl p-5 border border-[#D4AF37]/50"
+                style={{ background: "rgba(212,175,55,0.07)" }}
               >
-                <span
-                  className="font-playfair font-extrabold text-[#D4AF37] text-center w-full"
-                  style={{
-                    fontSize: "clamp(3rem, 6vw, 5.5rem)",
-                    wordBreak: "break-all",
-                    lineHeight: 1.1,
-                    animation: isClosed ? "none" : "bidZoomPulse 2.6s ease-in-out infinite",
-                    display: "block",
-                  }}
-                >
-                  {(item.currentBid > 0 ? item.currentBid : item.startingBid).toLocaleString()}
+                <span className="text-[10px] md:text-xs uppercase tracking-widest text-white/60 mb-3 text-center">
+                  {isClosed ? "Final Bid" : "Actual Price"}
                 </span>
+                <span
+                  className="font-playfair font-extrabold text-[#D4AF37] text-center leading-tight"
+                  style={{ fontSize: "clamp(1.6rem, 3.5vw, 2.8rem)" }}
+                >
+                  {isClosed
+                    ? (item.soldPrice > 0 ? item.soldPrice : item.currentBid).toLocaleString()
+                    : item.actualPrice.toLocaleString()}
+                </span>
+                <span className="text-white/40 text-[10px] mt-2">NPR</span>
               </div>
-            </motion.div>
 
-            {item.currentBid > 0 && item.currentBidder && (
-              <div className="flex items-center justify-center gap-2 bg-[#084691]/20 px-5 py-3 rounded-2xl mt-6 w-full">
-                <User className="w-5 h-5 text-white shrink-0" />
-                <span className="text-white font-semibold text-lg">{item.currentBidder}</span>
+              {/* Card 2: Starting Bid (active) / Sold To (closed) */}
+              <div
+                className="flex flex-col items-center justify-center rounded-2xl p-5 border border-white/15"
+                style={{ background: "rgba(255,255,255,0.05)" }}
+              >
+                <span className="text-[10px] md:text-xs uppercase tracking-widest text-white/60 mb-3 text-center">
+                  {isClosed ? "Sold To" : "Starting Bid"}
+                </span>
+                {isClosed ? (
+                  <span
+                    className="font-playfair font-bold text-white text-center leading-snug"
+                    style={{ fontSize: "clamp(1.6rem, 3.5vw, 2.8rem)", wordBreak: "break-word" }}
+                  >
+                    {item.currentBidder ?? "—"}
+                  </span>
+                ) : (
+                  <>
+                    <span
+                      className="font-playfair font-extrabold text-white text-center leading-tight"
+                      style={{ fontSize: "clamp(1.6rem, 3.5vw, 2.8rem)" }}
+                    >
+                      {item.startingBid.toLocaleString()}
+                    </span>
+                    <span className="text-white/40 text-[10px] mt-2">NPR</span>
+                  </>
+                )}
               </div>
-            )}
-          </div>
+            </div>
 
-          {/* Bottom strip — always pinned to bottom of right card */}
-          <div className="shrink-0 mt-6 pt-5 border-t border-white/10 flex flex-col items-center gap-3">
-            {item.currentBid > 0 && (
-              <div className="flex items-center gap-2 text-white text-sm">
-                <TrendingUp className="w-4 h-4" />
-                Starting bid: NPR {item.startingBid.toLocaleString()}
+            {/* Status pill */}
+            {isClosed ? (
+              <div className="px-6 py-2.5 rounded-full bg-gray-700/50 border border-white/20 text-white/70 text-sm font-semibold uppercase tracking-widest text-center">
+                Bidding Closed
               </div>
-            )}
-            {isClosed && (
-              <div className="px-6 py-3 bg-gray-100 rounded-2xl text-[#225898] font-semibold uppercase tracking-wider text-sm w-full text-center">
-                Auction Closed
+            ) : (
+              <div className="px-6 py-2.5 rounded-full bg-green-500/20 border border-green-400/40 text-green-300 text-sm font-semibold uppercase tracking-widest text-center">
+                Bidding Open
               </div>
             )}
           </div>
@@ -309,6 +305,7 @@ export default function AuctionItemPage() {
       </div>
 
       <AuctionBidHistory itemId={id as string} />
+      <PopperConfetti trigger={confettiTrigger} />
 
       {showDescModal && item.description && (
         <AuctionDescModal

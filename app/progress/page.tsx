@@ -30,7 +30,30 @@ export default function ProgressPage() {
   const [checkingAdmin, setCheckingAdmin] = useState(true);
   const [popTrigger, setPopTrigger] = useState(0);
   const prevTotalRaisedRef = useRef<number | null>(null);
+  const tadaRef = useRef<HTMLAudioElement | null>(null);
   const router = useRouter();
+
+  // Pre-create and unlock audio on first user interaction so the browser
+  // allows programmatic .play() calls that originate from polling intervals.
+  useEffect(() => {
+    const audio = new Audio("/audio/tada.mp3");
+    audio.preload = "auto";
+    tadaRef.current = audio;
+    const unlock = () => {
+      audio.muted = true;
+      audio.play().then(() => {
+        audio.pause();
+        audio.muted = false;
+        audio.currentTime = 0;
+      }).catch(() => {});
+    };
+    document.addEventListener("click", unlock, { once: true });
+    document.addEventListener("keydown", unlock, { once: true });
+    return () => {
+      document.removeEventListener("click", unlock);
+      document.removeEventListener("keydown", unlock);
+    };
+  }, []);
 
   useEffect(() => {
     async function checkAdmin() {
@@ -53,6 +76,10 @@ export default function ProgressPage() {
         setSummary(data);
         if (prevTotalRaisedRef.current !== null && data.totalRaised > prevTotalRaisedRef.current) {
           setPopTrigger((t) => t + 1);
+          if (tadaRef.current) {
+            tadaRef.current.currentTime = 0;
+            tadaRef.current.play().catch(() => {});
+          }
         }
         prevTotalRaisedRef.current = data.totalRaised;
       }
