@@ -113,7 +113,7 @@ export default function ProgressPage() {
   const auctionPercent = Math.min(100, (auctionTotal / targetAmount) * 100);
 
   return (
-    <div className="min-h-screen bg-[#07122b] flex flex-col items-center justify-center px-4 py-8">
+    <div className="min-h-screen bg-[#07122b] flex flex-col items-center justify-start px-4 pt-20 pb-8">
       {goalReached && <FallingConfetti />}
       <PopperConfetti trigger={popTrigger} />
       {/* Home Button */}
@@ -124,19 +124,47 @@ export default function ProgressPage() {
         </a>
       </div>
       <div className="w-full max-w-3xl">
-        <h1 className="text-2xl md:text-4xl font-bold text-white mb-2 text-center">
+        <h1 className="text-2xl md:text-4xl font-bold text-white mb-1 text-center">
           Truth & Hope Gala {galaYear}
         </h1>
-        <h2 className="text-lg md:text-2xl text-yellow-400 font-semibold text-center mb-8">
+        <h2 className="text-lg md:text-2xl text-yellow-400 font-semibold text-center mb-10">
           Fundraising Progress
         </h2>
-        <div className="flex flex-col items-center mb-6">
+        {/* Goal */}
+        <div className="flex flex-col items-center mb-10">
+          <span className="uppercase text-xl tracking-widest text-yellow-600 font-semibold mb-1">Goal</span>
+          <span className="text-5xl md:text-7xl font-bold text-yellow-400 tracking-tight animate-pulse">
+            NPR {targetAmount.toLocaleString()}
+          </span>
+        </div>
+        {/* Progress */}
+        <div className="flex flex-col items-center mb-10">
+          <span className="uppercase text-xl tracking-widest text-gray-200 font-semibold mb-1">Raised</span>
           <span className="text-5xl md:text-6xl font-bold text-white tracking-tight">
             NPR {totalRaised.toLocaleString()}
           </span>
-          <span className="text-2xl md:text-3xl font-bold text-yellow-400 mt-2">
-            {percentOfGoal}% of goal
+          <span className="text-xl md:text-2xl font-bold text-yellow-400 tracking-light mt-2">
+            {percentOfGoal}% of goal reached
           </span>
+        </div>
+        {/* Still Needed / Above & Beyond */}
+        <div className="flex flex-col items-center mb-10">
+          {goalReached ? (
+            <>
+              <PartyPopper className="text-yellow-400 w-5 h-5 mb-1 animate-bounce" />
+              <span className="uppercase text-xl tracking-widest text-green-400 font-semibold mb-1">Above &amp; Beyond</span>
+              <span className="text-5xl md:text-6xl font-bold text-yellow-300 animate-bounce">
+                +NPR {(totalRaised - targetAmount).toLocaleString()}
+              </span>
+            </>
+          ) : (
+            <>
+              <span className="uppercase text-xl tracking-widest text-gray-200 font-semibold mb-1">Still Needed</span>
+              <span className="text-5xl md:text-6xl font-bold text-white animate-bounce">
+                NPR {(targetAmount - totalRaised).toLocaleString()}
+              </span>
+            </>
+          )}
         </div>
         {/* Progress Bar */}
         <div className="relative w-full h-10 rounded-full bg-[#1a2540] overflow-hidden mb-4 border-2 border-[#22305a]">
@@ -166,19 +194,7 @@ export default function ProgressPage() {
             style={{ left: `calc(${Math.min(100, 100)}% - 2px)` }}
           />
         </div>
-        {/* Above and Beyond Celebration */}
-        {totalRaised > targetAmount && (
-          <div className="w-full flex flex-col items-center mb-6 pt-6">
-            <div className="flex items-center gap-2 mb-1 animate-bounce">
-              <span className="text-2xl">🎉</span>
-              <span className="text-2xl md:text-3xl font-extrabold text-yellow-300 drop-shadow">Above & Beyond</span>
-              <span className="text-2xl">🎉</span>
-            </div>
-            <div className="text-3xl md:text-4xl font-bold text-yellow-200 bg-[#1a2540]/80 px-6 py-2 rounded-full shadow-lg mt-2 animate-pulse">
-              +NPR {(totalRaised - targetAmount).toLocaleString()}
-            </div>
-          </div>
-        )}
+
         {/* Bar labels */}
         <div className="w-full mb-8">
           <div className="hidden md:flex justify-between text-white text-sm md:text-base font-medium">
@@ -211,7 +227,7 @@ export default function ProgressPage() {
           </div>
         </div>
         {/* Stat Row */}
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-center mt-8 bg-[#101b36] rounded-lg py-6 px-2 md:px-6 lg:px-8">
+        <div className="grid grid-cols-2 gap-4 text-center mt-14 bg-[#101b36] rounded-lg py-4 px-2 md:px-4 lg:px-6">
           <div className="flex flex-col items-center justify-center min-h-[80px]">
             <CheckCircle className="text-green-400 w-5 h-5 mb-1" />
             <span className="text-3xl md:text-4xl font-bold text-white">{itemsSold}</span>
@@ -222,29 +238,6 @@ export default function ProgressPage() {
             <span className="text-3xl md:text-4xl font-bold text-white">{itemsRemaining}</span>
             <div className="uppercase text-xs text-gray-400 mt-1">Items Remaining</div>
           </div>
-          <div className="flex flex-col items-center justify-center min-h-[80px] col-span-2 md:col-span-1">
-            <div className={`flex flex-col items-center ${goalReached ? "text-red-400" : "text-yellow-400"}`}> 
-              {goalReached ? (
-                <>
-                  <PartyPopper className="text-yellow-400 w-5 h-5 mb-1 animate-bounce" />
-                  <span className="text-3xl md:text-4xl font-bold">Reached</span>
-                  <span className="uppercase text-xs text-gray-400 mt-1">Goal</span>
-                </>
-              ) : (
-                <>
-                  <span className="text-yellow-400 text-lg md:text-xl font-semibold leading-tight">NPR</span>
-                  <span className="text-3xl md:text-4xl font-bold">{(targetAmount - totalRaised).toLocaleString()}</span>
-                </>
-              )}
-            </div>
-            {!goalReached ? (
-              <div className="uppercase text-xs text-gray-400 mt-1">
-                To reach goal
-              </div>
-            ) : null}
-          </div>
-          {/* Empty cell for spacing on small screens */}
-          <div className="hidden md:block" />
         </div>
 
         {/* Thank You Card */}
