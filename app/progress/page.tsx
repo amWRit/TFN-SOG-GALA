@@ -227,7 +227,10 @@ export default function ProgressPage() {
           </div>
         </div>
         {/* Stat Row */}
-        <div className="grid grid-cols-2 gap-4 text-center mt-14 bg-[#101b36] rounded-lg py-4 px-2 md:px-4 lg:px-6">
+        <div className="text-center mb-2">
+          <span className="uppercase text-xs tracking-widest text-white-500 font-semibold">Auction Details</span>
+        </div>
+        <div className="grid grid-cols-2 gap-4 text-center bg-[#101b36] rounded-lg py-4 px-2 md:px-4 lg:px-6">
           <div className="flex flex-col items-center justify-center min-h-[80px]">
             <CheckCircle className="text-green-400 w-5 h-5 mb-1" />
             <span className="text-3xl md:text-4xl font-bold text-white">{itemsSold}</span>
