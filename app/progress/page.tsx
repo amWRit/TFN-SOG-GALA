@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import ProgressSkeleton from "@/components/progress-skeleton";
-import { Home, CheckCircle, Clock, Loader, PartyPopper, TrendingUp } from "lucide-react";
+import { Home, CheckCircle, Clock, Loader, PartyPopper, TrendingUp, ChevronDown, ChevronUp } from "lucide-react";
 import styles from "../../styles/progress.module.css";
 import { useRouter } from "next/navigation";
 import NotFound from "@/components/NotFound";
@@ -32,6 +32,7 @@ export default function ProgressPage() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [checkingAdmin, setCheckingAdmin] = useState(true);
   const [popTrigger, setPopTrigger] = useState(0);
+  const [statsOpen, setStatsOpen] = useState(true);
   const prevTotalRaisedRef = useRef<number | null>(null);
   const tadaRef = useRef<HTMLAudioElement | null>(null);
   const router = useRouter();
@@ -225,9 +226,14 @@ export default function ProgressPage() {
           </div>
         </div>
         {/* Stat Row */}
-        <div className="text-center mb-2">
-          <span className="uppercase text-xs tracking-widest text-white-500 font-semibold">Auction Details</span>
-        </div>
+        <button
+          className="w-full text-center mb-2 flex items-center justify-center gap-1 group"
+          onClick={() => setStatsOpen((o) => !o)}
+        >
+          <span className="uppercase text-xs tracking-widest text-white/60 font-semibold group-hover:text-white/90 transition-colors">{statsOpen ? "Hide Auction Details" : "View Auction Details"}</span>
+          {statsOpen ? <ChevronUp className="w-3 h-3 text-white/60 group-hover:text-white/90 transition-colors" /> : <ChevronDown className="w-3 h-3 text-white/60 group-hover:text-white/90 transition-colors" />}
+        </button>
+        {statsOpen && (
         <div className="grid grid-cols-3 gap-4 text-center bg-[#101b36] rounded-lg py-4 px-2 md:px-4 lg:px-6">
           <div className="flex flex-col items-center justify-center min-h-[80px]">
             <CheckCircle className="text-green-400 w-5 h-5 mb-1" />
@@ -245,6 +251,7 @@ export default function ProgressPage() {
             <div className="uppercase text-xs text-gray-400 mt-1">Above Market</div>
           </div>
         </div>
+        )}
 
         {/* Thank You Card */}
         {goalReached && <ThankYouCard />}
