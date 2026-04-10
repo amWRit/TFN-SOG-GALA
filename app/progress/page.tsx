@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import ProgressSkeleton from "@/components/progress-skeleton";
-import { Home, CheckCircle, Clock, Loader, PartyPopper } from "lucide-react";
+import { Home, CheckCircle, Clock, Loader, PartyPopper, TrendingUp } from "lucide-react";
 import styles from "../../styles/progress.module.css";
 import { useRouter } from "next/navigation";
 import NotFound from "@/components/NotFound";
@@ -14,6 +14,8 @@ interface FundraisingSummary {
   galaYear: number;
   targetAmount: number;
   preAuctionTotal: number;
+  ticketSalesTotal: number;
+  programSupportTotal: number;
   auctionTotal: number;
   totalRaised: number;
   percentOfGoal: number;
@@ -21,6 +23,7 @@ interface FundraisingSummary {
   itemsSold: number;
   highestBid: number;
   itemsRemaining: number;
+  itemsActualValueTotal: number;
 }
 
 export default function ProgressPage() {
@@ -99,6 +102,8 @@ export default function ProgressPage() {
     galaYear,
     targetAmount,
     preAuctionTotal,
+    ticketSalesTotal,
+    programSupportTotal,
     auctionTotal,
     totalRaised,
     percentOfGoal,
@@ -106,11 +111,17 @@ export default function ProgressPage() {
     itemsSold,
     highestBid,
     itemsRemaining,
+    itemsActualValueTotal,
   } = summary;
 
-  // Bar fill calculations
-  const preAuctionPercent = Math.min(100, (preAuctionTotal / targetAmount) * 100);
-  const auctionPercent = Math.min(100, (auctionTotal / targetAmount) * 100);
+  const aboveMarketPercent = itemsActualValueTotal > 0
+    ? Math.round((auctionTotal / itemsActualValueTotal) * 100) - 100
+    : 0;
+
+  // Bar fill calculations — three stacked segments
+  const ticketPercent = Math.min(100, (ticketSalesTotal / targetAmount) * 100);
+  const programPercent = Math.min(100, (programSupportTotal / targetAmount) * 100);
+  const auctionPercent = Math.min(100 - ticketPercent - programPercent, (auctionTotal / targetAmount) * 100);
 
   return (
     <div className="min-h-screen bg-[#07122b] flex flex-col items-center justify-start px-4 pt-15 pb-8">
@@ -168,23 +179,20 @@ export default function ProgressPage() {
         </div>
         {/* Progress Bar */}
         <div className="relative w-full h-10 rounded-full bg-[#1a2540] overflow-hidden mb-4 border-2 border-[#22305a]">
-          {/* Pre-auction fill */}
+          {/* Ticket Sales segment */}
           <div
             className="absolute left-0 top-0 h-full bg-blue-600"
-            style={{ width: `${preAuctionPercent}%` }}
+            style={{ width: `${ticketPercent}%` }}
           />
-          {/* Auction fill (striped) */}
+          {/* Program Support segment */}
           <div
-            className="absolute top-0 h-full"
-            style={{
-              left: `${preAuctionPercent}%`,
-              width: `${auctionPercent}%`,
-              background:
-                auctionTotal > 0
-                  ?
-                    `repeating-linear-gradient(135deg, #e3342f 0 10px, #e3342f 0 20px, #b91c1c 0 30px, #b91c1c 0 40px)`
-                  : "none",
-            }}
+            className="absolute top-0 h-full bg-purple-500"
+            style={{ left: `${ticketPercent}%`, width: `${programPercent}%` }}
+          />
+          {/* Auction Tonight segment */}
+          <div
+            className="absolute top-0 h-full bg-red-600"
+            style={{ left: `${ticketPercent + programPercent}%`, width: `${auctionPercent}%` }}
           />
           {/* Glass swipe effect */}
           <div className={styles["glass-swipe"]} />
@@ -197,40 +205,30 @@ export default function ProgressPage() {
 
         {/* Bar labels */}
         <div className="w-full mb-8">
-          <div className="hidden md:flex justify-between text-white text-sm md:text-base font-medium">
+          <div className="flex flex-wrap justify-between gap-y-2 text-white text-sm font-medium">
             <span className="flex items-center gap-2">
-              <span className="w-4 h-4 inline-block rounded bg-blue-600" /> Pre-auction
-              <span className="font-bold ml-2">NPR {preAuctionTotal.toLocaleString()}</span>
+              <span className="w-4 h-4 inline-block rounded bg-blue-600" /> Ticket Sales
+              <span className="font-bold ml-1">NPR {ticketSalesTotal.toLocaleString()}</span>
             </span>
             <span className="flex items-center gap-2">
-              <span className="w-4 h-4 inline-block rounded bg-red-600" /> Auction tonight
-              <span className="font-bold ml-2">NPR {auctionTotal.toLocaleString()}</span>
+              <span className="w-4 h-4 inline-block rounded bg-purple-500" /> Program Support
+              <span className="font-bold ml-1">NPR {programSupportTotal.toLocaleString()}</span>
             </span>
             <span className="flex items-center gap-2">
+              <span className="w-4 h-4 inline-block rounded bg-red-600" /> Auction Tonight
+              <span className="font-bold ml-1">NPR {auctionTotal.toLocaleString()}</span>
+            </span>
+            {/* <span className="flex items-center gap-2">
               <span className="w-4 h-4 inline-block rounded bg-yellow-400" /> Goal
-              <span className="font-bold ml-2">NPR {targetAmount.toLocaleString()}</span>
-            </span>
-          </div>
-          <div className="flex flex-col gap-2 md:hidden text-white text-sm font-medium w-full">
-            <div className="flex justify-between w-full">
-              <span className="flex items-center gap-2">
-                <span className="w-4 h-4 inline-block rounded bg-red-600" /> Auction tonight
-              </span>
-              <span className="font-bold">NPR {auctionTotal.toLocaleString()}</span>
-            </div>
-            <div className="flex justify-between w-full">
-              <span className="flex items-center gap-2">
-                <span className="w-4 h-4 inline-block rounded bg-yellow-400" /> Goal
-              </span>
-              <span className="font-bold">NPR {targetAmount.toLocaleString()}</span>
-            </div>
+              <span className="font-bold ml-1">NPR {targetAmount.toLocaleString()}</span>
+            </span> */}
           </div>
         </div>
         {/* Stat Row */}
         <div className="text-center mb-2">
           <span className="uppercase text-xs tracking-widest text-white-500 font-semibold">Auction Details</span>
         </div>
-        <div className="grid grid-cols-2 gap-4 text-center bg-[#101b36] rounded-lg py-4 px-2 md:px-4 lg:px-6">
+        <div className="grid grid-cols-3 gap-4 text-center bg-[#101b36] rounded-lg py-4 px-2 md:px-4 lg:px-6">
           <div className="flex flex-col items-center justify-center min-h-[80px]">
             <CheckCircle className="text-green-400 w-5 h-5 mb-1" />
             <span className="text-3xl md:text-4xl font-bold text-white">{itemsSold}</span>
@@ -240,6 +238,11 @@ export default function ProgressPage() {
             <Loader className="text-blue-400 w-5 h-5 mb-1" />
             <span className="text-3xl md:text-4xl font-bold text-white">{itemsRemaining}</span>
             <div className="uppercase text-xs text-gray-400 mt-1">Items Remaining</div>
+          </div>
+          <div className="flex flex-col items-center justify-center min-h-[80px]">
+            <TrendingUp className="text-yellow-400 w-5 h-5 mb-1" />
+            <span className="text-3xl md:text-4xl font-bold text-yellow-300">{aboveMarketPercent >= 0 ? "+" : ""}{aboveMarketPercent}%</span>
+            <div className="uppercase text-xs text-gray-400 mt-1">Above Market</div>
           </div>
         </div>
 

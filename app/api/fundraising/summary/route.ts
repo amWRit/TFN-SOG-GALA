@@ -14,19 +14,37 @@ export async function GET() {
   }
 
   // Pre-auction total from config
-  const preAuctionTotal = galaConfig.preAuctionTotal || 0;
   const targetAmount = galaConfig.targetAmount || 0;
+
+  // Pre-auction breakdown by category
+  const preAuctionEntries = await prisma.preAuctionEntry.groupBy({
+    by: ["category"],
+    where: { galaYear: galaConfig.galaYear },
+    _sum: { amount: true },
+  });
+
+  const ticketSalesTotal =
+    preAuctionEntries.find((e) => e.category === "Ticket Sales")?._sum.amount ?? 0;
+  const programSupportTotal =
+    preAuctionEntries.find((e) => e.category === "Program Support")?._sum.amount ?? 0;
+
+  // preAuctionTotal = sum of all entry categories (entries drive the value)
+  const preAuctionTotal = preAuctionEntries.reduce(
+    (sum, e) => sum + (e._sum.amount ?? 0),
+    0
+  );
 
   // Get all completed auction items
   const completedItems = await prisma.auctionItem.findMany({
     where: { isActive: false },
-    select: { id: true },
+    select: { id: true, actualPrice: true },
   });
 
   // For each completed item, get the highest bid (if any)
   let auctionTotal = 0;
   let highestBid = 0;
   let itemsSold = 0;
+  let itemsActualValueTotal = 0;
   for (const item of completedItems) {
     const highest = await prisma.bid.findFirst({
       where: { auctionItemId: item.id },
@@ -37,6 +55,7 @@ export async function GET() {
       auctionTotal += highest.amount;
       if (highest.amount > highestBid) highestBid = highest.amount;
       itemsSold++;
+      itemsActualValueTotal += item.actualPrice;
     }
   }
 
@@ -52,6 +71,8 @@ export async function GET() {
     galaYear: galaConfig.galaYear,
     targetAmount,
     preAuctionTotal,
+    ticketSalesTotal,
+    programSupportTotal,
     auctionTotal,
     totalRaised,
     percentOfGoal,
@@ -59,5 +80,6 @@ export async function GET() {
     itemsSold,
     highestBid,
     itemsRemaining,
+    itemsActualValueTotal,
   });
 }
