@@ -37,13 +37,14 @@ export async function GET() {
   // Get all completed auction items
   const completedItems = await prisma.auctionItem.findMany({
     where: { isActive: false },
-    select: { id: true },
+    select: { id: true, actualPrice: true },
   });
 
   // For each completed item, get the highest bid (if any)
   let auctionTotal = 0;
   let highestBid = 0;
   let itemsSold = 0;
+  let itemsActualValueTotal = 0;
   for (const item of completedItems) {
     const highest = await prisma.bid.findFirst({
       where: { auctionItemId: item.id },
@@ -54,6 +55,7 @@ export async function GET() {
       auctionTotal += highest.amount;
       if (highest.amount > highestBid) highestBid = highest.amount;
       itemsSold++;
+      itemsActualValueTotal += item.actualPrice;
     }
   }
 
@@ -78,5 +80,6 @@ export async function GET() {
     itemsSold,
     highestBid,
     itemsRemaining,
+    itemsActualValueTotal,
   });
 }

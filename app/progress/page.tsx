@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import ProgressSkeleton from "@/components/progress-skeleton";
-import { Home, CheckCircle, Clock, Loader, PartyPopper } from "lucide-react";
+import { Home, CheckCircle, Clock, Loader, PartyPopper, TrendingUp } from "lucide-react";
 import styles from "../../styles/progress.module.css";
 import { useRouter } from "next/navigation";
 import NotFound from "@/components/NotFound";
@@ -23,6 +23,7 @@ interface FundraisingSummary {
   itemsSold: number;
   highestBid: number;
   itemsRemaining: number;
+  itemsActualValueTotal: number;
 }
 
 export default function ProgressPage() {
@@ -110,7 +111,12 @@ export default function ProgressPage() {
     itemsSold,
     highestBid,
     itemsRemaining,
+    itemsActualValueTotal,
   } = summary;
+
+  const aboveMarketPercent = itemsActualValueTotal > 0
+    ? Math.round((auctionTotal / itemsActualValueTotal) * 100) - 100
+    : 0;
 
   // Bar fill calculations — three stacked segments
   const ticketPercent = Math.min(100, (ticketSalesTotal / targetAmount) * 100);
@@ -222,7 +228,7 @@ export default function ProgressPage() {
         <div className="text-center mb-2">
           <span className="uppercase text-xs tracking-widest text-white-500 font-semibold">Auction Details</span>
         </div>
-        <div className="grid grid-cols-2 gap-4 text-center bg-[#101b36] rounded-lg py-4 px-2 md:px-4 lg:px-6">
+        <div className="grid grid-cols-3 gap-4 text-center bg-[#101b36] rounded-lg py-4 px-2 md:px-4 lg:px-6">
           <div className="flex flex-col items-center justify-center min-h-[80px]">
             <CheckCircle className="text-green-400 w-5 h-5 mb-1" />
             <span className="text-3xl md:text-4xl font-bold text-white">{itemsSold}</span>
@@ -232,6 +238,11 @@ export default function ProgressPage() {
             <Loader className="text-blue-400 w-5 h-5 mb-1" />
             <span className="text-3xl md:text-4xl font-bold text-white">{itemsRemaining}</span>
             <div className="uppercase text-xs text-gray-400 mt-1">Items Remaining</div>
+          </div>
+          <div className="flex flex-col items-center justify-center min-h-[80px]">
+            <TrendingUp className="text-yellow-400 w-5 h-5 mb-1" />
+            <span className="text-3xl md:text-4xl font-bold text-yellow-300">{aboveMarketPercent >= 0 ? "+" : ""}{aboveMarketPercent}%</span>
+            <div className="uppercase text-xs text-gray-400 mt-1">Above Market</div>
           </div>
         </div>
 

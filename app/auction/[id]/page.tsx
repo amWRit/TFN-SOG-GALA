@@ -152,13 +152,8 @@ export default function AuctionItemPage() {
       <div className="absolute inset-0 bg-gradient-to-br from-[#084691]/88 via-[#225898]/75 to-[#084691]/88 -z-10" />
 
       {/* Top bar */}
-      <div className="w-full max-w-7xl mx-auto flex items-center justify-between px-4 pt-12 pb-10">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-          <h1 className="font-playfair text-2xl md:text-3xl font-extrabold text-white drop-shadow-lg">
-            {item.title}
-          </h1>
-        </motion.div>
-        <div className="flex gap-2 ml-4">
+      <div className="w-full max-w-7xl mx-auto flex items-center justify-end px-4 pt-5 pb-5">
+        <div className="flex gap-2">
           <a
             href="/"
             className="flex items-center gap-2 px-4 py-2 bg-white text-[#084691] rounded-full shadow-lg font-semibold hover:bg-[#084691]/90 hover:text-white transition-all border border-[#084691] shrink-0"
@@ -178,7 +173,6 @@ export default function AuctionItemPage() {
 
       {/* Single column layout */}
       <div className="w-full max-w-7xl mx-auto px-4 pb-8 flex flex-col gap-6">
-
         {/* Image */}
         <div
           className="relative w-full shrink-0 rounded-2xl overflow-hidden shadow-2xl border border-[#D4AF37]"
@@ -210,6 +204,13 @@ export default function AuctionItemPage() {
             </div>
           )}
         </div>
+
+        {/* Title */}
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+          <h1 className="font-playfair text-2xl md:text-3xl font-extrabold text-white drop-shadow-lg">
+            {item.title}
+          </h1>
+        </motion.div>
 
         {/* Description card */}
         <div
