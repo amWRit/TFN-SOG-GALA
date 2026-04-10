@@ -113,16 +113,16 @@ export default function ProgressPage() {
   const auctionPercent = Math.min(100, (auctionTotal / targetAmount) * 100);
 
   return (
-    <div className="min-h-screen bg-[#07122b] flex flex-col items-center justify-start px-4 pt-20 pb-8">
+    <div className="min-h-screen bg-[#07122b] flex flex-col items-center justify-start px-4 pt-15 pb-8">
       {goalReached && <FallingConfetti />}
       <PopperConfetti trigger={popTrigger} />
       {/* Home Button */}
-      <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50">
+      {/* <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50">
         <a href="/" className="flex items-center gap-2 px-4 py-2 bg-white/90 text-gray-900 rounded-full shadow-lg font-semibold hover:bg-white transition-all border border-gray-200">
           <Home size={20} className="w-5 h-5" />
           Home
         </a>
-      </div>
+      </div> */}
       <div className="w-full max-w-3xl">
         <h1 className="text-2xl md:text-4xl font-bold text-white mb-1 text-center">
           Truth & Hope Gala {galaYear}
