@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 
 export function GalaConfigAdmin() {
-  const [form, setForm] = useState({ galaYear: 2026, targetAmount: 10000, preAuctionTotal: 0 });
+  const [form, setForm] = useState({ galaYear: 2026, targetAmount: 10000 });
+  const [preAuctionTotal, setPreAuctionTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -15,8 +16,8 @@ export function GalaConfigAdmin() {
         setForm({
           galaYear: data.galaYear,
           targetAmount: data.targetAmount,
-          preAuctionTotal: data.preAuctionTotal,
         });
+        setPreAuctionTotal(data.preAuctionTotal ?? 0);
         setLoading(false);
       })
       .catch(() => setLoading(false));
@@ -58,8 +59,11 @@ export function GalaConfigAdmin() {
         <input type="number" name="targetAmount" value={form.targetAmount} onChange={handleChange} className="w-full rounded px-3 py-2 bg-gray-800 text-white" />
       </div>
       <div>
-        <label className="block text-[#f5f5f5]/80 mb-1">Pre-auction Total</label>
-        <input type="number" name="preAuctionTotal" value={form.preAuctionTotal} onChange={handleChange} className="w-full rounded px-3 py-2 bg-gray-800 text-white" />
+        <label className="block text-[#f5f5f5]/60 mb-1 text-sm">Pre-auction Total (auto-computed)</label>
+        <div className="w-full rounded px-3 py-2 bg-gray-900 text-gray-400 border border-gray-700 select-none">
+          NPR {preAuctionTotal.toLocaleString()}
+        </div>
+        <p className="text-xs text-gray-500 mt-1">Managed automatically from Ticket Sales &amp; Program Support entries below.</p>
       </div>
       <button type="submit" className="bg-[#D4AF37] text-[#1a1a1a] font-semibold px-4 py-2 rounded mt-2" disabled={saving}>
         {saving ? "Saving..." : "Save"}

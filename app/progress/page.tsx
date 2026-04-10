@@ -14,6 +14,8 @@ interface FundraisingSummary {
   galaYear: number;
   targetAmount: number;
   preAuctionTotal: number;
+  ticketSalesTotal: number;
+  programSupportTotal: number;
   auctionTotal: number;
   totalRaised: number;
   percentOfGoal: number;
@@ -99,6 +101,8 @@ export default function ProgressPage() {
     galaYear,
     targetAmount,
     preAuctionTotal,
+    ticketSalesTotal,
+    programSupportTotal,
     auctionTotal,
     totalRaised,
     percentOfGoal,
@@ -108,9 +112,10 @@ export default function ProgressPage() {
     itemsRemaining,
   } = summary;
 
-  // Bar fill calculations
-  const preAuctionPercent = Math.min(100, (preAuctionTotal / targetAmount) * 100);
-  const auctionPercent = Math.min(100, (auctionTotal / targetAmount) * 100);
+  // Bar fill calculations — three stacked segments
+  const ticketPercent = Math.min(100, (ticketSalesTotal / targetAmount) * 100);
+  const programPercent = Math.min(100, (programSupportTotal / targetAmount) * 100);
+  const auctionPercent = Math.min(100 - ticketPercent - programPercent, (auctionTotal / targetAmount) * 100);
 
   return (
     <div className="min-h-screen bg-[#07122b] flex flex-col items-center justify-start px-4 pt-15 pb-8">
@@ -168,23 +173,20 @@ export default function ProgressPage() {
         </div>
         {/* Progress Bar */}
         <div className="relative w-full h-10 rounded-full bg-[#1a2540] overflow-hidden mb-4 border-2 border-[#22305a]">
-          {/* Pre-auction fill */}
+          {/* Ticket Sales segment */}
           <div
             className="absolute left-0 top-0 h-full bg-blue-600"
-            style={{ width: `${preAuctionPercent}%` }}
+            style={{ width: `${ticketPercent}%` }}
           />
-          {/* Auction fill (striped) */}
+          {/* Program Support segment */}
           <div
-            className="absolute top-0 h-full"
-            style={{
-              left: `${preAuctionPercent}%`,
-              width: `${auctionPercent}%`,
-              background:
-                auctionTotal > 0
-                  ?
-                    `repeating-linear-gradient(135deg, #e3342f 0 10px, #e3342f 0 20px, #b91c1c 0 30px, #b91c1c 0 40px)`
-                  : "none",
-            }}
+            className="absolute top-0 h-full bg-purple-500"
+            style={{ left: `${ticketPercent}%`, width: `${programPercent}%` }}
+          />
+          {/* Auction Tonight segment */}
+          <div
+            className="absolute top-0 h-full bg-red-600"
+            style={{ left: `${ticketPercent + programPercent}%`, width: `${auctionPercent}%` }}
           />
           {/* Glass swipe effect */}
           <div className={styles["glass-swipe"]} />
@@ -197,33 +199,23 @@ export default function ProgressPage() {
 
         {/* Bar labels */}
         <div className="w-full mb-8">
-          <div className="hidden md:flex justify-between text-white text-sm md:text-base font-medium">
+          <div className="flex flex-wrap justify-between gap-y-2 text-white text-sm font-medium">
             <span className="flex items-center gap-2">
-              <span className="w-4 h-4 inline-block rounded bg-blue-600" /> Pre-auction
-              <span className="font-bold ml-2">NPR {preAuctionTotal.toLocaleString()}</span>
+              <span className="w-4 h-4 inline-block rounded bg-blue-600" /> Ticket Sales
+              <span className="font-bold ml-1">NPR {ticketSalesTotal.toLocaleString()}</span>
             </span>
             <span className="flex items-center gap-2">
-              <span className="w-4 h-4 inline-block rounded bg-red-600" /> Auction tonight
-              <span className="font-bold ml-2">NPR {auctionTotal.toLocaleString()}</span>
+              <span className="w-4 h-4 inline-block rounded bg-purple-500" /> Program Support
+              <span className="font-bold ml-1">NPR {programSupportTotal.toLocaleString()}</span>
             </span>
             <span className="flex items-center gap-2">
+              <span className="w-4 h-4 inline-block rounded bg-red-600" /> Auction Tonight
+              <span className="font-bold ml-1">NPR {auctionTotal.toLocaleString()}</span>
+            </span>
+            {/* <span className="flex items-center gap-2">
               <span className="w-4 h-4 inline-block rounded bg-yellow-400" /> Goal
-              <span className="font-bold ml-2">NPR {targetAmount.toLocaleString()}</span>
-            </span>
-          </div>
-          <div className="flex flex-col gap-2 md:hidden text-white text-sm font-medium w-full">
-            <div className="flex justify-between w-full">
-              <span className="flex items-center gap-2">
-                <span className="w-4 h-4 inline-block rounded bg-red-600" /> Auction tonight
-              </span>
-              <span className="font-bold">NPR {auctionTotal.toLocaleString()}</span>
-            </div>
-            <div className="flex justify-between w-full">
-              <span className="flex items-center gap-2">
-                <span className="w-4 h-4 inline-block rounded bg-yellow-400" /> Goal
-              </span>
-              <span className="font-bold">NPR {targetAmount.toLocaleString()}</span>
-            </div>
+              <span className="font-bold ml-1">NPR {targetAmount.toLocaleString()}</span>
+            </span> */}
           </div>
         </div>
         {/* Stat Row */}

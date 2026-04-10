@@ -14,8 +14,25 @@ export async function GET() {
   }
 
   // Pre-auction total from config
-  const preAuctionTotal = galaConfig.preAuctionTotal || 0;
   const targetAmount = galaConfig.targetAmount || 0;
+
+  // Pre-auction breakdown by category
+  const preAuctionEntries = await prisma.preAuctionEntry.groupBy({
+    by: ["category"],
+    where: { galaYear: galaConfig.galaYear },
+    _sum: { amount: true },
+  });
+
+  const ticketSalesTotal =
+    preAuctionEntries.find((e) => e.category === "Ticket Sales")?._sum.amount ?? 0;
+  const programSupportTotal =
+    preAuctionEntries.find((e) => e.category === "Program Support")?._sum.amount ?? 0;
+
+  // preAuctionTotal = sum of all entry categories (entries drive the value)
+  const preAuctionTotal = preAuctionEntries.reduce(
+    (sum, e) => sum + (e._sum.amount ?? 0),
+    0
+  );
 
   // Get all completed auction items
   const completedItems = await prisma.auctionItem.findMany({
@@ -52,6 +69,8 @@ export async function GET() {
     galaYear: galaConfig.galaYear,
     targetAmount,
     preAuctionTotal,
+    ticketSalesTotal,
+    programSupportTotal,
     auctionTotal,
     totalRaised,
     percentOfGoal,

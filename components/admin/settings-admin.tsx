@@ -1,12 +1,13 @@
 
 import React, { useState } from "react";
-import { User, Clock, Image as ImageIcon, Landmark, Settings2 } from "lucide-react";
+import { User, Clock, Image as ImageIcon, Landmark, Settings2, Ticket } from "lucide-react";
 import { AdminAccounts } from "./admin-accounts";
 import { ImagesAdmin } from "./images-admin";
 import { GalaConfigAdmin } from "./gala-config-admin";
+import { PreAuctionAdmin } from "./pre-auction-admin";
 
 export function SettingsAdmin() {
-  const [activeSubTab, setActiveSubTab] = useState<"account" | "images" | "gala" | "future">("account");
+  const [activeSubTab, setActiveSubTab] = useState<"account" | "images" | "gala" | "preauction" | "future">("account");
 
   return (
     <div className="">
@@ -26,6 +27,13 @@ export function SettingsAdmin() {
           <span className="hidden sm:inline">Gala Config</span>
         </button>
         <button
+          className={`px-4 py-2 rounded font-semibold transition-colors flex items-center gap-2 ${activeSubTab === "preauction" ? "bg-[#D4AF37] text-[#1a1a1a]" : "bg-gray-800 text-[#f5f5f5]/80 hover:text-[#D4AF37]"}`}
+          onClick={() => setActiveSubTab("preauction")}
+        >
+          <Ticket size={18} />
+          <span className="hidden sm:inline">Pre-Auction</span>
+        </button>
+        <button
           className={`px-4 py-2 rounded font-semibold transition-colors flex items-center gap-2 ${activeSubTab === "images" ? "bg-[#D4AF37] text-[#1a1a1a]" : "bg-gray-800 text-[#f5f5f5]/80 hover:text-[#D4AF37]"}`}
           onClick={() => setActiveSubTab("images")}
         >
@@ -43,6 +51,7 @@ export function SettingsAdmin() {
       {activeSubTab === "account" && <AdminAccounts />}
       {activeSubTab === "images" && <ImagesAdmin />}
       {activeSubTab === "gala" && <GalaConfigAdmin />}
+      {activeSubTab === "preauction" && <PreAuctionAdmin />}
       {activeSubTab === "future" && (
         <div>
           <h2 className="text-xl font-bold mb-2 text-[#D4AF37]">Future Features</h2>

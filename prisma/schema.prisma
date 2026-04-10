@@ -15,9 +15,22 @@ model GalaConfig {
   id               Int    @id @default(autoincrement())
   galaYear         Int    @default(2026) // e.g. 2026
   targetAmount     Int    @default(10000) // e.g. 10000
-  preAuctionTotal  Int    @default(0) // sum of all offline sources (bank + reg + donations)
+  preAuctionTotal  Int    @default(0) // auto-synced: sum of all PreAuctionEntry rows
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
+}
+
+// Breakdown of pre-auction fundraising (ticket sales, program support, etc.)
+model PreAuctionEntry {
+  id        String   @id @default(cuid())
+  galaYear  Int
+  category  String   // "Ticket Sales" | "Program Support" | "Other"
+  amount    Int
+  note      String?
+  createdAt DateTime @default(now())
+
+  @@index([galaYear])
+  @@index([category])
 }
 
 // Seating assignments - stores who sits where
