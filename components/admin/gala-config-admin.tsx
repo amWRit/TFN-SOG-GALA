@@ -63,7 +63,7 @@ export function GalaConfigAdmin() {
         <div className="w-full rounded px-3 py-2 bg-gray-900 text-gray-400 border border-gray-700 select-none">
           NPR {preAuctionTotal.toLocaleString()}
         </div>
-        <p className="text-xs text-gray-500 mt-1">Managed automatically from Ticket Sales &amp; Program Support entries below.</p>
+        <p className="text-xs text-gray-500 mt-1">Managed automatically from Pre-auction entries.</p>
       </div>
       <button type="submit" className="bg-[#D4AF37] text-[#1a1a1a] font-semibold px-4 py-2 rounded mt-2" disabled={saving}>
         {saving ? "Saving..." : "Save"}

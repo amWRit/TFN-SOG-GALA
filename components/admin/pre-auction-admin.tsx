@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Trash2, PlusCircle } from "lucide-react";
+import { Trash2, PlusCircle, Pencil, Check, X } from "lucide-react";
 import toast from "react-hot-toast";
 
 const CATEGORIES = ["Ticket Sales", "Program Support", "Other"] as const;
@@ -15,6 +15,12 @@ interface PreAuctionEntry {
   createdAt: string;
 }
 
+interface EditState {
+  category: Category;
+  amount: string;
+  note: string;
+}
+
 export function PreAuctionAdmin() {
   const [entries, setEntries] = useState<PreAuctionEntry[]>([]);
   const [loading, setLoading] = useState(true);
@@ -25,6 +31,9 @@ export function PreAuctionAdmin() {
   });
   const [submitting, setSubmitting] = useState(false);
   const [deleting, setDeleting] = useState<string | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editState, setEditState] = useState<EditState>({ category: "Ticket Sales", amount: "", note: "" });
+  const [saving, setSaving] = useState(false);
 
   const fetchEntries = async () => {
     setLoading(true);
@@ -73,6 +82,41 @@ export function PreAuctionAdmin() {
       toast.error("Failed to remove entry");
     }
     setDeleting(null);
+  };
+
+  const startEdit = (entry: PreAuctionEntry) => {
+    setEditingId(entry.id);
+    setEditState({
+      category: entry.category as Category,
+      amount: String(entry.amount),
+      note: entry.note ?? "",
+    });
+  };
+
+  const cancelEdit = () => {
+    setEditingId(null);
+  };
+
+  const handleSaveEdit = async (id: string) => {
+    const amount = Number(editState.amount);
+    if (!editState.category || isNaN(amount) || amount <= 0) {
+      toast.error("Enter a valid category and amount");
+      return;
+    }
+    setSaving(true);
+    const res = await fetch(`/api/admin/pre-auction-entries/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ category: editState.category, amount, note: editState.note || null }),
+    });
+    if (res.ok) {
+      toast.success("Entry updated");
+      setEditingId(null);
+      await fetchEntries();
+    } else {
+      toast.error("Failed to update entry");
+    }
+    setSaving(false);
   };
 
   // Group totals per category
@@ -147,26 +191,80 @@ export function PreAuctionAdmin() {
         ) : entries.length === 0 ? (
           <div className="text-gray-500 text-sm text-center py-4">No entries yet.</div>
         ) : (
-          entries.map((entry) => (
-            <div
-              key={entry.id}
-              className="flex items-center justify-between bg-[#101b36] rounded-lg px-4 py-3"
-            >
-              <div className="flex flex-col">
-                <span className="text-xs text-gray-400 uppercase tracking-wide">{entry.category}</span>
-                <span className="text-white font-semibold">NPR {entry.amount.toLocaleString()}</span>
-                {entry.note && <span className="text-xs text-gray-500 mt-0.5">{entry.note}</span>}
+          entries.map((entry) =>
+            editingId === entry.id ? (
+              <div key={entry.id} className="flex items-center gap-2 bg-[#1a2540] rounded-lg px-4 py-3 flex-wrap">
+                <select
+                  value={editState.category}
+                  onChange={(e) => setEditState({ ...editState, category: e.target.value as Category })}
+                  className="rounded px-2 py-1 bg-gray-800 text-white text-sm flex-1 min-w-[130px]"
+                >
+                  {CATEGORIES.map((cat) => (
+                    <option key={cat} value={cat}>{cat}</option>
+                  ))}
+                </select>
+                <input
+                  type="number"
+                  value={editState.amount}
+                  onChange={(e) => setEditState({ ...editState, amount: e.target.value })}
+                  className="rounded px-2 py-1 bg-gray-800 text-white text-sm flex-1 min-w-[110px]"
+                  min={1}
+                />
+                <input
+                  type="text"
+                  value={editState.note}
+                  placeholder="Note (optional)"
+                  onChange={(e) => setEditState({ ...editState, note: e.target.value })}
+                  className="rounded px-2 py-1 bg-gray-800 text-white text-sm flex-1 min-w-[140px]"
+                />
+                <div className="flex gap-1">
+                  <button
+                    onClick={() => handleSaveEdit(entry.id)}
+                    disabled={saving}
+                    className="text-green-400 hover:text-green-300 p-1 disabled:opacity-40"
+                    title="Save"
+                  >
+                    <Check size={16} />
+                  </button>
+                  <button
+                    onClick={cancelEdit}
+                    className="text-gray-400 hover:text-gray-300 p-1"
+                    title="Cancel"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
               </div>
-              <button
-                onClick={() => handleDelete(entry.id)}
-                disabled={deleting === entry.id}
-                className="text-red-400 hover:text-red-300 p-1 disabled:opacity-40"
-                title="Remove entry"
+            ) : (
+              <div
+                key={entry.id}
+                className="flex items-center justify-between bg-[#101b36] rounded-lg px-4 py-3"
               >
-                <Trash2 size={16} />
-              </button>
-            </div>
-          ))
+                <div className="flex flex-col">
+                  <span className="text-xs text-gray-400 uppercase tracking-wide">{entry.category}</span>
+                  <span className="text-white font-semibold">NPR {entry.amount.toLocaleString()}</span>
+                  {entry.note && <span className="text-xs text-gray-500 mt-0.5">{entry.note}</span>}
+                </div>
+                <div className="flex gap-1">
+                  <button
+                    onClick={() => startEdit(entry)}
+                    className="text-yellow-400 hover:text-yellow-300 p-1"
+                    title="Edit entry"
+                  >
+                    <Pencil size={16} />
+                  </button>
+                  <button
+                    onClick={() => handleDelete(entry.id)}
+                    disabled={deleting === entry.id}
+                    className="text-red-400 hover:text-red-300 p-1 disabled:opacity-40"
+                    title="Remove entry"
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                </div>
+              </div>
+            )
+          )
         )}
       </div>
     </div>
