@@ -3,7 +3,8 @@ import { useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
-import { Clock, Home, Gavel, ChevronDown, ChevronUp } from "lucide-react";
+import { Clock, Home, Gavel, ChevronDown, ChevronUp, Expand } from "lucide-react";
+import ImageZoomModal from "../../../components/ImageZoomModal";
 import { AuctionDescModal } from "../../../components/auction-desc-modal";
 import { AuctionBidHistory } from "../../../components/auction-bid-history";
 import { AuctionStatsSection } from "../../../components/auction-stats-section";
@@ -76,6 +77,7 @@ export default function AuctionItemPage() {
   const [showDescModal, setShowDescModal] = useState(false);
   const [confettiTrigger, setConfettiTrigger] = useState(0);
   const [statsOpen, setStatsOpen] = useState(false);
+  const [showImageZoom, setShowImageZoom] = useState(false);
   const confettiFiredRef = useRef(false);
 
   useEffect(() => {
@@ -203,6 +205,14 @@ export default function AuctionItemPage() {
               {timeRemaining}
             </div>
           )}
+          <button
+            className="absolute bottom-4 right-4 bg-white/80 rounded-full p-2 shadow-md flex items-center justify-center hover:bg-white transition-colors"
+            onClick={() => setShowImageZoom(true)}
+            aria-label="Zoom image"
+            type="button"
+          >
+            <Expand size={22} className="text-[#084691]" />
+          </button>
         </div>
 
         {/* Title */}
@@ -247,6 +257,12 @@ export default function AuctionItemPage() {
 
       <AuctionBidHistory itemId={id as string} />
       <PopperConfetti trigger={confettiTrigger} />
+      <ImageZoomModal
+        open={showImageZoom}
+        imageUrl={item.imageUrl && item.imageUrl.trim() !== "" ? item.imageUrl : "/images/auctionitemplateholder.jpg"}
+        title={item.title}
+        onClose={() => setShowImageZoom(false)}
+      />
 
       {showDescModal && item.description && (
         <AuctionDescModal
